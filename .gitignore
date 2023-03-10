@@ -8,3 +8,4 @@ nbdist/
 .nb-gradle/
 
 *.bkp
+nbproject/configs/Remote_SFTP.properties
