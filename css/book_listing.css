@@ -1,0 +1,26 @@
+body {
+    padding-top: 60px;
+}
+
+.book {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.book img {
+    max-width: 100%;
+    height: auto;
+}
+
+.book-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.book-author {
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}

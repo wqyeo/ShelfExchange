@@ -9,3 +9,5 @@ nbdist/
 
 *.bkp
 nbproject/configs/Remote_SFTP.properties
+
+*.bak
