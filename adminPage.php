@@ -33,7 +33,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
     </head>
     
     <body>
-        
+        <div class="row">
+            <div class="column left">
+                Admin Profile
+            </div>
+            <div class="column right">
+                 Management Stuff
+            </div>
+        </div>
     </body>
     
     <?php
