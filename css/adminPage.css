@@ -7,3 +7,24 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     Author     : jczhs
 */
 
+.column
+{
+    float: left;
+}
+
+.left
+{
+    width: 25%;
+}
+
+.right
+{
+    width: 75%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
