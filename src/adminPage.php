@@ -36,14 +36,74 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
     </head>
     
     <body>
-        <div class="row">
-            <div class="column left">
-                Admin Profile
+        <main class="container rounded p-3 my-3 border"> 
+           
+
+            <div class='col-4' style='display: inline-block;'>
+                <section id="profilepic" style='display: inline-block;'>
+
+
+                    <figure>
+
+                        <img class="img-thumbnail" src="images/genericprofpic.png" alt="Poodle"
+                             title="View larger image..."/>
+                    </figure>
+
+                </section>
+
+
+                <section id="personalinfo"> 
+                    <div class="row"> 
+                        <div class="col" style='display: inline-block;'> 
+                            <h5 style='text-align:left;'><b> Personal Information </b> </h5>
+                            <!--<a href="#" style="font-size: 10px;"> Edit Profile </a>-->
+                            <p> Name: (Name) </p>
+                            <p> Email: (Email) </p>
+                            <p> Contact: (Phone Number) </p>
+                        </div>
+
+                    </div>
+                </section>
             </div>
-            <div class="column right">
-                 Management Stuff
+            
+            <div class='col-7' style='display: inline-block;'>
+                <section id='accManagement' style='padding-bottom: 50px;'>
+                    <div class='row'>
+                        <div class="col">
+                            <div class='dropdown' style='text-align: center;'>
+                                <button class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Account Management
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+                
+                <section id='bookManagement'>
+                    <div class='row'>
+                        <div class="col">
+                            <div class='dropdown' style='text-align: center;'>
+                                <button class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Book Management
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </section>
             </div>
-        </div>
+        </main>
     </body>
     
     <?php
