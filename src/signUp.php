@@ -25,12 +25,12 @@
             <form action="processSignUp.php" method="post">
                 <div class="form-group">
                 <label for="username">Username:</label> <!-- required -->
-                <input class="form-control" type="text" id="lname" required maxlength="45" name="lname" placeholder="Enter last name">
+                <input class="form-control" type="text" id="username" required maxlength="45" name="username" placeholder="Enter username">
                 </div>
                 
                 <div class="form-group">
-                    <labe for="contactNo">Contact Number:</label>
-                    <input class="form-control" type="text" id="contactNo" required maxlength="45" name="contactNo" placeholder="Enter contact number">
+                <label for="contactNo">Contact Number:</label>
+                <input class="form-control" type="text" id="contactNo" required maxlength="45" name="contactNo" placeholder="Enter contact number">
                 </div>
                 
                 <div class="form-group">

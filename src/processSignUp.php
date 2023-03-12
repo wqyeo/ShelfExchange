@@ -63,13 +63,14 @@
             saveMemberToDB();
             echo "<h4>Registration successful!</h4>";
             echo "<p>Email: " . $email;
-            echo '<form name="return" id="return" action="/Lab09/register.php">';
+            echo "<p>Username: " . $username;
+            echo '<form name="return" id="return" action="/ShelfExchange/signUp.php">';
             echo '<button class="btn btn-primary" type="submit">Return</button>';
             echo '</form>';
         } else {
             echo "<h4>The following input errors were detected:</h4>";
             echo "<p>" . $errorMsg . "</p>";
-            echo '<form name="return" id="return" action="/Lab09/register.php">';
+            echo '<form name="return" id="return" action="/ShelfExchange/signUp.php">';
             echo '<button class="btn btn-danger" type="submit">Return</button>';
             echo '</form>';
         }
@@ -84,11 +85,22 @@
         
         //Helper function to write the member data to the DB
         function saveMemberToDB() {
-            global $username, $email, $hashed_password, $errorMsg, $success;   //This is to access the global variables.
+            global $todayDate, $contactNo, $username, $email, $hashed_password, $errorMsg, $success;   //This is to access the global variables.
+            
+            $todayDate = date("Y/m/d");
 // Create database connection.
+          /**  
             $config = parse_ini_file('../../private/db-config.ini');
             $conn = new mysqli($config['servername'], $config['username'],
-                    $config['password'], $config['dbname']);
+                    $config['password'], $config['dbname']); 
+          **/
+            $servername = "localhost";
+            $dbusername = "root";
+            $password = "lmaozedongs01";
+            $dbname = "shelf_exchange";
+            
+            $conn = new mysqli($servername, $dbusername, $password, $dbname); //The arguments are the database credentials
+            
 // Check connection
             if ($conn->connect_error) {
                 $errorMsg = "Connection failed: " . $conn->connect_error;
@@ -96,12 +108,15 @@
             } else {
                 echo "Connected Successfully!"; // For testing connection
 // Prepare the statement:
-                $stmt = $conn->prepare("INSERT INTO user (username, email, password) VALUES (?,?,?)");
+                $stmt = $conn->prepare("INSERT INTO user (email, username, password, joined_date, contact_no) VALUES (?, ?, ?, ?, ?)");
 // Bind & execute the query statement:
-                $stmt->bind_param("sss", $username, $email, $hashed_password);
+                $stmt->bind_param("sssss", $email, $username, $hashed_password, $todayDate, $contactNo);
                 if (!$stmt->execute()) {
+                    echo "GG. Failed";
                     $errorMsg = "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
                     $success = false;
+                    echo "GG. Failed2";
+
                 }
                 $stmt->close();
             }
