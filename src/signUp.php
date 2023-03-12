@@ -13,6 +13,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
+        <?php
+        include "nav.php";
+        ?>
         <main class="container">
             <h1>User Registration</h1>
             <p>
@@ -49,5 +52,8 @@
                 <button class="btn btn-primary" type="submit">Sign up</button>
             </form>
         </main>
+        <?php
+        include "footer.php";
+        ?>
     </body>
 </html>

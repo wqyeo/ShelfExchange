@@ -11,3 +11,4 @@ nbdist/
 nbproject/configs/Remote_SFTP.properties
 
 *.bak
+src/nbproject/configs/INF1005-PROJ.properties
