@@ -1,0 +1,30 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/* 
+    Created on : 10 Mar 2023, 10:36:25 am
+    Author     : jczhs
+*/
+
+.column
+{
+    float: left;
+}
+
+.left
+{
+    width: 25%;
+}
+
+.right
+{
+    width: 75%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}

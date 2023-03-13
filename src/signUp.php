@@ -13,13 +13,25 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
+        <?php
+        include "nav.php";
+        ?>
         <main class="container">
-            <h1>User Login</h1>
+            <h1>User Registration</h1>
             <p>
                 For existing users, please go to the
-                <a href="signUp.php">Sign Up page</a>.
+                <a href="login.php">Login page</a>.
             </p>
-            <form action="processLogin.php" method="post">
+            <form action="processSignUp.php" method="post">
+                <div class="form-group">
+                <label for="username">Username:</label> <!-- required -->
+                <input class="form-control" type="text" id="username" required maxlength="45" name="username" placeholder="Enter username">
+                </div>
+                
+                <div class="form-group">
+                <label for="contactNo">Contact Number:</label>
+                <input class="form-control" type="text" id="contactNo" required maxlength="45" name="contactNo" placeholder="Enter contact number">
+                </div>
                 
                 <div class="form-group">
                 <label for="email">Email:</label> <!-- required -->
@@ -31,9 +43,17 @@
                 <input class="form-control" type="password" id="pwd" required maxlength="255" name="pwd" placeholder="Enter password">
                 </div>
                 
+                <div class="form-group"> <!-- required -->
+                <label for="pwd_confirm">Confirm Password:</label>
+                <input class="form-control" type="password" id="pwd_confirm" required maxlength="255" name="pwd_confirm" placeholder="Confirm password">
+                </div>
+                
                 <br>
-                <button class="btn btn-primary" type="submit">Login</button>
+                <button class="btn btn-primary" type="submit">Sign up</button>
             </form>
         </main>
+        <?php
+        include "footer.php";
+        ?>
     </body>
 </html>
