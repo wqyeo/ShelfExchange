@@ -1,24 +1,8 @@
-
-<html lang="en">
-    <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"crossorigin="anonymous">
-        <!--jQuery-->
-        <script defer src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-        <!--Bootstrap JS-->
-        <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
-        <!-- Custom JS -->
-        <script defer src="js/main.js"></script>
-        <link rel="stylesheet" href="css/main.css">
-        <title>ShelfExchange</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
         <?php
         $username = $contactNo = $pwd = $pwd_confirm = $email = $errorMsg = "";
         $success = true;
         
-        if (empty($_POST["username"])) {                   //If the form value of lname is not empty, then it will sanitize the input
+        if (empty($_POST["username"])) {                   
             $errorMsg .= "Username is required.<br>";
             $success = false;
         } else {
@@ -30,14 +14,12 @@
         } else{
             $contactNo = sanitize_input($_POST["contactNo"]);
         }
-        if (empty($_POST["pwd"])) {                     //If the form value of pwd is not empty, then it will sanitize the input
+        if (empty($_POST["pwd"])) {                     
             $errorMsg .= "Password is required.<br>";
             $success = false;
         } else {
-            //Do hashing
             $pwd = $_POST['pwd'];
             $hashed_password = password_hash($pwd, PASSWORD_DEFAULT);
-            //var_dump($hashed_password); //This is to check if the password is hashed by displaying it out.
         }
         if (empty($_POST["pwd_confirm"])) {            //If the form value of pwd_confirm is not empty, then it will sanitize the input
             $errorMsg .= "Password confirmation required.<br>";
@@ -82,6 +64,10 @@
             $data = htmlspecialchars($data);
             return $data;
         }
+
+        function null_or_empty($fieldName){
+            return !isset($_POST[$fieldName]) || empty($_POST[$fieldName]);
+        }
         
         //Helper function to write the member data to the DB
         function saveMemberToDB() {
@@ -89,17 +75,9 @@
             
             $todayDate = date("Y/m/d");
 // Create database connection.
-          /**  
+
             $config = parse_ini_file('../../private/db-config.ini');
-            $conn = new mysqli($config['servername'], $config['username'],
-                    $config['password'], $config['dbname']); 
-          **/
-            $servername = "localhost";
-            $dbusername = "root";
-            $password = "lmaozedongs01";
-            $dbname = "shelf_exchange";
-            
-            $conn = new mysqli($servername, $dbusername, $password, $dbname); //The arguments are the database credentials
+            $conn = new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
             
 // Check connection
             if ($conn->connect_error) {
@@ -116,16 +94,10 @@
                     $errorMsg = "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
                     $success = false;
                     echo "GG. Failed2";
-
                 }
                 $stmt->close();
             }
             $conn->close();
         }
         
-        ?>
-        
-        <main>
-        </main>
-    </body>
-</html>
+?>
