@@ -1,5 +1,5 @@
         <?php
-        $username = $contactNo = $pwd = $pwd_confirm = $email = $errorMsg = "";
+        $username = $pwd = $pwd_confirm = $email = $errorMsg = "";
         $success = true;
         
         if (empty($_POST["username"])) {                   
@@ -8,12 +8,7 @@
         } else {
             $username = sanitize_input($_POST["username"]);
         }
-        if (empty($_POST["contactNo"])) {
-            $errorMsg .= "Contact Number is required.<br>";
-            $success = false;
-        } else{
-            $contactNo = sanitize_input($_POST["contactNo"]);
-        }
+        
         if (empty($_POST["pwd"])) {                     
             $errorMsg .= "Password is required.<br>";
             $success = false;
@@ -86,9 +81,9 @@
             } else {
                 echo "Connected Successfully!"; // For testing connection
 // Prepare the statement:
-                $stmt = $conn->prepare("INSERT INTO user (email, username, password, joined_date, contact_no) VALUES (?, ?, ?, ?, ?)");
+                $stmt = $conn->prepare("INSERT INTO user (email, username, password, joined_date) VALUES (?, ?, ?, ?)");
 // Bind & execute the query statement:
-                $stmt->bind_param("sssss", $email, $username, $hashed_password, $todayDate, $contactNo);
+                $stmt->bind_param("sssss", $email, $username, $hashed_password, $todayDate);
                 if (!$stmt->execute()) {
                     echo "GG. Failed";
                     $errorMsg = "Execute failed: (" . $stmt->errno . ") " . $stmt->error;

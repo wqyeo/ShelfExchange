@@ -18,45 +18,50 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+        
+        <link href="css/signUp.css" rel="stylesheet" />
+        <script defer src="js/signUp.js"></script>
     </head>
     <body>
         <?php
         include "nav.php";
         ?>
-        <main class="container">
-            <h1>User Registration</h1>
-            <p>
-                For existing users, please go to the
-                <a href="login.php">Login page</a>.
-            </p>
-            <form action="processSignUp.php" method="post">
-                <div class="form-group">
-                <label for="username">Username:</label> <!-- required -->
-                <input class="form-control" type="text" id="username" required maxlength="45" name="username" placeholder="Enter username">
+        <!-- Big header asking for user to sign up-->
+        <header class="bg-dark py-2">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Sign Up</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Get more offers and benefits when browsing!</p>
+                </div>
+            </div>
+        </header>
+        
+        <main class="container mt-3">
+            <form action="processSignUp.php" method="post" onsubmit="return validateForm()">
+                <div class="mb-3">
+                  <label for="username" class="form-label">Username</label>
+                  <input type="text" class="form-control" id="username" name="username" required>
+                  <div id="usernameError" class="text-danger"></div>
                 </div>
                 
-                <div class="form-group">
-                <label for="contactNo">Contact Number:</label>
-                <input class="form-control" type="text" id="contactNo" required maxlength="45" name="contactNo" placeholder="Enter contact number">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+                  <div id="emailError" class="text-danger"></div>
                 </div>
                 
-                <div class="form-group">
-                <label for="email">Email:</label> <!-- required -->
-                <input class="form-control" type="email" id="email" required maxlength="255" name="email" placeholder="Enter email">
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                    <small id="password-strength-text" class="form-text text-muted mt-2">Password strength: <span id="password-strength"></span></small>
+                    <div class="progress mt-2">
+                        <div id="password-strength-bar" class="progress-bar" role="progressbar"></div>
+                    </div>
+                    <div id="passwordError" class="text-danger"></div>
                 </div>
                 
-                <div class="form-group">
-                <label for="pwd">Password:</label> <!-- required -->
-                <input class="form-control" type="password" id="pwd" required maxlength="255" name="pwd" placeholder="Enter password">
-                </div>
-                
-                <div class="form-group"> <!-- required -->
-                <label for="pwd_confirm">Confirm Password:</label>
-                <input class="form-control" type="password" id="pwd_confirm" required maxlength="255" name="pwd_confirm" placeholder="Confirm password">
-                </div>
-                
-                <br>
-                <button class="btn btn-primary" type="submit">Sign up</button>
+                <button type="submit" class="btn btn-primary mb-3">Sign up</button>
+                <p>Already have an account? <a href="login.php">Log in</a></p>
             </form>
         </main>
         <?php
