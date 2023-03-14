@@ -1,0 +1,31 @@
+form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+form label {
+  font-weight: bold;
+}
+
+form input[type=text],
+form input[type=email],
+form input[type=password] {
+  border: none;
+  border-radius: 0;
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 1rem;
+  box-shadow: none;
+}
+
+form input:focus {
+  border-color: #007bff;
+  box-shadow: none;
+}
+
+form button[type=submit] {
+  width: 100%;
+}
+
+form p {
+  text-align: center;
+}
