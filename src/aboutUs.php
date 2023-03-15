@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Shop Homepage - Start Bootstrap Template</title>
+        <title>About Us</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Bootstrap icons-->
@@ -17,6 +17,9 @@
         <?php
             include "nav.php"
         ?>
+        
+        
+        <section class="py-5">
         <div id="abtus">
             <h1 class="display-4 fw-bolder">BRAND PROFILE</h1>
             
@@ -36,7 +39,7 @@
             <p> Email: (Email) </p>
             
         </div>
-        
+        </section>
         <?php
             include "footer.php"
         ?>
