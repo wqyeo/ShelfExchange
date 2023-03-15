@@ -11,8 +11,11 @@
         <title>ShelfExchange</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+               <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
     </head>
-    <body>
+    <body class="d-flex flex-column h-100">
         <?php
         include "nav.php";
         ?>
