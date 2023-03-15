@@ -30,6 +30,13 @@
             
         </div>
         
+        <div>
+            <h3 class="display-4 fw-bolder">Contact Us</h3>
+            <p> Name: (Name) </p>
+            <p> Email: (Email) </p>
+            
+        </div>
+        
         <?php
             include "footer.php"
         ?>
