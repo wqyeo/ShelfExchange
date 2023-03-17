@@ -36,6 +36,48 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
     </head>
     
     <body>
+        <?php
+        function getBooks() 
+        {
+            //Create Database connection
+            $servername = "localhost";
+            $dbusername = "root";
+            $password = "lmaozedongs01";
+            $dbname = "shelf_exchange";
+            
+            // Create a connection to the database
+            $conn = mysqli_connect($servername, $username, $password, $dbname);
+
+            // Check connection
+            if (!$conn) 
+            {
+                die("Connection failed: " . mysqli_connect_error());
+            }
+
+            // SQL query to retrieve books
+            $sql = "SELECT * FROM book";
+            
+            // Execute the query and store the results in a variable
+            $result = mysqli_query($conn, $sql);
+            
+            // Check if any results were returned
+            if (mysqli_num_rows($result) > 0) 
+            {
+                // Loop through each row of results and output them
+                while($row = mysqli_fetch_assoc($result)) 
+                {
+                    echo "Book Title: " . $row["title"]."<br>";
+                }
+            } else 
+            {
+                echo "No results found.";
+            }
+
+            // Close the database connection
+            mysqli_close($conn);
+            }
+        ?>
+     
         <main class="container rounded p-3 my-3 border"> 
            
 
@@ -60,6 +102,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                             <p> Name: (Name) </p>
                             <p> Email: (Email) </p>
                             <p> Contact: (Phone Number) </p>
+                            <?php
+                                getBooks()
+                            ?>
                         </div>
 
                     </div>
