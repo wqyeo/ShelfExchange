@@ -1,4 +1,3 @@
-
 //region Form_Validation
 function validateForm() {
     let formIsValid = true;
@@ -17,19 +16,9 @@ function validatePasswordInput(){
     let password = document.getElementById("password");
     
     if (isEmptyOrWhitespace(password.value)) {
-      document.getElementById("passwordError").innerHTML = "Password is required. (8 characters long)";
+      document.getElementById("passwordError").innerHTML = "Password is required!";
       return false;
     } 
-    // Need at least 8 characters long
-    if (password.value.length < 8) {
-      document.getElementById("passwordError").innerHTML = "Password must be at least 8 characters long";
-      return false;
-    }
-    
-    if (password.value.length > 64) {
-      document.getElementById("passwordError").innerHTML = "Password is too long! Maximum 64 characters";
-      return false;
-    }
     
     document.getElementById("passwordError").innerHTML = "";
     return true;

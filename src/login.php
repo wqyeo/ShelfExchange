@@ -41,8 +41,8 @@
                 </div>
                 
                 <div class="form-group">
-                <label for="pwd">Password</label> <!-- required -->
-                <input class="form-control" type="password" id="pwd" required maxlength="255" name="pwd">
+                <label for="password">Password</label> <!-- required -->
+                <input class="form-control" type="password" id="password" required maxlength="255" name="password">
                   <div id="passwordError" class="text-danger"></div>
                 </div>
                 
