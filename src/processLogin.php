@@ -1,88 +1,83 @@
-<html lang="en">
-    <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"crossorigin="anonymous">
-        <!--jQuery-->
-        <script defer src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-        <!--Bootstrap JS-->
-        <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
-        <!-- Custom JS -->
-        <script defer src="js/main.js"></script>
-        <link rel="stylesheet" href="css/main.css">
-        <title>World of Pets</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <?php
+<?php
+    // Check if form was submitted
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  
+        // Check if all required fields are present and not empty
+        if (empty($_POST["email"]) || empty($_POST["password"])) {
+            header("Location: login.php?error=missing_fields");
+            exit();
+        }
+
+        // Sanitize and validate the username
+        $emailValidated = tryGetValidatedEmail();
+        $passwordValidated = tryGetValidatedPassword();
+
         
-        $username = $pwd = $pwd_confirm = $email = $errorMsg = "";
-        $success = true;
-        
-        $email = $_POST["email"];
-        
-        authenticateUser();
-        if ($success) {
-            echo "<h4>Login successful!</h4>";
-            echo "<p>Welcome back: " . $username;
-            echo '<form name="returnhome" id="returnhome" action="/ShelfExchange/login.php">'; //Later will need to configure to log in as admin or user
-            echo '<button class="btn btn-primary" type="submit">Return</button>';
-            echo '</form>';
-        } else {
-            echo "<h4>The following input errors were detected:</h4>";
-            echo "<p>" . $errorMsg . "</p>";
-            echo '<form name="return" id="return" action="/ShelfExchange/login.php">';
-            echo '<button class="btn btn-danger" type="submit">Return</button>';
-            echo '</form>';
+        saveNewUser($passwordValidated, $emailValidated);
+
+        header("Location: login.php?success=signup_complete"); //Need change to user/admin landing page after log in
+        exit();
+    } else {
+        // Form was not submitted, redirect to the signup page
+        header("Location: login.php");
+        exit();
+    }
+    
+    function tryGetValidatedEmail(){
+        $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            header("Location: login.php?error=email_invalid");
+            exit();
+        }
+        return $email;
+    }
+    
+    function tryGetValidatedPassword(){
+        $password = $_POST["password"];
+        if (strlen($password) < 8) {
+            header("Location: signUp.php?error=password_invalid");
+            exit();
         }
         
-        function authenticateUser(){
-            global $username, $email, $pwd_hashed, $errorMsg, $success;
-            
-            //Create Database connection
-            $servername = "localhost";
-            $dbusername = "root";
-            $password = "lmaozedongs01";
-            $dbname = "shelf_exchange";
-            
-            $conn = new mysqli($servername, $dbusername, $password, $dbname); //The arguments are the database credentials
-            
-            //Check connection
-            if($conn->connect_error) {
-                $errorMsg = "Connection failed: " . $conn->connect_error;
-                $success = false;
-            }
-            else{
-                //Prepare the statement
-                $stmt = $conn->prepare("SELECT * FROM user WHERE email=?");
-                //Bind & execute the query statement
-                $stmt->bind_param('s', $email);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                if($result->num_rows > 0){
-                    // Take note that email field is unique, so should only have one row in the result set
-                    $row = $result->fetch_assoc();
-                    $username = $row["username"];
-                    $pwd_hashed = $row["password"];
-                    
-                    //Check if the password matches:
-                    if(!password_verify($_POST["pwd"], $pwd_hashed)){
-                        // Dont need to be so specific with the error message - hackers dont need to know what they got right or wrong.
-                        $errorMsg = "Email not found or password doesn't match...";
-                        $success = false;
-                    }
-                }
-                else{
-                    $errorMsg = "Email not found or password doesn't match...";
-                    $success = false;
-                }
-                $stmt->close();
-            }
-            $conn->close();
+        return $password;
+    }
+    
+    function saveNewUser($newPassword, $newEmail){
+        $connection = createDatabaseConnection();
+        if ($connection->connect_error) {
+            header("Location: login.php?error=connection_failed($connection->connect_error)");
+            exit();
         }
         
-        ?>
+        $todayDate = getCurrentDate();
+        $statement = prepareBindedInsertUserStatement($connection, $newEmail, $newPassword, $todayDate);
+        if (!$statement->execute()) {
+            // TODO: Error message should be recorded into a log file that can be readed from server.
+            //$errorMsg = "Execute failed: (" . $statement->errno . ") " . $statement->error;
+            header("Location: login.php?error=connection_failed(FATAL)");
+            exit();
+        }
+        $statement->close();
+        $connection->close();
+    }
+    
+    // Prepares a SQL statement to insert new user, and binds the given input
+    // NOTE: It this function will input password.
+    // Returns, the statement.
+    function prepareBindedInsertUserStatement($connection, $email, $username, $rawPassword, $joinedDate) {
+        $stmt = $connection->prepare("INSERT INTO user (email, username, password, joined_date) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $email, $username, password_hash($rawPassword, PASSWORD_DEFAULT), $joinedDate);
+        return $stmt;
+    }
+    
+    function getCurrentDate() {
+        date_default_timezone_set('Asia/Singapore');
+        return date('Y-m-d');
+    }
+    
+    function createDatabaseConnection() {
+        $config = parse_ini_file('../../private/db-config.ini');
+        return new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
+    }
         
-        <main>
-        </main>
-    </body>
-</html>
+?>

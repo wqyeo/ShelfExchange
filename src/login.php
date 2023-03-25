@@ -18,22 +18,23 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
         <link href="css/login.css" rel="stylesheet" />
+        <script defer src="js/login.js"></script>
     </head>
     <body>
         <?php
         include "nav.php";
         ?>
-        <!-- Big header asking for user to sign up-->
+        <!-- Big header asking for user to log in-->
         <header class="bg-dark py-2">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Login</h1>
+                    <h1 class="display-4 fw-bolder">Log in</h1>
                     <p class="lead fw-normal text-white-50 mb-0">Get more offers and benefits when browsing!</p>
                 </div>
             </div>
         </header>
         <main class="container mt-3">
-            <form action="processLogin.php" method="post">   
+            <form action="processLogin.php" method="post" onsubmit="return validateForm()">   
                 <div class="mb-3">
                   <label for="email" class="form-label">Email</label>
                   <input type="email" class="form-control" id="email" name="email" required>
@@ -46,7 +47,7 @@
                 </div>
                 
                 <button type="submit" class="btn btn-primary mb-3">Log in</button>
-                <p>Already have an account? <a href="signUp.php">Sign up</a></p>
+                <p>Don't have an account? <a href="signUp.php">Sign up</a></p>
             </form>
         </main>
         <?php
