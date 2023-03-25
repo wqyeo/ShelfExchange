@@ -36,6 +36,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
     </head>
     
     <body>
+        <?php
+        $errorMsg = ""; 
+        $success = true;
+        
+        function getBooks()
+        {
+            $servername = "localhost";
+            $dbusername = "root";
+            $dbpassword = "lmaozedong01";
+            $dbname = "shelf_exchange";
+            
+            $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
+            
+            if($conn->connect_error)
+            {
+                $errorMsg = "Connection failed";
+            }
+        }
+        ?>
         <main class="container rounded p-3 my-3 border"> 
            
 

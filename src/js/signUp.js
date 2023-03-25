@@ -49,7 +49,7 @@ function validateUsernameInput(){
         return false;
     }
     
-    if (password.value.length > 45) {
+    if (username.value.length > 45) {
         document.getElementById("usernameError").innerHTML = "Username is too long! Maximum 45 characters long";
         return false;
     }
