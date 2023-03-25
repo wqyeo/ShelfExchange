@@ -22,7 +22,7 @@
         <link href="css/signUp.css" rel="stylesheet" />
         <script defer src="js/signUp.js"></script>
     </head>
-    <body>
+    <body class="d-flex flex-column h-100">
         <?php
         include "nav.php";
         ?>
