@@ -6,9 +6,9 @@ The error models should have assigned string constants, which can be used to red
 For example:
 
 ```
-enum LoginError {
-	case BIG_ERROR = "Big_Error";
-	case NO_ACCESS = "No_Access";
+class LoginError {
+	const BIG_ERROR = "Big_Error";
+	const NO_ACCESS = "No_Access";
 }
 
 // .. Somewhere if something occured due to error,
