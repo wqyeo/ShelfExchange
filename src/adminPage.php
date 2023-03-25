@@ -51,7 +51,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
             
             if($conn->connect_error)
             {
-                $errorMsg = "Connection failed"
+
+                $errorMsg = "Connection failed";
             }
         }
         ?>

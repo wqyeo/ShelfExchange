@@ -26,7 +26,7 @@
                  </div>
                  <div class="navbar-nav ms-auto">
                      <li class="nav-item"><a class="nav-link" href="signUp.php">Sign up</a></li>
-                     <li class="nav-item"><a class="nav-link" href="#!">Log in</a></li>
+                     <li class="nav-item"><a class="nav-link" href="login.php">Log in</a></li>
                  </div>
              </div>
          </div>
