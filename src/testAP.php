@@ -37,25 +37,47 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
     
     <body>
         <?php
-        $errorMsg = ""; 
-        $success = true;
-        
-        function getBooks()
+        function getBooks() 
         {
+            //Create Database connection
             $servername = "localhost";
             $dbusername = "root";
-            $dbpassword = "lmaozedong01";
+            $password = "lmaozedongs01";
             $dbname = "shelf_exchange";
             
-            $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
-            
-            if($conn->connect_error)
+            // Create a connection to the database
+            $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
+
+            // Check connection
+            if (!$conn) 
             {
-                $errorMsg = "Connection failed"
+                die("Connection failed: " . mysqli_connect_error());
             }
-        }
+
+            // SQL query to retrieve books
+            $sql = "SELECT * FROM shelf_exchange.book";
+            
+            // Execute the query and store the results in a variable
+            $books = mysqli_query($conn, $sql);
+            
+            // Check if any results were returned
+            if (mysqli_num_rows($books) > 0) 
+            {
+                return $books;
+            } 
+            else 
+            {
+                echo "No results found.";
+            }
+
+            // Close the database connection
+            mysqli_close($conn);
+            }
         ?>
+     
         <main class="container rounded p-3 my-3 border"> 
+           
+
             <div class='col-4' style='display: inline-block;'>
                 <section id="profilepic" style='display: inline-block;'>
 
@@ -77,7 +99,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                             <p> Name: (Name) </p>
                             <p> Email: (Email) </p>
                             <p> Contact: (Phone Number) </p>
-                            
                         </div>
 
                     </div>
@@ -88,17 +109,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 <section id='accManagement' style='padding-bottom: 50px;'>
                     <div class='row'>
                         <div class="col">
-                            <div class='dropdown' style='text-align: center;'>
-                                <button class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Account Management
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
-                            </div>
-
+                            <h1> ACCOUNT MANAGEMENT </h1>
                         </div>
                     </div>
                 </section>
@@ -106,17 +117,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 <section id='bookManagement'>
                     <div class='row'>
                         <div class="col">
-                            <div class='dropdown' style='text-align: center;'>
-                                <button class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Book Management
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
-                            </div>
-                            
+                            <h1> BOOK MANAGEMENT </h1>
+                            <table> 
+                                <tr>
+                                    <th> Image </th>
+                                    <th> Title </th>
+                                    <th> Release Date </th>
+                                </tr>
+                                
+                                <?php
+                                $books = getBooks();
+                                
+                                foreach ($book as $book)
+                                {
+                                    echo "<tr>";
+                                    echo "<td> <img src='" .$book['image'] . "'></td>";
+                                    echo "<td>" . $book['title'] . "</td>";
+                                    echo "<td>" . $book['release_date'] . "</td>";
+                                    echo "</tr>";
+                                }
+                                ?>
+                            </table>
                         </div>
                     </div>
                 </section>

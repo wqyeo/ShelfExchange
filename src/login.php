@@ -19,8 +19,11 @@
         <link href="css/styles.css" rel="stylesheet" />
         <link href="css/login.css" rel="stylesheet" />
         <script defer src="js/login.js"></script>
+        
+               <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
     </head>
-    <body>
+    <body class="d-flex flex-column h-100">
         <?php
         include "nav.php";
         ?>
