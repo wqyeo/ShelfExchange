@@ -14,3 +14,7 @@ nbproject/configs/Remote_SFTP.properties
 src/nbproject/configs/INF1005-PROJ.properties
 
 src/nbproject/configs/
+
+src/.php-cs-fixer.cache
+
+.php-cs-fixer.cache

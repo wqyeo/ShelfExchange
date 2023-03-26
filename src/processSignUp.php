@@ -1,100 +1,138 @@
 <?php
-    // Check if form was submitted
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  
-        // Check if all required fields are present and not empty
-        if (empty($_POST["username"]) || empty($_POST["email"]) || empty($_POST["password"])) {
-            header("Location: signUp.php?error=missing_fields");
-            exit();
-        }
 
-        // Sanitize and validate the username
-        $usernameValidated = tryGetValidatedUsername();
-        $emailValidated = tryGetValidatedEmail();
-        $passwordValidated = tryGetValidatedPassword();
-
-        
-        saveNewUser($usernameValidated, $passwordValidated, $emailValidated);
-
-        header("Location: login.php?success=signup_complete");
-        exit();
-    } else {
-        // Form was not submitted, redirect to the signup page
-        header("Location: signUp.php");
+require 'php_error_models/signUpErrorCode.php';
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if all required fields are present and not empty
+    if (empty($_POST["username"]) || empty($_POST["email"]) || empty($_POST["password"])) {
+        redirectWithError(SignUpErrorCode::MISSING_FIELDS);
         exit();
     }
-    
-    function tryGetValidatedUsername(){
-        $username = filter_var(trim($_POST["username"]), FILTER_SANITIZE_STRING);
-        if (strlen($username) < 4) {
-            header("Location: signUp.php?error=username_short");
-            exit();
-        }
-        if (strlen($username) > 45) {
-            header("Location: signUp.php?error=username_long");
-            exit();
-        }
-        return $username;
+
+    // Sanitize and validate the username
+    $usernameValidated = tryGetValidatedUsername();
+    $emailValidated = tryGetValidatedEmail();
+    $passwordValidated = tryGetValidatedPassword();
+
+    saveNewUser($usernameValidated, $passwordValidated, $emailValidated);
+
+    header("Location: login.php?success=signup_complete");
+    exit();
+} else {
+    // Form was not submitted, redirect to the signup page
+    header("Location: signUp.php");
+    exit();
+}
+
+function tryGetValidatedUsername()
+{
+    $username = filter_var(trim($_POST["username"]), FILTER_SANITIZE_STRING);
+    $usernameLength = strlen($username);
+    if ($usernameLength < 4 || $usernameLength > 45) {
+        redirectWithError(SignUpErrorCode::USERNAME_INPUT_INVALID);
+        exit();
     }
-    
-    function tryGetValidatedEmail(){
-        $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            header("Location: signUp.php?error=email_invalid");
-            exit();
+    return $username;
+}
+
+function tryGetValidatedEmail()
+{
+    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        redirectWithError(SignUpErrorCode::EMAIL_INPUT_INVALID);
+        exit();
+    }
+    return $email;
+}
+
+function tryGetValidatedPassword()
+{
+    $password = $_POST["password"];
+    $passwordLength = strlen($password);
+    if ($passwordLength < 8 || $passwordLength > 64) {
+        redirectWithError(SignUpErrorCode::PASSWORD_INPUT_INVALID);
+        exit();
+    }
+    return $password;
+}
+
+function saveNewUser($newUsername, $newPassword, $newEmail)
+{
+    require 'php_util/util.php';
+    $connection = createDatabaseConnection();
+    if ($connection->connect_error) {
+        redirectWithError(SignUpErrorCode::CONNECTION_FAILED);
+        exit();
+    }
+
+    // Check if an account with same username/exists first.
+    $errorCode = accountExists($connection, $newUsername, $newEmail);
+    if ($errorCode != NULL){
+        redirectWithError($errorCode);
+        exit();
+    }
+
+    $todayDate = getCurrentDate();
+    $statement = prepareBindedInsertUserStatement($connection, $newEmail, $newUsername, $newPassword, $todayDate);
+    if (!$statement->execute()) {
+        // TODO: Error message should be recorded into a log file that can be readed from server.
+        //$errorMsg = "Execute failed: (" . $statement->errno . ") " . $statement->error;
+        redirectWithError(SignUpErrorCode::CONNECTION_FAILED_STATEMENT_ERROR);
+        exit();
+    }
+    $statement->close();
+    $connection->close();
+}
+
+/**
+ * check if username exists in the database
+    *
+    * Returns a SignUpErrorCode string, null if no duplicates or error.
+    */
+function accountExists($connection, string $username, string $email): string
+{
+    $statement = $connection->prepare("SELECT * FROM user WHERE username = ? OR email = LOWER(?)");
+    $statement->bind_param("ss", $username, $email);
+
+    // Statement failed to execute
+    if (!$statement->execute()) {
+        return SignUpErrorCode::CONNECTION_FAILED_STATEMENT_ERROR;
+    }
+
+    $errorCode = '';
+    $result = $statement->get_result();
+    // There are entries with the same username/email exists
+    if ($result->num_rows > 0) {
+        // Check which is the duplicate.
+        while ($row = $result->fetch_assoc()) {
+            if ($row['username'] == $username) {
+                $errorCode = SignUpErrorCode::USERNAME_USED;
+            }
+            if ($row['email'] == $email) {
+                $errorCode = SignUpErrorCode::EMAIL_USED;
+            }
+
+            if ($errorCode != NULL){
+                // There is already an error,
+                // break out of loop to return it.
+                break;
+            }
         }
-        return $email;
     }
-    
-    function tryGetValidatedPassword(){
-        $password = $_POST["password"];
-        if (strlen($password) < 8) {
-            header("Location: signUp.php?error=password_short");
-            exit();
-        }
-        if (strlen($password) > 64) {
-            header("Location: signUp.php?error=password_long");
-            exit();
-        }
-        return $password;
-    }
-    
-    function saveNewUser($newUsername, $newPassword, $newEmail){
-        $connection = createDatabaseConnection();
-        if ($connection->connect_error) {
-            header("Location: signUp.php?error=connection_failed($connection->connect_error)");
-            exit();
-        }
-        
-        $todayDate = getCurrentDate();
-        $statement = prepareBindedInsertUserStatement($connection, $newEmail, $newUsername, $newPassword, $todayDate);
-        if (!$statement->execute()) {
-            // TODO: Error message should be recorded into a log file that can be readed from server.
-            //$errorMsg = "Execute failed: (" . $statement->errno . ") " . $statement->error;
-            header("Location: signUp.php?error=connection_failed(FATAL)");
-            exit();
-        }
-        $statement->close();
-        $connection->close();
-    }
-    
-    // Prepares a SQL statement to insert new user, and binds the given input
-    // NOTE: It this function will input password.
-    // Returns, the statement.
-    function prepareBindedInsertUserStatement($connection, $email, $username, $rawPassword, $joinedDate) {
-        $stmt = $connection->prepare("INSERT INTO user (email, username, password, joined_date) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $email, $username, password_hash($rawPassword, PASSWORD_DEFAULT), $joinedDate);
-        return $stmt;
-    }
-    
-    function getCurrentDate() {
-        date_default_timezone_set('Asia/Singapore');
-        return date('Y-m-d');
-    }
-    
-    function createDatabaseConnection() {
-        $config = parse_ini_file('../../private/db-config.ini');
-        return new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
-    }
-        
-?>
+    $statement->close();
+    return $errorCode;
+}
+
+// Prepares a SQL statement to insert new user, and binds the given input
+// NOTE: This function will input password.
+// Returns, the statement.
+function prepareBindedInsertUserStatement($connection, $email, $username, $rawPassword, $joinedDate)
+{
+    $statement = $connection->prepare("INSERT INTO user (email, username, password, joined_date) VALUES (LOWER(?), ?, ?, ?)");
+    $statement->bind_param("ssss", $email, $username, password_hash($rawPassword, PASSWORD_DEFAULT), $joinedDate);
+    return $statement;
+}
+
+function redirectWithError(String $errorCode): void
+{
+    header("Location: signUp.php?error=" . urlencode($errorCode));
+}

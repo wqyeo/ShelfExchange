@@ -1,83 +1,98 @@
 <?php
-    // Check if form was submitted
+    require 'php_error_models/loginErrorCode.php';
+
+    ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  
         // Check if all required fields are present and not empty
         if (empty($_POST["email"]) || empty($_POST["password"])) {
-            header("Location: login.php?error=missing_fields");
+            redirectWithError(LoginErrorCode::MISSING_FIELDS);
             exit();
         }
 
-        // Sanitize and validate the username
         $emailValidated = tryGetValidatedEmail();
         $passwordValidated = tryGetValidatedPassword();
 
-        
-        saveNewUser($passwordValidated, $emailValidated);
-
-        header("Location: login.php?success=signup_complete"); //Need change to user/admin landing page after log in
+        $rowResult = authenticateUser($emailValidated, $passwordValidated);
+        // TODO: Link to accounts page
+        header("Location: login.php?success=login_complete");
         exit();
     } else {
-        // Form was not submitted, redirect to the signup page
+        // Form was not submitted
         header("Location: login.php");
         exit();
     }
-    
-    function tryGetValidatedEmail(){
-        $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            header("Location: login.php?error=email_invalid");
-            exit();
-        }
-        return $email;
-    }
-    
-    function tryGetValidatedPassword(){
+
+    function tryGetValidatedPassword(): string
+    {
         $password = $_POST["password"];
-        if (strlen($password) < 8) {
-            header("Location: signUp.php?error=password_invalid");
+        if (!$password) {
+            redirectWithError(LoginErrorCode::PASSWORD_INPUT_INVALID);
             exit();
         }
-        
         return $password;
     }
-    
-    function saveNewUser($newPassword, $newEmail){
-        $connection = createDatabaseConnection();
-        if ($connection->connect_error) {
-            header("Location: login.php?error=connection_failed($connection->connect_error)");
+
+    function tryGetValidatedEmail(): string
+    {
+        $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            redirectWithError(LoginErrorCode::EMAIL_INPUT_INVALID);
             exit();
         }
-        
-        $todayDate = getCurrentDate();
-        $statement = prepareBindedInsertUserStatement($connection, $newEmail, $newPassword, $todayDate);
+        return strtolower($email);
+    }
+
+    function authenticateUser(string $email, string $password)
+    {
+        require 'php_util/util.php';
+        $connection = createDatabaseConnection();
+        if ($connection->connect_error) {
+            redirectWithError(LoginErrorCode::CONNECTION_FAILED);
+            exit();
+        }
+
+        $statement = prepareBindedFindUserStatement($connection, $email);
         if (!$statement->execute()) {
             // TODO: Error message should be recorded into a log file that can be readed from server.
             //$errorMsg = "Execute failed: (" . $statement->errno . ") " . $statement->error;
-            header("Location: login.php?error=connection_failed(FATAL)");
+            redirectWithError(LoginErrorCode::CONNECTION_FAILED_STATEMENT_ERROR);
             exit();
         }
+        // Fetch result from executed statement
+        $result = $statement->get_result();
+
+        if ($result-> num_rows <= 0) {
+            // Shouldn't have empty results, likely failed due to email not found.
+            redirectWithError(LoginErrorCode::EMAIL_ACCOUNT_NOT_FOUND);
+            exit();
+        }
+
+        // Since email bind to accounts are unique,
+        // we can just fetch the first associated row.
+        $row = $result->fetch_assoc();
+        $hashedPassword = $row["password"];
+        if (!password_verify($password, $hashedPassword)) {
+            // Password mismatch;
+            redirectWithError(LoginErrorCode::PASSWORD_INCORRECT);
+            exit();
+        }
+
         $statement->close();
         $connection->close();
+        return $row;
     }
-    
-    // Prepares a SQL statement to insert new user, and binds the given input
-    // NOTE: It this function will input password.
-    // Returns, the statement.
-    function prepareBindedInsertUserStatement($connection, $email, $username, $rawPassword, $joinedDate) {
-        $stmt = $connection->prepare("INSERT INTO user (email, username, password, joined_date) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $email, $username, password_hash($rawPassword, PASSWORD_DEFAULT), $joinedDate);
+
+    // Prepare a SQL statement that finds the user by email
+    function prepareBindedFindUserStatement($connection, string $email)
+    {
+        $stmt = $connection->prepare("SELECT * FROM user WHERE LOWER(email)=?");
+        $stmt->bind_param("s", $email);
         return $stmt;
     }
-    
-    function getCurrentDate() {
-        date_default_timezone_set('Asia/Singapore');
-        return date('Y-m-d');
+
+    function redirectWithError(string $errorCode): void
+    {
+        header("Location: login.php?error=" . urlencode($errorCode));
     }
-    
-    function createDatabaseConnection() {
-        $config = parse_ini_file('../../private/db-config.ini');
-        return new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
-    }
-        
-?>

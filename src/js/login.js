@@ -2,9 +2,6 @@
 function validateForm() {
     let formIsValid = true;
     
-    if (!validateUsernameInput()){
-        formIsValid = false;
-    }
     if (!validatePasswordInput()){
         formIsValid = false;
     }
@@ -19,7 +16,7 @@ function validatePasswordInput(){
     let password = document.getElementById("password");
     
     if (isEmptyOrWhitespace(password.value)) {
-      document.getElementById("passwordError").innerHTML = "Password is required.";
+      document.getElementById("passwordError").innerHTML = "Password is required!";
       return false;
     } 
     
@@ -32,7 +29,11 @@ function validateEmailInput(){
     
     // Check if email is valid format
     if (isEmptyOrWhitespace(email.value)) {
-        document.getElementById("emailError").innerHTML = "Email is required.";
+        document.getElementById("emailError").innerHTML = "Email is required";
+        return false;
+    }
+    if (!/^\S+@\S+\.\S+$/.test(email.value)) {
+        document.getElementById("emailError").innerHTML = "Invalid email format";
         return false;
     }
       
