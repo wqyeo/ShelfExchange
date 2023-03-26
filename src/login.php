@@ -30,29 +30,60 @@
                 </div>
             </div>
         </header>
-        
+      <!--Find and display server side error to user.-->
+    <?php
+        require 'php_error_models/loginErrorCode.php';
+        $errorMessage = $_GET['error'];
+
+        $emailErrorMessage = "";
+        $passwordErrorMessage = "";
+        $genericErrorMessage = "";
+        if (isset($errorMessage)) {
+            switch ($errorMessage) {
+                case LoginErrorCode::EMAIL_ACCOUNT_NOT_FOUND:
+                    $emailErrorMessage = "No matching email found!";
+                    break;
+                case LoginErrorCode::PASSWORD_INCORRECT:
+                    $passwordErrorMessage = "Password is incorrect!";
+                    break;
+                case LoginErrorCode::CONNECTION_FAILED:
+                    $genericErrorMessage = "Failure reaching the server, try again or contact support.";
+                    break;
+                case LoginErrorCode::CONNECTION_FAILED_STATEMENT_ERROR:
+                    $genericErrorMessage = "Failure signing in, contact support!";
+                    break;
+            }
+        }
+        ?>
+           
         <main class="container mt-3">
             <form action="processLogin.php" method="post" onsubmit="return validateForm()">
                 
                 <div class="form-group">
                 <label for="email">Email</label> <!-- required -->
                 <input class="form-control" type="email" id="email" required maxlength="255" name="email"> 
-                  <div id="emailError" class="text-danger"></div>
+        <div id="emailError" class="text-danger"><?php echo $emailErrorMessage; ?></div>
                 </div>
                 
                 <div class="form-group">
                 <label for="password">Password</label> <!-- required -->
                 <input class="form-control" type="password" id="password" required maxlength="255" name="password">
-                  <div id="passwordError" class="text-danger"></div>
+                  <div id="passwordError" class="text-danger"><?php echo $passwordErrorMessage; ?></div>
                 </div>
                 
+                <div class="mb-1">
+                <!--For any generic error in form submission-->
+                <div id="genericError" class="text-danger"><?php echo $genericErrorMessage; ?></div>
+   
                 <br>
                 <button class="btn btn-primary mb-3" type="submit">Login</button>
                 <p>Don't own an account? <a href="signUp.php">Sign Up</a></p>
+            </div>
+
             </form>
         </main>
         <?php
-        include "footer.php";
+            include "footer.php";
         ?>
     </body>
 </html>
