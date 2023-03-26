@@ -34,7 +34,7 @@
     </head>
     <body>
         <?php
-        include "nav.inc.php";
+        include "nav.php";
         ?>
         
         
@@ -77,7 +77,9 @@
             </section>
             
         </main>
-
+        <?php
+            include "footer.php"
+        ?>
     </body>
 </html>
 
