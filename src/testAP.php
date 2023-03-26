@@ -41,8 +41,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         {
             //Create Database connection
             $servername = "localhost";
-            $dbusername = "root";
-            $password = "lmaozedongs01";
+            $dbusername = "shelfdev";
+            $password = "lmao01234";
             $dbname = "shelf_exchange";
             
             // Create a connection to the database
@@ -128,10 +128,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                 <?php
                                 $books = getBooks();
                                 
-                                foreach ($book as $book)
+                                foreach ($books as $book)
                                 {
                                     echo "<tr>";
-                                    echo "<td> <img src='" .$book['image'] . "'></td>";
+                                    echo "<td> <figure> <img src='" .$book['image'] . "'></figure></td>";
                                     echo "<td>" . $book['title'] . "</td>";
                                     echo "<td>" . $book['release_date'] . "</td>";
                                     echo "</tr>";
