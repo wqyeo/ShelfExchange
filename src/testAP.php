@@ -131,7 +131,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                 foreach ($books as $book)
                                 {
                                     echo "<tr>";
-                                    echo "<td> <img src='" .$book['image'] . "'></td>";
+                                    echo "<td> <figure> <img src='" .$book['image'] . "'></figure></td>";
                                     echo "<td>" . $book['title'] . "</td>";
                                     echo "<td>" . $book['release_date'] . "</td>";
                                     echo "</tr>";
