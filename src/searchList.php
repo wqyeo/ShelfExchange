@@ -16,9 +16,13 @@
     <body>
         <?php
             include "nav.php";
-include "php_book_browser/indexBrowserHelper.php";
-
-        $bookListGenerator = new IndexBrowserHelper();
+        include "php_book_browser/searchBrowserHelper.php";
+        $searchQuery = "";
+        // get search query
+if (isset($_GET['query'])) {
+            $searchQuery = $_GET['query'];
+        }
+        $bookListGenerator = new SearchBrowserHelper($searchQuery);
 
         ?>
 
@@ -31,45 +35,47 @@ include "php_book_browser/indexBrowserHelper.php";
     headerCreator.endHeader();
   </script>
 
-        <!--Featured Section-->
+        <!--Search Results-->
 <section class="py-5">
             <div class="container px-4 px-lg-4 mt-3">
       <div class="row">
         <div class="col text-center mb-4">
-          <h2>Featured Books</h2>
+          <h2>Your Search Results</h2>
           <hr class="mx-auto">
         </div>
       </div>
                     <div class="row gx-4 mt-2 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
         
 <?php
-         $bookListGenerator->createFeaturedBookList();
+         $bookListGenerator->displaySearchResults();
         ?>
                 </div>
             </div>
         </section>
 
+<?php
 
-        <!-- Interest Section-->
-        <section class="py-5">
+// If there is very little search results,
+// recommend random books to the customer.
+if ($bookListGenerator->searchResultCount < 4) {
+    echo '        <section class="py-5">
             <div class="container px-4 px-lg-5 mt-3">
       <div class="row">
         <div class="col text-center mb-4">
-          <h2>Books You Might Be Interested In</h2>
+          <h2>Other books you may be interested in</h2>
           <hr class="mx-auto">
         </div>
       </div>
-                    <div class="row gx-4 mt-2 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-        
-<?php
+                    <div class="row gx-4 mt-2 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">';
 
-         $bookListGenerator->createInterestBookList();
-
-        ?>
+    $bookListGenerator->recommendRandomBooks();
+    echo '
                 </div>
             </div>
-        </section>
-        <?php
+        </section>';
+}
+
+// Include footer and end.
 include "footer.php";
         $bookListGenerator->dispose();
         ?>
