@@ -32,7 +32,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         
         <!-- Custom JS & CSS -->
         <script defer src="js/main.js"></script>
+        <script src="js/updateBook.js"></script>
         <link rel="stylesheet" href="css/adminPage.css">
+        
     </head>
     
     <body>
@@ -123,6 +125,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                     <th> Image </th>
                                     <th> Title </th>
                                     <th> Release Date </th>
+                                    <th> Delete </th>
                                 </tr>
                                 
                                 <?php
@@ -134,6 +137,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                     echo "<td> <figure> <img src='" .$book['image'] . "'></figure></td>";
                                     echo "<td>" . $book['title'] . "</td>";
                                     echo "<td>" . $book['release_date'] . "</td>";
+                                    echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#updateBookModal' data-book-id='" . $book['id'] . "'>Update</button></td>";
                                     echo "</tr>";
                                 }
                                 ?>
@@ -143,6 +147,40 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 </section>
             </div>
         </main>
+        <!-- Book Update Modal -->
+        <div class="modal fade" id="updateBookModal" tabindex="-1" role="dialog" aria-labelledby="updateBookModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="updateBookModalLabel">Update Book</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form id="updateBookForm">
+                    <input type="hidden" name="book_id" id="updateBookId">
+                    <div class="form-group">
+                      <label for="updateBookTitle">Title</label>
+                      <input type="text" class="form-control" id="updateBookTitle" name="title">
+                    </div>
+                    <div class="form-group">
+                      <label for="updateBookReleaseDate">Release Date</label>
+                      <input type="date" class="form-control" id="updateBookReleaseDate" name="release_date">
+                    </div>
+                    <div class="form-group">
+                      <label for="updateBookImage">Image URL</label>
+                      <input type="text" class="form-control" id="updateBookImage" name="image">
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="submit" form="updateBookForm" class="btn btn-primary">Update Book</button>
+                </div>
+              </div>
+            </div>
+          </div>
     </body>
     
     <?php
