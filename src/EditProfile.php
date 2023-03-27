@@ -142,7 +142,7 @@
     </head>
     <body>
         <?php
-        include "nav.inc.php";
+        include "nav.php";
         ?>
         
         
@@ -176,7 +176,9 @@
             </form>
             
         </main>
-        
+        <?php
+            include "footer.php"
+        ?>
     </body>
 </html>
 

@@ -41,8 +41,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         {
             //Create Database connection
             $servername = "localhost";
-            $dbusername = "root";
-            $password = "lmaozedongs01";
+            $dbusername = "shelfdev";
+            $password = "lmao01234";
             $dbname = "shelf_exchange";
             
             // Create a connection to the database
@@ -72,14 +72,47 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
 
             // Close the database connection
             mysqli_close($conn);
+        }
+        function getUsers(){
+            $servername = "localhost";
+            $dbusername = "shelfdev";
+            $password = "lmao01234";
+            $dbname = "shelf_exchange";
+            
+            // Create a connection to the database
+            $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
+
+            // Check connection
+            if (!$conn) 
+            {
+                die("Connection failed: " . mysqli_connect_error());
             }
+
+            // SQL query to retrieve books
+            $sql = "SELECT * FROM shelf_exchange.user";
+            // Execute the query and store the results in a variable
+            $users = mysqli_query($conn, $sql);
+            
+            // Check if any results were returned
+            if (mysqli_num_rows($users) > 0) 
+            {
+                return $users;
+            } 
+            else 
+            {
+                echo "No results found.";
+            }
+
+            // Close the database connection
+            mysqli_close($conn);
+        }
         ?>
      
         <main class="container rounded p-3 my-3 border"> 
            
 
             <div class='col-4' style='display: inline-block;'>
-                <section id="profilepic" style='display: inline-block;'>
+                <section id="profilepic">
 
 
                     <figure>
@@ -95,7 +128,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                     <div class="row"> 
                         <div class="col" style='display: inline-block;'> 
                             <h5 style='text-align:left;'><b> Personal Information </b> </h5>
-                            <!--<a href="#" style="font-size: 10px;"> Edit Profile </a>-->
+                            <a href="#" style="font-size: 10px;"> Edit Profile </a>
                             <p> Name: (Name) </p>
                             <p> Email: (Email) </p>
                             <p> Contact: (Phone Number) </p>
@@ -105,11 +138,36 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 </section>
             </div>
             
-            <div class='col-7' style='display: inline-block;'>
+            
+            <div class='col-7' style="display: inline-block;">
                 <section id='accManagement' style='padding-bottom: 50px;'>
                     <div class='row'>
                         <div class="col">
                             <h1> ACCOUNT MANAGEMENT </h1>
+                            <table class="table table-bordered text-center"> 
+                                <tr class="bg-dark text-white">
+                                    <th> User ID </th>
+                                    <th> Username </th>
+                                    <th> Email </th>
+                                    <th> Edit User </th>
+                                    <th> Delete User </th>
+                                </tr>
+                                
+                                <?php
+                                $users = getUsers();
+                                
+                                foreach ($users as $user)
+                                {
+                                    echo "<tr>";
+                                    echo "<td>" . $user['id'] . "</td>";
+                                    echo "<td>" . $user['username'] . "</td>";
+                                    echo "<td>" . $user['email'] . "</td>";
+                                    echo "<td><a href='#'><button type='button' class='btn btn-primary'> Edit </button></a></td>";
+                                    echo "<td><a href='#'><button type='button' class='btn btn-danger'> Delete </button></a></td>";
+                                    echo "</tr>";
+                                }
+                                ?>
+                            </table>
                         </div>
                     </div>
                 </section>
