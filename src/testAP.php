@@ -191,10 +191,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                     echo "<td> <figure> <img src='" .$book['image'] . "' width='200' height='300'></figure></td>";
                                     echo "<td>" . $book['title'] . "</td>";
                                     echo "<td>" . $book['release_date'] . "</td>";
-<<<<<<< Updated upstream
-=======
                                     echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#updateBookModal' data-book-id='" . $book['id'] . "' data-book-title='" . $book['title'] . "' data-book-release-date='" . $book['release_date'] . "'>Update</button></td>";
->>>>>>> Stashed changes
                                     echo "</tr>";
                                 }
                                 ?>
@@ -204,8 +201,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 </section>
             </div>
         </main>
-<<<<<<< Updated upstream
-=======
         <!-- Book Update Modal -->
         <div class="modal fade" id="updateBookModal" tabindex="-1" role="dialog" aria-labelledby="updateBookModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -248,7 +243,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
               </div>
             </div>
           </div>
->>>>>>> Stashed changes
     </body>
     
     <?php
