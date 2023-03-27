@@ -6,9 +6,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     Created on : 27 Mar 2023, 12:33:27 pm
     Author     : evanc
 */
+h3, h5 {
+    text-align: center;
+}
+
+#content {
+    position: relative;
+}
 
 #content img {
-    position: relative;
+    position: absolute;
     top: 0px;
     right: 0px;
 }

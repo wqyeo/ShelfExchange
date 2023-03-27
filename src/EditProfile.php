@@ -110,7 +110,7 @@
 
 <html>
     <head>
-        <title>World of Pets</title>
+        <title>Edit Profile</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -171,7 +171,10 @@
 
                 <div class="form-group"> 
                     <button class="btn btn-primary" type="submit">Save Changes</button>
+                    <button class="btn btn-danger"> <a href="UserProfilePage.php" class="text-light"> Cancel </a></button>
                 </div>
+                
+                    
                 
             </form>
             

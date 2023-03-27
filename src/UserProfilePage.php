@@ -57,8 +57,8 @@
         <main class="container rounded p-3 my-3 border"> 
             
             <div id='content'>
-                    <a href='EditProfile.php'> <img src='images/editprof.png' class='rounded circle' style='height:20px; width:20px;'> </a>
-                </div>
+                <a href='EditProfile.php'> <img src='images/editprof.png' class='rounded circle' style='height:20px; width:20px;'> </a>
+            </div>
             <h3 style='padding-top: 5px; padding-bottom: 10px;'> Welcome, <?php echo $result['username']; ?> </h3>
             
             <section id='profilepic' style='text-align:center;'>
@@ -94,7 +94,7 @@
             
         </main>
         <?php
-            include "footer.php"
+            include "footer.php";
         ?>
     </body>
 </html>
