@@ -1,6 +1,7 @@
 class HeaderCreator {
   static SEARCH_TITLE = "Find Your Next Favorite Book";
   static SEARCH_PLACEHOLDER = "Search by title, author or genre";
+  static SEARCH_ACTION = "searchList.php";
 
   constructor() {
     document.write(`<header class="bg-dark py-5">`);
@@ -21,7 +22,7 @@ class HeaderCreator {
     document.write(`
       <div class="container mb-2 my-4">
         <h2 class="text-white mb-3">${HeaderCreator.SEARCH_TITLE}</h2>
-        <form action="search.php" method="GET" class="d-flex">
+        <form action="${HeaderCreator.SEARCH_ACTION}" method="GET" class="d-flex">
           <input class="form-control me-2" type="search" placeholder="${HeaderCreator.SEARCH_PLACEHOLDER}" aria-label="Search" name="query">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>

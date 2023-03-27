@@ -1,43 +1,39 @@
+
 <?php
 
-include "php_book_browser/bookDatabaseHelper.php";
+require "php_book_browser/bookDatabaseHelper.php";
 
 /**
  * Helper class to generate book listing HTML code snippets
     */
-class IndexBrowserHelper
+class SearchBrowserHelper
 {
     private BookDatabaseHelper $databaseHelper;
+    private string $searchQuery;
 
-    public const FEATURED_LIST_COUNT = 4;
-    public const INTEREST_LIST_COUNT = 8;
+    /**
+    * How many results are found from search.
+    * Unset until 'displaySearchResults' are called.
+    */
+    public int $searchResultCount;
 
-    public function __construct()
+    const RECOMMEND_BOOKS_COUNT = 4;
+
+    public function __construct(string $searchQuery)
     {
         $this->databaseHelper = new BookDatabaseHelper();
-    }
-    /**
- * Create and generate a HTML code snippet for interest book list.
-            * The HTML code is placed on wherever this function is called.
-            */
-    public function createInterestBookList(): void
-    {
-        $booksResult = $this->databaseHelper->randomlyFetchBooks($this::INTEREST_LIST_COUNT);
-        if (isset($booksResult)) {
-            $this->generateListByResult($booksResult);
-        } else {
-            echo "Failed to fetch books from server, fresh page or contact support!";
-        }
+        $this->searchResultCount = 0;
+        $this->searchQuery = $searchQuery;
     }
 
     /**
- * Create and generate  HTML code snipper for featured book list
-            * The HTML code is placed on where this function is called
-            */
-    public function createFeaturedBookList(): void
+    * Recommend random books,
+    * directly injects HTML into where this function is called.
+    */
+    public function recommendRandomBooks(): void
     {
         // TODO: Make it actually show featured;
-        $booksResult = $this->databaseHelper->randomlyFetchBooks($this::FEATURED_LIST_COUNT);
+        $booksResult = $this->databaseHelper->randomlyFetchBooks(4);
         if (isset($booksResult)) {
             $this->generateListByResult($booksResult);
        } else {
@@ -46,14 +42,33 @@ class IndexBrowserHelper
     }
 
     /**
+    *  Display user's search result,
+    *  directly injects HTML into where this function is called.
+    */
+    public function displaySearchResults() :void {
+        // Nothing in search query
+        if (!isset($this->searchQuery)){
+            echo "You placed nothing in your search query...";
+            return;
+        }
+        $searchResult = $this->databaseHelper->fetchBookBySearchQuery($this->searchQuery);
+        if (isset($searchResult)) {
+            $this->generateListByResult($searchResult);        
+        } else {
+            echo "Failed to execute your search query, try again or contact support.";
+        }
+    } 
+
+    /**
  * From the SQL result of selecting books,
  * generate code snippets of HTML cards for each book
             */
     private function generateListByResult(mysqli_result $booksResult): void
     {
-        if ($booksResult->num_rows > 0) {
+        $this->searchResultCount = 0;
+        if (mysqli_num_rows($booksResult) > 0) {
             // For each result, generate HTML card.
-            while ($row = $booksResult->fetch_assoc()) {
+            while ($row = mysqli_fetch_assoc($booksResult)) {
                 echo '<div class="col mb-5">
             <div class="card h-100">
               <!-- Product image-->
@@ -72,8 +87,10 @@ class IndexBrowserHelper
             </div>
           </div>';
             }
+
+            $this->searchResultCount += 1;
         } else {
-            echo "Failed to get any resulting books, refresh the page or contact support!";
+            echo "Got zero results from your search...";
         }
     }
 
