@@ -18,20 +18,18 @@
             include "nav.php";
 include "php_book_browser/indexBrowserHelper.php";
 
-        $htmlHelper = new IndexBrowserHelper();
+        $bookListGenerator = new IndexBrowserHelper();
 
         ?>
 
-
-        <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">SHELF EXCHANGE</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">A book worm's paradise.</p>
-                </div>
-            </div>
-        </header>
+        <!--Header-->
+  <script src="js/html_generator/headerCreator.js"></script>
+  <script>
+    const headerCreator = new HeaderCreator();
+    headerCreator.createHeadingWith("SHELF EXCHANGE", "A bookworm's paradise.");
+    headerCreator.createSearchBar();
+    headerCreator.endHeader();
+  </script>
 
         <!--Featured Section-->
 <section class="py-5">
@@ -45,7 +43,7 @@ include "php_book_browser/indexBrowserHelper.php";
                     <div class="row gx-4 mt-2 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
         
 <?php
-         $htmlHelper->createFeaturedBookList();
+         $bookListGenerator->createFeaturedBookList();
         ?>
                 </div>
             </div>
@@ -65,7 +63,7 @@ include "php_book_browser/indexBrowserHelper.php";
         
 <?php
 
-         $htmlHelper->createInterestBookList();
+         $bookListGenerator->createInterestBookList();
 
         ?>
                 </div>
@@ -73,7 +71,7 @@ include "php_book_browser/indexBrowserHelper.php";
         </section>
         <?php
 include "footer.php";
-        $htmlHelper->dispose();
+        $bookListGenerator->dispose();
         ?>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
