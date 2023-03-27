@@ -188,9 +188,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                 foreach ($books as $book)
                                 {
                                     echo "<tr>";
-                                    echo "<td> <figure> <img src='" .$book['image'] . "'></figure></td>";
+                                    echo "<td> <figure> <img src='" .$book['image'] . "' width='200' height='300'></figure></td>";
                                     echo "<td>" . $book['title'] . "</td>";
                                     echo "<td>" . $book['release_date'] . "</td>";
+<<<<<<< Updated upstream
+=======
+                                    echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#updateBookModal' data-book-id='" . $book['id'] . "' data-book-title='" . $book['title'] . "' data-book-release-date='" . $book['release_date'] . "'>Update</button></td>";
+>>>>>>> Stashed changes
                                     echo "</tr>";
                                 }
                                 ?>
@@ -200,6 +204,51 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 </section>
             </div>
         </main>
+<<<<<<< Updated upstream
+=======
+        <!-- Book Update Modal -->
+        <div class="modal fade" id="updateBookModal" tabindex="-1" role="dialog" aria-labelledby="updateBookModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="updateBookModalLabel">Update Book</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="update-title">Title</label>
+                            <input type="text" class="form-control" id="update-title" value="<?php echo $book['title']; ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="update-author">Author</label>
+                            <input type="text" class="form-control" id="update-author" value="<?php echo $book['author']; ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="update-genre">Genre</label>
+                            <input type="text" class="form-control" id="update-genre" value="<?php echo $book['genre']; ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="update-release-date">Release Date</label>
+                            <input type="date" class="form-control" id="update-release-date" value="<?php echo $book['release_date']; ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="update-image">Image URL</label>
+                            <input type="text" class="form-control" id="update-image" value="<?php echo $book['image']; ?>">
+                        </div>
+                        <input type="hidden" id="book-id" value="<?php echo $book['id']; ?>">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="submit" form="updateBookForm" class="btn btn-primary">Update Book</button>
+                </div>
+              </div>
+            </div>
+          </div>
+>>>>>>> Stashed changes
     </body>
     
     <?php
