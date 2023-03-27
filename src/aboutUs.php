@@ -23,14 +23,14 @@
         <?php
             include "nav.php"
         ?>
-        
-        <header class="bg-dark py-2">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">About Us</h1>
-                </div>
-            </div>
-        </header>
+  <script src="js/html_generator/headerCreator.js"></script>
+  <script>
+    const headerCreator = new HeaderCreator();
+    headerCreator.createHeadingWith("About Us", "");
+    headerCreator.createSearchBar();
+    headerCreator.endHeader();
+  </script>
+
         <main class="container mt-3">
             <section class="py-5">
                 <div class="text-center mt-3" id="abtus">

@@ -26,17 +26,13 @@
         <?php
         include "nav.php";
         ?>
-        <!-- Big header asking for user to sign up-->
-        <header class="bg-dark py-2">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Sign Up</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Get more offers and benefits when browsing!</p>
-                </div>
-            </div>
-        </header>
-
-        <!--Find and display server side error to user.-->
+  <script src="js/html_generator/headerCreator.js"></script>
+<script>
+    const headerCreator = new HeaderCreator();
+    headerCreator.createHeadingWith("Create An Account", "Create an account for offers and promotions!");
+    headerCreator.endHeader();
+    </script>
+  <!--Find and display server side error to user.-->
     <?php
         require 'php_error_models/signUpErrorCode.php';
         $errorMessage = $_GET['error'];
