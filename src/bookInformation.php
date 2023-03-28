@@ -9,7 +9,10 @@
 
 </head>
 
-<body>
+<body class="d-flex flex-column h-100">
+<?php
+include "nav.php";
+?>
 
   <script src="js/html_generator/headerCreator.js"></script>
   <script>
@@ -19,25 +22,39 @@
     headerCreator.endHeader();
   </script>
 
+<?php
+// TODO: Error handling when book not found or smth.
+include "php_util/bookInformationFetcher.php";
+
+$bookId = $_GET['book'];
+$bookInformationFetcher = new BookInformationFetcher($bookId);
+$bookInformation = $bookInformationFetcher->getBookInformation();
+?>
+<script src="js/bookInformation.js"></script>
 
   <div class="container mt-3 mb-3">
     <div class="row">
       <div class="col-md-4">
-        <img src="book-image.jpg" alt="Book Image" class="img-fluid">
+<?php
+  echo '<img src="' . $bookInformation['image'] . '" alt="Book Image" class="img-fluid">';
+?>
       </div>
-      <div class="col-md-8">
-        <h1>Book Title</h1>
-        <p class="lead">Book Description</p>
-        <p><strong>Price:</strong> $10.99</p>
-        <button class="btn btn-primary mb-3">Add to Cart</button>
-        <p><strong>Tags:</strong> Fiction, Thriller, Mystery</p>
-        <p><strong>Author:</strong> John Doe</p>
+      <div class="col-md-8" id="book-info">
+<?php
+if (isset($bookInformation)){
+  // Display book info, tags and authors.
+  echo '
+    <script>displayBookInformation('. json_encode($bookInformation) . ');displayBookTags(' . json_encode($bookInformationFetcher->getBookTags()) . ');displayBookAuthors(' . json_encode($bookInformationFetcher->getBookAuthors()) . ');</script>
+';
+}
+?>
       </div>
     </div>
     <hr>
     <div class="row">
       <div class="col-md-12">
-        <h2>Book Reviews</h2>
+          <h2>Book Reviews</h2>
+          <!-- TODO: Display reviews-->
         <ul class="list-group">
           <li class="list-group-item">Great book! Couldn't put it down.</li>
           <li class="list-group-item">Highly recommended.</li>
@@ -49,7 +66,7 @@
 
   <?php
   include "footer.php"
-  ?>
+?>
 
 </body>
 

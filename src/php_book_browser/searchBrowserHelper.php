@@ -81,8 +81,8 @@ class SearchBrowserHelper
                 <div class="text-center">
 
                 <!--Book title; Href to book information-->
-                <a href="bookInformation.php?book=' . $row["id"] . '">  
-                  <h5 class="fw-bolder">' . $row["title"] . '</h5>
+                <a href="bookInformation.php?book=' . $row["id"] . '" class="text-decoration-none text-dark">  
+                  <h5>' . $row["title"] . '</h5>
                 </a>
                 </div>
               </div>

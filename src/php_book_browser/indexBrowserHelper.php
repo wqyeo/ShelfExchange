@@ -56,16 +56,16 @@ class IndexBrowserHelper
             while ($row = $booksResult->fetch_assoc()) {
                 echo '<div class="col mb-5">
             <div class="card h-100">
-              <!--Book image; Href to information->
-            <a href="bookInformation.php?book= ' . $row["id"] . '"> 
+              <!--Book image; Href to information-->
+            <a href="bookInformation.php?book=' . $row["id"] . '"> 
               <img class="card-img-top" src="' . $row["image"] . '" alt="..." />
             </a>  
             <!-- Product details-->
               <div class="card-body p-4">
                 <div class="text-center">
                   <!--Book title; Href to information-->
-                <a href="bookInformation.php?book=' . $row["id"] . '">
-                  <h5 class="fw-bolder">' . $row["title"] . '</h5>
+                <a href="bookInformation.php?book=' . $row["id"] . '" class="text-decoration-none text-dark">
+                  <h5>' . $row["title"] . '</h5>
                 </a>
                 </div>
               </div>
