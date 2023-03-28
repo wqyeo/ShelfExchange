@@ -26,15 +26,12 @@
         <?php
         include "nav.php";
         ?>
-        <!-- Big header asking for user to sign up-->
-        <header class="bg-dark py-2">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Login</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Welcome back!</p>
-                </div>
-            </div>
-        </header>
+          <script src="js/html_generator/headerCreator.js"></script>
+  <script>
+    const headerCreator = new HeaderCreator();
+    headerCreator.createHeadingWith("Welcome Back!", "Login for offers and promotions!");
+    headerCreator.endHeader();
+  </script>
       <!--Find and display server side error to user.-->
     <?php
         require 'php_error_models/loginErrorCode.php';

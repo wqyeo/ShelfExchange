@@ -73,6 +73,39 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
             // Close the database connection
             mysqli_close($conn);
             }
+        function getUsers(){
+            $servername = "localhost";
+            $dbusername = "shelfdev";
+            $password = "lmao01234";
+            $dbname = "shelf_exchange";
+            
+            // Create a connection to the database
+            $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
+
+            // Check connection
+            if (!$conn) 
+            {
+                die("Connection failed: " . mysqli_connect_error());
+            }
+
+            // SQL query to retrieve books
+            $sql = "SELECT * FROM shelf_exchange.user";
+            // Execute the query and store the results in a variable
+            $users = mysqli_query($conn, $sql);
+            
+            // Check if any results were returned
+            if (mysqli_num_rows($users) > 0) 
+            {
+                return $users;
+            } 
+            else 
+            {
+                echo "No results found.";
+            }
+
+            // Close the database connection
+            mysqli_close($conn);
+        }
         ?>
      
         <main class="container rounded p-3 my-3 border"> 
@@ -110,6 +143,30 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                     <div class='row'>
                         <div class="col">
                             <h1> ACCOUNT MANAGEMENT </h1>
+                            <table class="table table-bordered text-center"> 
+                                <tr class="bg-dark text-white">
+                                    <th> User ID </th>
+                                    <th> Username </th>
+                                    <th> Email </th>
+                                    <th> Edit User </th>
+                                    <th> Delete User </th>
+                                </tr>
+                                
+                                <?php
+                                $users = getUsers();
+                                
+                                foreach ($users as $user)
+                                {
+                                    echo "<tr>";
+                                    echo "<td>" . $user['id'] . "</td>";
+                                    echo "<td>" . $user['username'] . "</td>";
+                                    echo "<td>" . $user['email'] . "</td>";
+                                    echo "<td><a href='#'><button type='button' class='btn btn-primary'> Edit </button></a></td>";
+                                    echo "<td><a href='#'><button type='button' class='btn btn-danger'> Delete </button></a></td>";
+                                    echo "</tr>";
+                                }
+                                ?>
+                            </table>
                         </div>
                     </div>
                 </section>
@@ -131,9 +188,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                 foreach ($books as $book)
                                 {
                                     echo "<tr>";
-                                    echo "<td> <figure> <img src='" .$book['image'] . "'></figure></td>";
+                                    echo "<td> <figure> <img src='" .$book['image'] . "' width='200' height='300'></figure></td>";
                                     echo "<td>" . $book['title'] . "</td>";
                                     echo "<td>" . $book['release_date'] . "</td>";
+                                    echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#updateBookModal' data-book-id='" . $book['id'] . "' data-book-title='" . $book['title'] . "' data-book-release-date='" . $book['release_date'] . "'>Update</button></td>";
                                     echo "</tr>";
                                 }
                                 ?>
@@ -143,6 +201,48 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 </section>
             </div>
         </main>
+        <!-- Book Update Modal -->
+        <div class="modal fade" id="updateBookModal" tabindex="-1" role="dialog" aria-labelledby="updateBookModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="updateBookModalLabel">Update Book</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="update-title">Title</label>
+                            <input type="text" class="form-control" id="update-title" value="<?php echo $book['title']; ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="update-author">Author</label>
+                            <input type="text" class="form-control" id="update-author" value="<?php echo $book['author']; ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="update-genre">Genre</label>
+                            <input type="text" class="form-control" id="update-genre" value="<?php echo $book['genre']; ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="update-release-date">Release Date</label>
+                            <input type="date" class="form-control" id="update-release-date" value="<?php echo $book['release_date']; ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="update-image">Image URL</label>
+                            <input type="text" class="form-control" id="update-image" value="<?php echo $book['image']; ?>">
+                        </div>
+                        <input type="hidden" id="book-id" value="<?php echo $book['id']; ?>">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="submit" form="updateBookForm" class="btn btn-primary">Update Book</button>
+                </div>
+              </div>
+            </div>
+          </div>
     </body>
     
     <?php

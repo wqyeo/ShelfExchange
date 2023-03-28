@@ -83,6 +83,9 @@ error_reporting(E_ALL);
         $connection->close();
         return $row;
     }
+        // Search all books based on the searchQuery,
+        // where author, tags and book title are matching,
+        // order by book title matching first, then author, then tags.
 
     // Prepare a SQL statement that finds the user by email
     function prepareBindedFindUserStatement($connection, string $email)

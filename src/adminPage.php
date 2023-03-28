@@ -42,13 +42,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         
         function getBooks()
         {
-            $servername = "localhost";
-            $dbusername = "root";
-            $dbpassword = "lmaozedong01";
-            $dbname = "shelf_exchange";
-            
-            $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
-            
+            require 'php_util/util.php';
+            $conn = createDatabaseConnection();
+
+    
             if($conn->connect_error)
             {
 
