@@ -181,8 +181,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                     <td><?php echo $row["id"]; ?></td>
                                     <td><?php echo $row["username"]; ?> </td>
                                     <td><?php echo $row["email"]; ?></td>
-                                    <td><button type='button' class='btn btn-primary' data-toggle='modal' data-target='#updateUserDetails' data-UserId='<?php echo $row["id"]; ?>'data-Username='<?php echo $row["username"]; ?>'data-Email='<?php echo $row["email"]; ?>'> Edit </button></td>
-                                    <td><button type='button' class='btn btn-danger' onclick='deleteUser(<?php echo $row["id"]; ?>)'> <a href='delete.php'> Delete </a></button></td>
+                                    <td><button type='button' class='btn btn-primary' onclick='getUserDetails(<?php echo $row["id"]; ?>)'> Edit </button></td> 
+
+                                    <td><button type='button' class='btn btn-danger text-light' onclick='deleteUser(<?php echo $row["id"]; ?>)'> <a href='testAPAcc.php' style="text-light"> Delete </a></button></td>
                                     </tr>
                                 <?php
                                 }
@@ -232,34 +233,55 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                   </button>
                 </div>
                 <div class="modal-body">
-                    <form action="processUpdateUser.php" method="post" id="updateUser">
-                        <input type="hidden" id="UserId" value="<?php echo $user['id']; ?>">
+                    <form action="updateUser.php" method="post" id="updateUser">
+                        
                         <div class="form-group">
-                            <label for="update-userID">User ID</label>
-                            <input type="text" class="form-control" id="update-userID">
+                            <label for="updateUsername">Username</label>
+                            <input type="text" class="form-control" id="updateUsername">
                         </div>
                         <div class="form-group">
-                            <label for="update-userName">Username</label>
-                            <input type="text" class="form-control" id="update-userName">
+                            <label for="updateEmail">Email</label>
+                            <input type="text" class="form-control" id="updateEmail">
                         </div>
-                        <div class="form-group">
-                            <label for="update-userEmail">Email</label>
-                            <input type="text" class="form-control" id="update-userEmail">
-                        </div>
-                        
-                        
-                        
                     </form>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                  <button type="submit" name="update" form="updateUser" id="update" class="btn btn-primary">Update User</button>
+                  <button type="button" name="update" form="updateUser" id="update" class="btn btn-primary"
+                          onclick='updateDetails()'>Update User</button>
+                  <input type="hidden" id="UserId" value="<?php echo $row['id']; ?>">
                 </div>
               </div>
             </div>
         </div>
     </body>
     <script>
+        function getUserDetails(updateID){            
+            $('#updateUser').val(updateID);
+           
+            $.post("updateUser.php",{updateID: updateID}, function(data, status){
+                var userid=JSON.parse(data);
+                $('#updateUsername').val(userid.username);
+                $('#updateEmail').val(userid.email);
+            });
+            $('#updateUserDetails').modal("show");
+        }
+        
+        function updateDetails(){
+            var updateUsername = $('updateUsername').val();
+            var updateEmail = $('updateEmail').val();
+            var updateUser = $('#updateUser').val();
+            
+            $.post("updateUser.php", {
+                updateUsername: updateUsername,
+                updateEmail:updateEmail,
+                updateUser:updateUser
+            },function(data, status){
+                $('#updateUserDetails').modal('hide');
+                
+            });
+        }
+        
         function deleteUser(deleteID){
             $.ajax({
                 url: "delete.php",
