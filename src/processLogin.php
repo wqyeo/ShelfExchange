@@ -1,6 +1,8 @@
 <?php
     require 'php_error_models/loginErrorCode.php';
-
+    
+    session_start();
+ 
     ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -72,13 +74,16 @@ error_reporting(E_ALL);
         // Since email bind to accounts are unique,
         // we can just fetch the first associated row.
         $row = $result->fetch_assoc();
+        $_SESSION['username'] = $row['username'];
+        $testvar = $_SESSION['username'];
+        
         $hashedPassword = $row["password"];
         if (!password_verify($password, $hashedPassword)) {
             // Password mismatch;
             redirectWithError(LoginErrorCode::PASSWORD_INCORRECT);
             exit();
         }
-
+    
         $statement->close();
         $connection->close();
         return $row;
