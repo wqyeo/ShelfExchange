@@ -3,10 +3,15 @@
 
 <head>
   <title>Book Information</title>
+<!--jquery-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
   <!-- Include Bootstrap CSS -->
+
   <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
   <link href="css/styles.css" rel="stylesheet" />
-
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <!-- Bootstrap icons-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -41,11 +46,13 @@ $bookInformation = $bookInformationFetcher->getBookInformation();
       </div>
       <div class="col-md-8" id="book-info">
 <?php
-if (isset($bookInformation)){
-  // Display book info, tags and authors.
-  echo '
+if (isset($bookInformation)) {
+    // Display book info, tags and authors.
+    echo '
     <script>displayBookInformation('. json_encode($bookInformation) . ');displayBookTags(' . json_encode($bookInformationFetcher->getBookTags()) . ');displayBookAuthors(' . json_encode($bookInformationFetcher->getBookAuthors()) . ');</script>
 ';
+} else {
+    echo 'Woops, we couldnt find that book D:';
 }
 ?>
       </div>
@@ -53,12 +60,14 @@ if (isset($bookInformation)){
     <hr>
     <div class="row">
       <div class="col-md-12">
-          <h2>Book Reviews</h2>
+         <h2>Book Reviews</h2>
           <!-- TODO: Display reviews-->
-        <ul class="list-group">
-          <li class="list-group-item">Great book! Couldn't put it down.</li>
-          <li class="list-group-item">Highly recommended.</li>
-          <li class="list-group-item">One of my favorites.</li>
+        <ul class="list-group review-list" id="reviews-information">
+          <?php
+  if (isset($bookInformation)) {
+      echo'<script>displayReviews('. json_encode($bookInformationFetcher->getBookReviews()) . ');</script>';
+  }
+?> 
         </ul>
       </div>
     </div>
