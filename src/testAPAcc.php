@@ -3,6 +3,7 @@
 Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
 Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edit this template
 -->
+
 <html lang="en">
     <?php
         include "nav.php"
@@ -32,6 +33,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         
         <!-- Custom JS & CSS -->
         <script defer src="js/main.js"></script>
+        <script src="js/updateUserAcc.js"></script>
         <link rel="stylesheet" href="css/adminPage.css">
     </head>
     
@@ -107,7 +109,21 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
             // Close the database connection
             mysqli_close($conn);
         }
-        
+        $servername = "localhost";
+        $dbusername = "shelfdev";
+        $password = "lmao01234";
+        $dbname = "shelf_exchange";
+
+        // Create a connection to the database
+        $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
+
+        // Check connection
+        if (!$conn) 
+        {
+            die("Connection failed: " . mysqli_connect_error());
+        }
+        $query = "SELECT * FROM shelf_exchange.user";
+        $result = mysqli_query($conn, $query);
         ?>
      
         <main class="container rounded p-3 my-3 border"> 
@@ -156,17 +172,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                 </tr>
                                 <!-- try use while loop -->
                                 <?php
-                                $users = getUsers();
+                                //$users = getUsers();
+                                while ($row = mysqli_fetch_array($result)) {
+                                    //foreach ($users as $user)
                                 
-                                foreach ($users as $user)
-                                {
-                                    echo "<tr>";
-                                    echo "<td>" . $user['id'] . "</td>";
-                                    echo "<td>" . $user['username'] . "</td>";
-                                    echo "<td>" . $user['email'] . "</td>";
-                                    echo "<td><button type='button' class='btn btn-primary' data-toggle='modal' data-target='#updateUserDetails' data-UserId='" . $user['id'] . "'data-Username='" . $user['username'] . "'data-Email='" . $user['email'] . "'> Edit </button></td>";
-                                    echo "<td><button type='button' class='btn btn-danger'> <a href='delete.php'> Delete </a></button></td>";
-                                    echo "</tr>";
+                                ?>
+                                    <tr>
+                                    <td><?php echo $row["id"]; ?></td>
+                                    <td><?php echo $row["username"]; ?> </td>
+                                    <td><?php echo $row["email"]; ?></td>
+                                    <td><button type='button' class='btn btn-primary' data-toggle='modal' data-target='#updateUserDetails' data-UserId='<?php echo $row["id"]; ?>'data-Username='<?php echo $row["username"]; ?>'data-Email='<?php echo $row["email"]; ?>'> Edit </button></td>
+                                    <td><button type='button' class='btn btn-danger' onclick='deleteUser(<?php echo $row["id"]; ?>)'> <a href='delete.php'> Delete </a></button></td>
+                                    </tr>
+                                <?php
                                 }
                                 ?>
                             </table>
@@ -215,32 +233,46 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 </div>
                 <div class="modal-body">
                     <form action="processUpdateUser.php" method="post" id="updateUser">
+                        <input type="hidden" id="UserId" value="<?php echo $user['id']; ?>">
                         <div class="form-group">
                             <label for="update-userID">User ID</label>
-                            <input type="text" class="form-control" id="update-userID" value="<?php echo $user['id']; ?>">
+                            <input type="text" class="form-control" id="update-userID">
                         </div>
                         <div class="form-group">
                             <label for="update-userName">Username</label>
-                            <input type="text" class="form-control" id="update-userName" value="<?php echo $user['username']; ?>">
+                            <input type="text" class="form-control" id="update-userName">
                         </div>
                         <div class="form-group">
                             <label for="update-userEmail">Email</label>
-                            <input type="text" class="form-control" id="update-userEmail" value="<?php echo $user['email']; ?>">
+                            <input type="text" class="form-control" id="update-userEmail">
                         </div>
                         
                         
-                        <input type="hidden" id="UserId" value="<?php echo $user['id']; ?>">
+                        
                     </form>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                  <button type="submit" name="update" form="updateUser" class="btn btn-primary">Update User</button>
+                  <button type="submit" name="update" form="updateUser" id="update" class="btn btn-primary">Update User</button>
                 </div>
               </div>
             </div>
         </div>
     </body>
-    
+    <script>
+        function deleteUser(deleteID){
+            $.ajax({
+                url: "delete.php",
+                type:'post',
+                data: {
+                    deleteid: deleteID
+                },
+                success: function(data,status){
+                    header("Location: testAPAcc.php");
+                }
+            });
+        }
+    </script>
     <?php
         include "footer.php"
     ?>
