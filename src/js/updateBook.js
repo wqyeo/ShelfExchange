@@ -5,6 +5,7 @@
 
 $('#updateBookModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
+<<<<<<< Updated upstream
     var bookId = button.data('book-id'); // Extract book id from data-* attributes
 
     // Fetch book data from server using AJAX
@@ -23,3 +24,19 @@ $('#updateBookModal').on('show.bs.modal', function (event) {
         }
     });
 });
+=======
+    console.log(button);
+    var bookId = button.data('book-id'); // Extract book ID from data-* attributes
+    console.log(bookId);
+    var bookTitle = button.data('book-title'); // Extract book title from data-* attributes
+    console.log(bookTitle);
+    var bookReleaseDate = button.data('book-release-date'); // Extract book release date from data-* attributes
+    console.log(bookReleaseDate);
+    var modal = $(this);
+    modal.find('.modal-title').text('Update Book: ' + bookTitle);
+    modal.find('.modal-body input#book-id').val(bookId);
+    modal.find('.modal-body input#update-title').val(bookTitle);
+    modal.find('.modal-body input#update-release-date').val(bookReleaseDate);
+  });
+});
+>>>>>>> Stashed changes

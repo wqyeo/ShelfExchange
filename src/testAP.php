@@ -5,7 +5,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
 -->
 <html lang="en">
     <?php
-        include "nav.php"
+        include "nav.php";
+        include "bookManagement.php"
     ?>
     <head>
         <title>Admin Page</title>
@@ -32,16 +33,24 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         
         <!-- Custom JS & CSS -->
         <script defer src="js/main.js"></script>
+<<<<<<< Updated upstream
         <script src="js/updateBook.js"></script>
+=======
+        <script defer src="js/updateBook.js"></script>
+>>>>>>> Stashed changes
         <link rel="stylesheet" href="css/adminPage.css">
         
     </head>
     
     <body>
         <?php
+<<<<<<< Updated upstream
         function getBooks() 
         {
             //Create Database connection
+=======
+        function getUsers(){
+>>>>>>> Stashed changes
             $servername = "localhost";
             $dbusername = "shelfdev";
             $password = "lmao01234";
@@ -57,6 +66,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
             }
 
             // SQL query to retrieve books
+<<<<<<< Updated upstream
             $sql = "SELECT * FROM shelf_exchange.book";
             
             // Execute the query and store the results in a variable
@@ -66,6 +76,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
             if (mysqli_num_rows($books) > 0) 
             {
                 return $books;
+=======
+            $sql = "SELECT * FROM shelf_exchange.user";
+            // Execute the query and store the results in a variable
+            $users = mysqli_query($conn, $sql);
+            
+            // Check if any results were returned
+            if (mysqli_num_rows($users) > 0) 
+            {
+                return $users;
+>>>>>>> Stashed changes
             } 
             else 
             {
@@ -74,7 +94,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
 
             // Close the database connection
             mysqli_close($conn);
+<<<<<<< Updated upstream
             }
+=======
+        }
+>>>>>>> Stashed changes
         ?>
      
         <main class="container rounded p-3 my-3 border"> 
@@ -137,7 +161,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                     echo "<td> <figure> <img src='" .$book['image'] . "'></figure></td>";
                                     echo "<td>" . $book['title'] . "</td>";
                                     echo "<td>" . $book['release_date'] . "</td>";
+<<<<<<< Updated upstream
                                     echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#updateBookModal' data-book-id='" . $book['id'] . "'>Update</button></td>";
+=======
+                                    echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#updateBookModal' data-book-id='" . $book['id'] . "' data-book-title='" . htmlspecialchars($book['title'], ENT_QUOTES) . "' data-book-release-date='" . $book['release_date'] . "'>Update</button></td>";
+>>>>>>> Stashed changes
                                     echo "</tr>";
                                 }
                                 ?>
@@ -158,6 +186,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                   </button>
                 </div>
                 <div class="modal-body">
+<<<<<<< Updated upstream
                   <form id="updateBookForm">
                     <input type="hidden" name="book_id" id="updateBookId">
                     <div class="form-group">
@@ -173,6 +202,31 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                       <input type="text" class="form-control" id="updateBookImage" name="image">
                     </div>
                   </form>
+=======
+                    <form>
+                        <div class="form-group">
+                            <label for="update-title">Title</label>
+                            <input type="text" class="form-control" id="update-title" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="update-author">Author</label>
+                            <input type="text" class="form-control" id="update-author" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="update-genre">Genre</label>
+                            <input type="text" class="form-control" id="update-genre" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="update-release-date">Release Date</label>
+                            <input type="date" class="form-control" id="update-release-date" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="update-image">Image URL</label>
+                            <input type="file" class="form-control" id="update-image" value="">
+                        </div>
+                        <input type="hidden" id="book-id" value="">
+                    </form>
+>>>>>>> Stashed changes
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
