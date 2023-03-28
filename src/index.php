@@ -47,7 +47,7 @@
 
         <?php
         $bookListGenerator->createFeaturedBookList();
-        ?>
+  ?>
       </div>
     </div>
   </section>
@@ -66,9 +66,9 @@
 
         <?php
 
-        $bookListGenerator->createInterestBookList();
+  $bookListGenerator->createInterestBookList();
 
-        ?>
+  ?>
       </div>
     </div>
   </section>

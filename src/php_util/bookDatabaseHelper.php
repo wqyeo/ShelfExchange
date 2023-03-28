@@ -67,7 +67,7 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
      * - 'reviews' The reviews for this book.
      */
     public function getBookInfo(int $bookId): ?array
-    { 
+    {
         // TODO: Get book price and stock (inventory)
         $bookInfo = $this->getBook($bookId);
         $languageInfo = $this->getLanguage($bookInfo['language_id']);
@@ -134,9 +134,12 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
         return $tags;
     }
 
+    /**
+    * Additionally, includes the username and user's profile picture for the review.
+    */
     private function getReviews(int $bookId): ?array
     {
-        $statement = $this->connection->prepare("SELECT * FROM review WHERE book_id=?");
+        $statement = $this->connection->prepare("SELECT review.*, user.username, user.profile_picture FROM review LEFT JOIN user ON review.user_id = user.id WHERE review.book_id=?");
         $statement->bind_param("i", $bookId);
         $statement->execute();
         $result = $statement->get_result();
