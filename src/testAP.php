@@ -35,14 +35,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         <script defer src="js/main.js"></script>
         <script defer src="js/updateBook.js"></script>
         <link rel="stylesheet" href="css/adminPage.css">
-        
     </head>
     
     <body>
         <?php
-        function getBooks() 
-        {
-            //Create Database connection
         function getUsers(){
             $servername = "localhost";
             $dbusername = "shelfdev";
@@ -59,17 +55,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
             }
 
             // SQL query to retrieve books
-            $sql = "SELECT * FROM shelf_exchange.book";
-            
-            // Execute the query and store the results in a variable
-            $books = mysqli_query($conn, $sql);
-            
-            // Check if any results were returned
-            if (mysqli_num_rows($books) > 0) 
-            {
-                return $books;
-            }
-            
             $sql = "SELECT * FROM shelf_exchange.user";
             // Execute the query and store the results in a variable
             $users = mysqli_query($conn, $sql);
@@ -86,7 +71,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
 
             // Close the database connection
             mysqli_close($conn);
-            }
         }
         ?>
      
@@ -125,6 +109,30 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                     <div class='row'>
                         <div class="col">
                             <h1> ACCOUNT MANAGEMENT </h1>
+                            <table class="table table-bordered text-center"> 
+                                <tr class="bg-dark text-white">
+                                    <th> User ID </th>
+                                    <th> Username </th>
+                                    <th> Email </th>
+                                    <th> Edit User </th>
+                                    <th> Delete User </th>
+                                </tr>
+                                
+                                <?php
+                                $users = getUsers();
+                                
+                                foreach ($users as $user)
+                                {
+                                    echo "<tr>";
+                                    echo "<td>" . $user['id'] . "</td>";
+                                    echo "<td>" . $user['username'] . "</td>";
+                                    echo "<td>" . $user['email'] . "</td>";
+                                    echo "<td><a href='#'><button type='button' class='btn btn-primary'> Edit </button></a></td>";
+                                    echo "<td><a href='#'><button type='button' class='btn btn-danger'> Delete </button></a></td>";
+                                    echo "</tr>";
+                                }
+                                ?>
+                            </table>
                         </div>
                     </div>
                 </section>
@@ -138,7 +146,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                     <th> Image </th>
                                     <th> Title </th>
                                     <th> Release Date </th>
-                                    <th> Delete </th>
                                 </tr>
                                 
                                 <?php
@@ -147,10 +154,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                 foreach ($books as $book)
                                 {
                                     echo "<tr>";
-                                    echo "<td> <figure> <img src='" .$book['image'] . "'></figure></td>";
+                                    echo "<td> <figure> <img src='" .$book['image'] . "' width='200' height='300'></figure></td>";
                                     echo "<td>" . $book['title'] . "</td>";
                                     echo "<td>" . $book['release_date'] . "</td>";
-                                    echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#updateBookModal' data-book-id='" . $book['id'] . "'>Update</button></td>";
                                     echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#updateBookModal' data-book-id='" . $book['id'] . "' data-book-title='" . htmlspecialchars($book['title'], ENT_QUOTES) . "' data-book-release-date='" . $book['release_date'] . "'>Update</button></td>";
                                     echo "</tr>";
                                 }
@@ -172,21 +178,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                   </button>
                 </div>
                 <div class="modal-body">
-                  <form id="updateBookForm">
-                    <input type="hidden" name="book_id" id="updateBookId">
-                    <div class="form-group">
-                      <label for="updateBookTitle">Title</label>
-                      <input type="text" class="form-control" id="updateBookTitle" name="title">
-                    </div>
-                    <div class="form-group">
-                      <label for="updateBookReleaseDate">Release Date</label>
-                      <input type="date" class="form-control" id="updateBookReleaseDate" name="release_date">
-                    </div>
-                    <div class="form-group">
-                      <label for="updateBookImage">Image URL</label>
-                      <input type="text" class="form-control" id="updateBookImage" name="image">
-                    </div>
-                  </form>
                     <form>
                         <div class="form-group">
                             <label for="update-title">Title</label>
