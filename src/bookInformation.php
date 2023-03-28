@@ -17,6 +17,7 @@
 <body class="d-flex flex-column h-100">
 <?php
 include "nav.php";
+
 ?>
 
   <script src="js/html_generator/headerCreator.js"></script>
@@ -71,10 +72,28 @@ if (isset($bookInformation)) {
         </ul>
       </div>
     </div>
-  </div>
 
-  <?php
-  include "footer.php"
+<!--Show some other books user might be interested in-->
+  </div>
+  <section class="py-5">
+    <div class="container px-4 px-lg-5 mt-3">
+      <div class="row">
+        <div class="col text-center mb-4">
+          <h2>Other related books</h2>
+          <hr class="mx-auto">
+        </div>
+      </div>
+      <div class="row gx-4 mt-2 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+        <?php
+
+  $bookInformationFetcher->displayRelatedBooksList();
+
+?>
+  </section>
+
+<?php
+include "footer.php"
 ?>
 
 </body>
