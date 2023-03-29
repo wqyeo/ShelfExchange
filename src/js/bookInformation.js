@@ -6,13 +6,38 @@ function displayBookInformation(bookInformation) {
     description =
       "We apologize for the lack of a description for this book. However, we are confident that it is an interesting read and encourage you to check it out!";
   }
+
+  var cartButton =
+    '<button class="btn btn-secondary mb-3" disabled>Out of Stock</button>';
+
+  var pricePrefix = "";
+  var price = "Not Available";
+  // If book inventory exists
+  var bookInventory = bookInformation["inventory"];
+  if (bookInventory != null && bookInventory != "") {
+    // Check quantity
+    var quantity = bookInventory["quantity"];
+    // Quantity exists, and there is books for sale.
+    if (quantity != null && quantity != "" && quantity >= 1) {
+      price = bookInventory["cost_per_quantity"];
+      pricePrefix = "$";
+      cartButton =
+        '<button class="btn btn-primary mb-3" onclick="addToCart(' +
+        bookInformation["id"] +
+        ')">Add To Cart</button>';
+    }
+  }
+
   // TODO: Pricing
-  const html = `
+  var html =
+    `
     <h1>${title}</h1>
     <p class="lead">${description}</p>
-    <p><strong>Price:</strong> $10.00</p>
-    <button class="btn btn-primary mb-3">Add to Cart</button>
-  `;
+    <p><strong>` +
+    pricePrefix +
+    price +
+    `</strong></p>` +
+    cartButton;
   document.getElementById("book-info").insertAdjacentHTML("beforeend", html);
 }
 
