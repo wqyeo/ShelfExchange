@@ -85,12 +85,12 @@ if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
  <input type="hidden" name="user_id" value="' . $currentUserId . '">
  <input type="hidden" name="book_id" value="' . $bookId . '">
     <div class="form-group">
-        <label for="review">Review:</label>
-        <textarea class="form-control" name="review" id="review" cols="30" rows="10"></textarea>
+        <label class="mb-1" for="review">Review:</label>
+        <textarea class="form-control mb-1" name="review" id="review" cols="30" rows="10"></textarea>
     </div>
     <div class="form-group">
-        <label for="rating">Rating:</label>
-        <select class="form-control" name="rating" id="rating">
+        <label class="mb-1" for="rating">Rating:</label>
+        <select class="form-control mb-1" name="rating" id="rating">
             <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -100,11 +100,17 @@ if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
         </select>
     </div>
     <div>
-        <input type="submit" class="btn btn-primary" value="Submit Review">
+        <input type="submit" class="btn btn-primary mb-1" value="Submit Review">
     </div>
 </form>';
     } else {
-        echo'<script>displayReviews('. json_encode($bookInformationFetcher->getCurrentUserReview()) . ', "#user-reviews-information");</script>';
+        echo '<script>displayReviews('. json_encode($bookInformationFetcher->getCurrentUserReview()) . ', "#user-reviews-information");</script>';
+        echo '<form action="deleteReviewProcess.php" method="post">
+ <input type="hidden" name="user_id" value="' . $currentUserId . '">
+ <input type="hidden" name="book_id" value="' . $bookId . '">
+        <input type="submit" class="mb-1 my-1 btn btn-danger" value="Delete Review">
+
+</form>';
     }
 } else {
     echo 'Log in to leave your own personal review!';
