@@ -1,4 +1,8 @@
-<?php session_start(); ?>
+<?php
+ini_set('display_errors', 'On');
+error_reporting(E_ALL | E_STRICT);
+?>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
      <div class="container px-4 px-lg-5">
          <a class="navbar-brand" href="index.php">Shelf Exchange</a>
@@ -26,14 +30,29 @@
                      </button>
                  </div>
                  <div class="navbar-nav ms-auto">
-                     <?php if(isset($_SESSION['email'])): ?>
-                        <li class="nav-item"><a class="nav-link" href="signUp.php">Sign up</a></li>
-                        <li class="nav-item"><a class="nav-link" href="login.php">Log Out</a></li>
-                     <?php else: ?>
-                        <li class="nav-item"><a class="nav-link" href="signUp.php">Sign up</a></li>
-                        <li class="nav-item"><a class="nav-link" href="login.php">Log in</a></li>
-                     <?php endif; ?>
-                 </div>
+<?php
+function showSignUpLogin(): void
+{
+    echo ' <li class="nav-item"><a class="nav-link" href="signUp.php">Sign up</a></li>
+                     <li class="nav-item"><a class="nav-link" href="login.php">Log in</a></li>';
+}
+
+if (!isset($connection)) {
+    showSignUpLogin();
+} else {
+    include_once "php_util/userSessionHelper.php";
+    $userSessionHelper = new UserSessionHelper($connection);
+
+    if ($userSessionHelper->isLoggedIn()) {
+        echo '<li><img width="42" height="42" src="' . $userSessionHelper->getUserInformation()['profile_picture']  . '" alt="profile picture"></li>
+<li><a class="nav-link" href="UserProfilePage.php?user=' . $userSessionHelper->getUserInformation()['user_id'] . '">' . $userSessionHelper->getUserInformation()['username']  . '</a> ';
+    } else {
+        showSignUpLogin();
+    }
+}
+
+?>
+</div>
              </div>
          </div>
      </div>

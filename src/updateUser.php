@@ -31,15 +31,21 @@ if(isset($_POST['updateID'])){
 }
 
 
-// Update Query (still trying to make it work)
-if(isset($_POST['updateUser'])){
-    $uniqueid = $_POST['updateUser'];
+// Update Query
+if(isset($_POST['UserId'])){
+    $uniqueid = $_POST['UserId'];
     $name = $_POST['updateUsername'];
     $email = $_POST['updateEmail'];
     
     $sql = "UPDATE user SET username='$name', email='$email' where id='$uniqueid'";
     
     $result = mysqli_query($conn, $sql);
+    if ($result) {
+        header("location: testAPAcc.php");
+    }else{
+        echo "failed";
+        echo "<script> alert('failed') </script>";
+    }
 }
 
 ?>

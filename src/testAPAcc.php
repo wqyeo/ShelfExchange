@@ -32,8 +32,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         </script>
         
         <!-- Custom JS & CSS -->
-        <script defer src="js/main.js"></script>
-        <script src="js/updateUserAcc.js"></script>
+        <script defer src="js/updateOrDelUserAcc.js"></script>
         <link rel="stylesheet" href="css/adminPage.css">
     </head>
     
@@ -161,7 +160,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 <section id='accManagement' style='padding-bottom: 50px;'>
                     <div class='row'>
                         <div class="col">
-                            <h1> ACCOUNT MANAGEMENT </h1>
+                            <h1> ACCOUNT MANAGEMENT </h1> 
+                            <button type='button' class='btn btn-success' data-toggle='modal' data-target='#createNewUser'> Create New User </button>
                             <table class="table table-bordered text-center"> 
                                 <tr class="bg-dark text-white">
                                     <th> User ID </th>
@@ -182,8 +182,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                     <td><?php echo $row["username"]; ?> </td>
                                     <td><?php echo $row["email"]; ?></td>
                                     <td><button type='button' class='btn btn-primary' onclick='getUserDetails(<?php echo $row["id"]; ?>)'> Edit </button></td> 
-
-                                    <td><button type='button' class='btn btn-danger text-light' onclick='deleteUser(<?php echo $row["id"]; ?>)'> <a href='testAPAcc.php' style="text-light"> Delete </a></button></td>
+                                    <td><button type='button' class='btn btn-danger text-light' onclick='deleteUser(<?php echo $row["id"]; ?>)'>  Delete </button></td>
                                     </tr>
                                 <?php
                                 }
@@ -222,7 +221,42 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 </section>
             </div>
         </main>
-        
+        <!-- add user modal -->
+        <div class="modal fade" id="createNewUser" tabindex="-1" role="dialog" aria-labelledby="createUser" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="createUser">Create User</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    
+                    <div class="form-group">
+                        <label for="createUsername">Username</label>
+                        <input type="text" class="form-control" id="createUsername">
+                    </div>
+                    <div class="form-group">
+                        <label for="createEmail">Email</label>
+                        <input type="text" class="form-control" id="createEmail">
+                    </div>
+                    <div class="form-group">
+                        <label for="createPassword">Password</label>
+                        <input type="password" class="form-control" id="createPassword">
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="button" name="create" form="createUser" id="create" class="btn btn-primary"
+                          onclick='addUser()'>Create</button>
+                  
+                </div>
+              </div>
+            </div>
+        </div>
+        <!-- update modal --> 
         <div class="modal fade" id="updateUserDetails" tabindex="-1" role="dialog" aria-labelledby="updateUser" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
@@ -233,64 +267,47 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                   </button>
                 </div>
                 <div class="modal-body">
-                    <form action="updateUser.php" method="post" id="updateUser">
-                        
-                        <div class="form-group">
-                            <label for="updateUsername">Username</label>
-                            <input type="text" class="form-control" id="updateUsername">
-                        </div>
-                        <div class="form-group">
-                            <label for="updateEmail">Email</label>
-                            <input type="text" class="form-control" id="updateEmail">
-                        </div>
-                    </form>
+
+                    <div class="form-group">
+                        <label for="updateUsername">Username</label>
+                        <input type="text" class="form-control" id="updateUsername">
+                    </div>
+                    <div class="form-group">
+                        <label for="updateEmail">Email</label>
+                        <input type="text" class="form-control" id="updateEmail">
+                    </div>
+                    
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                  <button type="button" name="update" form="updateUser" id="update" class="btn btn-primary"
-                          onclick='updateDetails()'>Update User</button>
-                  <input type="hidden" id="UserId" value="<?php echo $row['id']; ?>">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" name="update" form="updateUser" id="update" class="btn btn-primary"
+                            onclick='updateDetails()'>Update User</button>
+                    <input type="hidden" id="UserId" value="<?php echo $row['id']; ?>">
                 </div>
               </div>
             </div>
         </div>
     </body>
     <script>
-        function getUserDetails(updateID){            
-            $('#updateUser').val(updateID);
-           
-            $.post("updateUser.php",{updateID: updateID}, function(data, status){
-                var userid=JSON.parse(data);
-                $('#updateUsername').val(userid.username);
-                $('#updateEmail').val(userid.email);
-            });
-            $('#updateUserDetails').modal("show");
-        }
-        
-        function updateDetails(){
-            var updateUsername = $('updateUsername').val();
-            var updateEmail = $('updateEmail').val();
-            var updateUser = $('#updateUser').val();
+       
+        function addUser(){
+            $('#createNewUser').modal("show");
+            var addName = $('#createUsername').val();
+            var addEmail = $('#createEmail').val();
+            var addPassword = $('#createPassword').val();
             
-            $.post("updateUser.php", {
-                updateUsername: updateUsername,
-                updateEmail:updateEmail,
-                updateUser:updateUser
-            },function(data, status){
-                $('#updateUserDetails').modal('hide');
-                
-            });
-        }
-        
-        function deleteUser(deleteID){
             $.ajax({
-                url: "deleteUser.php",
+                url:"createUser.php",
                 type:'post',
-                data: {
-                    deleteid: deleteID
-                },
-                success: function(data,status){
-                    header("Location: testAPAcc.php");
+                data:{
+                    sendEmail: addEmail,
+                    sendName: addName,
+                    sendPassword: addPassword
+                }
+                success:function(data,status){
+                    $('#createNewUser').modal("hide");
+//                    location.href='testAPAcc.php';
+                    
                 }
             });
         }

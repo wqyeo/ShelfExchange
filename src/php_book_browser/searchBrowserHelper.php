@@ -1,7 +1,7 @@
 
 <?php
 
-require "php_util/bookDatabaseHelper.php";
+require_once "php_util/bookDatabaseHelper.php";
 
 /**
  * Helper class to generate book listing HTML code snippets
