@@ -54,6 +54,25 @@ class IndexBrowserHelper
         if ($booksResult->num_rows > 0) {
             // For each result, generate HTML card.
             while ($row = $booksResult->fetch_assoc()) {
+                // Check book quanity, to determine if we should disable
+                // the cart button.
+                $bookQuantity = -1;
+                if (isset($row['quantity'])) {
+                    $bookQuantity = $row['quantity'];
+                }
+
+                $cartButton = "";
+                if ($bookQuantity >= 1) {
+                    $cartButton = '<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                <div class="text-center"><a class="btn btn-outline-dark mt-auto" onclick="addToCart(' . $row["id"] . ')" href="#">Add to Cart</a></div>
+                <div class="text-center">' . $row['cost_per_quantity'] . '</div>
+              </div>';
+                } else {
+                    $cartButton = '<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                <div class="text-center"><a class="btn btn-secondary btn-outline-dark mt-auto text-white" href="#" disabled>Out of Stock</a></div>
+              </div>';
+                }
+
                 echo '<div class="col mb-5">
             <div class="card h-100">
               <!--Book image; Href to information-->
@@ -70,9 +89,7 @@ class IndexBrowserHelper
                 </div>
               </div>
               <!-- Product actions-->
-              <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to Cart</a></div>
-              </div>
+                ' . $cartButton .  '
             </div>
           </div>';
             }

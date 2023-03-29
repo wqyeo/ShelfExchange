@@ -19,12 +19,14 @@ class BookDatabaseHelper
     public function fetchBookBySearchQuery(string $searchQuery): mysqli_result
     {
         $searchQuery = mysqli_real_escape_string($this->connection, $searchQuery);
-        $sql = "SELECT DISTINCT book.*
+        $sql = "
+SELECT DISTINCT book.*, book_inventory.quantity, book_inventory.cost_per_quantity
 FROM book
 LEFT JOIN book_author ON book.id = book_author.book_id
 LEFT JOIN author ON author.id = book_author.author_id
 LEFT JOIN book_tag ON book.id = book_tag.book_id
 LEFT JOIN tag ON tag.id = book_tag.tag_id
+LEFT JOIN book_inventory ON book.id = book_inventory.book_id
 WHERE book.title LIKE CONCAT('%', ? ,'%')
   OR author.name LIKE CONCAT('%', ? ,'%')
   OR tag.name LIKE CONCAT('%', ? ,'%')";
@@ -43,7 +45,11 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
      */
     public function randomlyFetchBooks(int $bookCount): mysqli_result
     {
-        $sql = "SELECT * FROM book ORDER BY RAND() LIMIT " . $bookCount;
+        $sql = "
+SELECT book.*, book_inventory.quantity, book_inventory.cost_per_quantity
+FROM book
+LEFT JOIN book_inventory ON book.id = book_inventory.book_id
+ORDER BY RAND() LIMIT " . $bookCount;
         return $this->connection->query($sql);
     }
 
@@ -88,8 +94,20 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
         $bookInfo['authors'] = $authors;
         $bookInfo['tags'] = $tags;
         $bookInfo['reviews'] = $reviews;
+        $bookInfo['inventory'] = $this->getBookInventory($bookId);
 
         return $bookInfo;
+    }
+
+    private function getBookInventory(int $bookId): ?array
+    {
+        $statement = $this->connection->prepare("SELECT * FROM book_inventory WHERE book_id=?");
+        $statement->bind_param("i", $bookId);
+        $statement->execute();
+        $result = $statement->get_result();
+        $bookInventory = $result->fetch_assoc();
+        $statement->close();
+        return $bookInventory;
     }
 
     private function getBook(int $bookId): ?array
@@ -181,7 +199,8 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
         }
 
         // Prepare SQL statement to select books by tag
-        $sql = "SELECT book.* FROM book
+        $sql = "SELECT book.*, book_inventory.quantity, book_inventory.cost_per_quantity FROM book
+                LEFT JOIN book_inventory ON book.id = book_inventory.book_id
                 INNER JOIN book_tag ON book.id = book_tag.book_id
                 WHERE book_tag.tag_id = ? " . $exclude . "
                 ORDER BY RAND()
@@ -230,7 +249,8 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
         }
 
         // Prepare SQL statement to select books by tag
-        $sql = "SELECT book.* FROM book
+        $sql = "SELECT book.*, book_inventory.quantity, book_inventory.cost_per_quantity FROM book
+                LEFT JOIN book_inventory ON book.id = book_inventory.book_id
                 INNER JOIN book_author ON book.id = book_author.book_id
                 WHERE book_author.author_id = ? " . $exclude . "
                 ORDER BY RAND()
