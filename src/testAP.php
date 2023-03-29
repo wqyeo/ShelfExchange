@@ -5,7 +5,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
 -->
 <html lang="en">
     <?php
-        include "nav.php"
+        include "nav.php";
+        include "book_functions.php";
     ?>
     <head>
         <title>Admin Page</title>
@@ -36,94 +37,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
     </head>
     
     <body>
-        <?php
-        function getBooks() 
-        {
-            //Create Database connection
-            $servername = "localhost";
-            $dbusername = "shelfdev";
-            $password = "lmao01234";
-            $dbname = "shelf_exchange";
-            
-            // Create a connection to the database
-            $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
-
-            // Check connection
-            if (!$conn) 
-            {
-                die("Connection failed: " . mysqli_connect_error());
-            }
-
-            // SQL query to retrieve books
-            $sql = "SELECT * FROM shelf_exchange.book";
-            
-            // Execute the query and store the results in a variable
-            $books = mysqli_query($conn, $sql);
-            
-            // Check if any results were returned
-            if (mysqli_num_rows($books) > 0) 
-            {
-                return $books;
-            } 
-            else 
-            {
-                echo "No results found.";
-            }
-
-            // Close the database connection
-            mysqli_close($conn);
-            }
-        function getUsers(){
-            $servername = "localhost";
-            $dbusername = "shelfdev";
-            $password = "lmao01234";
-            $dbname = "shelf_exchange";
-            
-            // Create a connection to the database
-            $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
-
-            // Check connection
-            if (!$conn) 
-            {
-                die("Connection failed: " . mysqli_connect_error());
-            }
-
-            // SQL query to retrieve books
-            $sql = "SELECT * FROM shelf_exchange.user";
-            // Execute the query and store the results in a variable
-            $users = mysqli_query($conn, $sql);
-            
-            // Check if any results were returned
-            if (mysqli_num_rows($users) > 0) 
-            {
-                return $users;
-            } 
-            else 
-            {
-                echo "No results found.";
-            }
-
-            // Close the database connection
-            mysqli_close($conn);
-        }
-        ?>
-     
         <main class="container rounded p-3 my-3 border"> 
-           
-
             <div class='col-4' style='display: inline-block;'>
                 <section id="profilepic" style='display: inline-block;'>
-
-
                     <figure>
-
                         <img class="img-thumbnail" src="images/genericprofpic.png" alt="Poodle"
                              title="View larger image..."/>
                     </figure>
-
                 </section>
-
-
                 <section id="personalinfo"> 
                     <div class="row"> 
                         <div class="col" style='display: inline-block;'> 
@@ -133,11 +54,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                             <p> Email: (Email) </p>
                             <p> Contact: (Phone Number) </p>
                         </div>
-
                     </div>
                 </section>
             </div>
-            
+         
             <div class='col-7' style='display: inline-block;'>
                 <section id='accManagement' style='padding-bottom: 50px;'>
                     <div class='row'>
@@ -151,21 +71,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                     <th> Edit User </th>
                                     <th> Delete User </th>
                                 </tr>
-                                
-                                <?php
-                                $users = getUsers();
-                                
-                                foreach ($users as $user)
-                                {
-                                    echo "<tr>";
-                                    echo "<td>" . $user['id'] . "</td>";
-                                    echo "<td>" . $user['username'] . "</td>";
-                                    echo "<td>" . $user['email'] . "</td>";
-                                    echo "<td><a href='#'><button type='button' class='btn btn-primary'> Edit </button></a></td>";
-                                    echo "<td><a href='#'><button type='button' class='btn btn-danger'> Delete </button></a></td>";
-                                    echo "</tr>";
-                                }
-                                ?>
                             </table>
                         </div>
                     </div>
@@ -181,7 +86,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                     <th> Title </th>
                                     <th> Release Date </th>
                                 </tr>
-                                
                                 <?php
                                 $books = getBooks();
                                 
@@ -216,14 +120,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                         <div class="form-group">
                             <label for="update-title">Title</label>
                             <input type="text" class="form-control" id="update-title" value="<?php echo $book['title']; ?>">
-                        </div>
-                        <div class="form-group">
-                            <label for="update-author">Author</label>
-                            <input type="text" class="form-control" id="update-author" value="<?php echo $book['author']; ?>">
-                        </div>
-                        <div class="form-group">
-                            <label for="update-genre">Genre</label>
-                            <input type="text" class="form-control" id="update-genre" value="<?php echo $book['genre']; ?>">
                         </div>
                         <div class="form-group">
                             <label for="update-release-date">Release Date</label>
