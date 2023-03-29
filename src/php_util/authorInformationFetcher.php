@@ -1,60 +1,37 @@
 <?php
 
 require "php_util/bookDatabaseHelper.php";
-/**
- * Helper class to fetch information about a book,
- * based on the book id.
- */
-class BookInformationFetcher
+
+class AuthorInformationFetcher
 {
-    private BookDatabaseHelper $databaseHelper;
-    private ?array $bookInformation;
+    private ?array $authorInformation;
+    private BookDatabaseHelper $bookDatabase;
+    private int $authorId;
 
     public const RELATED_BOOK_LIST_COUNT = 8;
 
-    public function __construct(int $bookId, mysqli $connection)
+    public function __construct(int $authorId, mysqli $connection)
     {
-        $this->databaseHelper = new BookDatabaseHelper($connection);
-        $this->bookInformation = $this->databaseHelper->getBookInfo($bookId);
+        $this->authorId = $authorId;
+        $this->bookDatabase = new BookDatabaseHelper($connection);
+        $this->setAuthorInformation($authorId, $connection);
     }
 
-    public function getBookInformation(): ?array
+    private function setAuthorInformation(int $authorId, mysqli $connection): void
     {
-        return $this->bookInformation;
-    }
-
-    public function getBookAuthors(): ?array
-    {
-        return $this->bookInformation['authors'];
-    }
-
-    public function getBookTags(): ?array
-    {
-        return $this->bookInformation['tags'];
-    }
-
-    public function getBookLanguage(): ?array
-    {
-        return $this->bookInformation['language'];
-    }
-
-    public function getBookReviews(): ?array
-    {
-        return $this->bookInformation['reviews'];
-    }
-
-    public function displayRelatedBooksList(): void
-    {
-        if (isset($this->bookInformation)) {
-            $books = null;
-            $currentBookId = $this->bookInformation['id'];
-            $bookTagId = -1; // Force to fetch random books if no tag set.
-            if (isset($this->bookInformation['tags']) && !empty($this->bookInformation['tags'])) {
-                $bookTagId = reset($this->bookInformation['tags'])['id'];
-            }
-            $books = $this->databaseHelper->getRandomBooksByTagOrRandom($bookTagId, $this::RELATED_BOOK_LIST_COUNT, $currentBookId);
-            $this->generateListByBookArray($books);
+        $sql = "SELECT * FROM author WHERE id = ?";
+        $statement = $connection->prepare($sql);
+        $statement->bind_param("i", $authorId);
+        if ($statement->execute()) {
+            $this->authorInformation = $statement->get_result()->fetch_assoc();
         }
+        $statement->close();
+    }
+
+    public function displayBooksWithAuthor(): void
+    {
+        $books = $this->bookDatabase->getRandomBooksByAuthorOrRandom($this->authorId, $this::RELATED_BOOK_LIST_COUNT);
+        $this->generateListByBookArray($books);
     }
 
     /**
@@ -91,5 +68,10 @@ class BookInformationFetcher
         } else {
             echo "Failed to get any resulting books, refresh the page or contact support!";
         }
+    }
+
+    public function getAuthorInformation(): ?array
+    {
+        return $this->authorInformation;
     }
 }

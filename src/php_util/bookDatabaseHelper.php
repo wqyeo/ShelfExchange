@@ -2,20 +2,14 @@
 
 /**
  * Helper class to fetch books from database
- * NOTE: Remember to call dispose when done.
  */
 class BookDatabaseHelper
 {
     private mysqli $connection;
 
-    public function __construct()
+    public function __construct(mysqli $connection)
     {
-        require 'php_util/util.php';
-        $this->connection = createDatabaseConnection();
-
-        if ($this->connection->connect_error) {
-            echo "Connection failed";
-        }
+        $this->connection = $connection;
     }
 
     /**
@@ -67,7 +61,7 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
      * - 'reviews' The reviews for this book.
      */
     public function getBookInfo(int $bookId): ?array
-    { 
+    {
         // TODO: Get book price and stock (inventory)
         $bookInfo = $this->getBook($bookId);
         $languageInfo = $this->getLanguage($bookInfo['language_id']);
@@ -134,9 +128,12 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
         return $tags;
     }
 
+    /**
+    * Additionally, includes the username and user's profile picture for the review.
+    */
     private function getReviews(int $bookId): ?array
     {
-        $statement = $this->connection->prepare("SELECT * FROM review WHERE book_id=?");
+        $statement = $this->connection->prepare("SELECT review.*, user.username, user.profile_picture FROM review LEFT JOIN user ON review.user_id = user.id WHERE review.book_id=?");
         $statement->bind_param("i", $bookId);
         $statement->execute();
         $result = $statement->get_result();
@@ -149,8 +146,101 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
     }
     //#endregion
 
-    public function dispose(): void
+    /**
+     * Fetches a set amount of random books that meet the tagId;
+     * Additionally, if the result is empty, it will just randomly select books up to the set amount.
+     * @param int $excludeBookId The ID of a book to exclude from the search result
+     */
+    public function getRandomBooksByTagOrRandom(int $tagId, int $maxBooks, int $excludeBookId=null): ?array
     {
-        $this->connection->close();
+        $books = array(); // Array to store selected books
+
+        // SQL statement to exclude a set book from search result,
+        // if the param is set.
+        $exclude = '';
+        if (!empty($excludeBookId)) {
+            $exclude = ' AND book.id != ' . $excludeBookId;
+        }
+
+        // Prepare SQL statement to select books by tag
+        $sql = "SELECT book.* FROM book
+                INNER JOIN book_tag ON book.id = book_tag.book_id
+                WHERE book_tag.tag_id = ? " . $exclude . "
+                ORDER BY RAND()
+                LIMIT ?";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bind_param("ii", $tagId, $maxBooks);
+
+        // Execute SQL statement and store results in array
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                array_push($books, $row);
+            }
+        }
+        $stmt->close();
+
+        if (empty($books)) {
+            // if no results found, select 8 random books
+            $statement = $this->connection->prepare("SELECT * FROM book WHERE id != ? ORDER BY RAND() LIMIT ?");
+            $statement->bind_param("ii", $excludeBookId, $maxBooks);
+            $statement->execute();
+            $result = $statement->get_result();
+            while ($row = $result->fetch_assoc()) {
+                array_push($books, $row);
+            }
+            $statement->close();
+        }
+
+        return $books;
+    }
+
+    /**
+     * Fetches a set amount of random books that meet the authorId;
+     * Additionally, if the result is empty, it will just randomly select books up to the set amount.
+     * @param int $excludeBookId The ID of a book to exclude from the search result
+     */
+    public function getRandomBooksByAuthorOrRandom(int $authorId, int $maxBooks, int $excludeBookId=null): ?array
+    {
+        $books = array(); // Array to store selected books
+
+        // SQL statement to exclude a set book from search result,
+        // if the param is set.
+        $exclude = '';
+        if (!empty($excludeBookId)) {
+            $exclude = ' AND book.id != ' . $excludeBookId;
+        }
+
+        // Prepare SQL statement to select books by tag
+        $sql = "SELECT book.* FROM book
+                INNER JOIN book_author ON book.id = book_author.book_id
+                WHERE book_author.author_id = ? " . $exclude . "
+                ORDER BY RAND()
+                LIMIT ?";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bind_param("ii", $authorId, $maxBooks);
+
+        // Execute SQL statement and store results in array
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                array_push($books, $row);
+            }
+        }
+        $stmt->close();
+
+        if (empty($books)) {
+            // if no results found, select 8 random books
+            $statement = $this->connection->prepare("SELECT * FROM book WHERE id != ? ORDER BY RAND() LIMIT ?");
+            $statement->bind_param("ii", $excludeBookId, $maxBooks);
+            $statement->execute();
+            $result = $statement->get_result();
+            while ($row = $result->fetch_assoc()) {
+                array_push($books, $row);
+            }
+            $statement->close();
+        }
+
+        return $books;
     }
 }
