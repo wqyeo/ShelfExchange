@@ -17,11 +17,10 @@
 
 <body class="d-flex flex-column h-100">
 <?php
-include "php_util/util.php";
+include_once "php_util/userSessionHelper.php";
+include_once "php_util/util.php";
 $connection = createDatabaseConnection();
-
 include "nav.php";
-
 ?>
 
   <script src="js/html_generator/headerCreator.js"></script>
@@ -37,9 +36,16 @@ include "nav.php";
 include "php_util/bookInformationFetcher.php";
 
 $bookId = $_GET['book'];
-$bookInformationFetcher = new BookInformationFetcher($bookId, $connection);
+
+$currentUserId = -1;
+if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
+    $currentUserId = $userSessionHelper->getUserInformation()['user_id'];
+}
+
+$bookInformationFetcher = new BookInformationFetcher($bookId, $connection, $currentUserId);
 $bookInformation = $bookInformationFetcher->getBookInformation();
 ?>
+
 <script src="js/bookInformation.js"></script>
 
   <div class="container mt-3 mb-3">
@@ -61,16 +67,69 @@ if (isset($bookInformation)) {
 }
 ?>
       </div>
+
+<!-- Current user reviews-->
     </div>
     <hr>
     <div class="row">
       <div class="col-md-12">
+         <h2>Your review</h2>
+        <ul class="list-group review-list" id="user-reviews-information">
+          <?php
+
+if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
+    $currentUserId = $userSessionHelper->getUserInformation()['user_id'];
+
+    if (empty($bookInformationFetcher->getCurrentUserReview())) {
+        echo '<form action="reviewSubmitProcess.php" method="post">
+ <input type="hidden" name="user_id" value="' . $currentUserId . '">
+ <input type="hidden" name="book_id" value="' . $bookId . '">
+    <div class="form-group">
+        <label class="mb-1" for="review">Review:</label>
+        <textarea class="form-control mb-1" name="review" id="review" cols="30" rows="10"></textarea>
+    </div>
+    <div class="form-group">
+        <label class="mb-1" for="rating">Rating:</label>
+        <select class="form-control mb-1" name="rating" id="rating">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+    </div>
+    <div>
+        <input type="submit" class="btn btn-primary mb-1" value="Submit Review">
+    </div>
+</form>';
+    } else {
+        echo '<script>displayReviews('. json_encode($bookInformationFetcher->getCurrentUserReview()) . ', "#user-reviews-information");</script>';
+        echo '<form action="deleteReviewProcess.php" method="post">
+ <input type="hidden" name="user_id" value="' . $currentUserId . '">
+ <input type="hidden" name="book_id" value="' . $bookId . '">
+        <input type="submit" class="mb-1 my-1 btn btn-danger" value="Delete Review">
+
+</form>';
+    }
+} else {
+    echo 'Log in to leave your own personal review!';
+}
+?> 
+        </ul>
+      </div>
+    </div>
+    </div>
+
+<!--other user reviews-->
+    <hr>
+    <div class="row">
+      <div class="col-md-12">
          <h2>Book Reviews</h2>
-          <!-- TODO: Display reviews-->
         <ul class="list-group review-list" id="reviews-information">
           <?php
   if (isset($bookInformation)) {
-      echo'<script>displayReviews('. json_encode($bookInformationFetcher->getBookReviews()) . ');</script>';
+      echo'<script>displayReviews('. json_encode($bookInformationFetcher->getBookReviews()) . ', "#reviews-information");</script>';
   }
 ?> 
         </ul>

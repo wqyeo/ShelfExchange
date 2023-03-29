@@ -3,23 +3,14 @@
 <?php
     
     
-    // i think need persistent login so can fetch data based on email 
-    // right now only fetch the first row in database
-    $servername = "localhost";
-    $dbusername = "shelfdev";
-    $password = "lmao01234";
-    $dbname = "shelf_exchange";
-
-    // Create a connection to the database
-    $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
-    $sel = "SELECT * FROM user";
-    $query = mysqli_query($conn, $sel);
-    $result = mysqli_fetch_assoc($query);
+    include "php_util/util.php";
+    $connection = createDatabaseConnection();    
+    
 ?>
 <html>
     <head>
         
-        <title> <?php echo $result['username']; ?> Account</title>"
+        <title> <?php echo $row['username']; ?> Account</title>"
         
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,15 +45,31 @@
         <?php
         include "nav.php";
         ?>
-        
-        
+        <?php
+            // checks if user is logged in
+            if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
+                $id = $userSessionHelper->getUserInformation()['user_id'];
+                $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
+                $sel->bind_param("i", $id);
+                $sel->execute();
+                $result = $sel->get_result();
+                if ($result->num_rows > 0){
+                    $row = $result->fetch_assoc(); 
+                }
+                
+            }
+            else {
+                header("Location: login.php");
+            }
+        ?>
+
         <main class="container rounded p-3 my-3 border"> 
             
             <div id='content'>
-                <input type='hidden' name='id' value='<?php echo $result['id']; ?>'/>
+                <input type='hidden' name='id' value='<?php echo $row['id']; ?>'/>
                 <a href='EditProfile.php'><img src='images/editprof.png' class='rounded circle' style='height:20px; width:20px;'></a>
             </div>
-            <h3 style='padding-top: 5px; padding-bottom: 10px;'> Welcome, <?php echo $result['username']; ?> </h3>
+            <h3 style='padding-top: 5px; padding-bottom: 10px;'> Welcome, <?php echo $row['username']; ?> </h3>
             
             <section id='profilepic' style='text-align:center;'>
                 
@@ -78,8 +85,8 @@
                     <div class='col'> 
                         <h5><b> Personal Information </b> </h5>
                         <!--<a href='#' style='font-size: 10px;'> Edit Profile </a>-->
-                        <p> Name: <?php echo $result['username']; ?>  </p>
-                        <p> Email: <?php echo $result['email']; ?> </p>
+                        <p> Name: <?php echo $row['username']; ?>  </p>
+                        <p> Email: <?php echo $row['email']; ?> </p>
 
                     </div>
 
@@ -90,7 +97,10 @@
                     
                     <div class='col'>
                        <h5> <b> Settings </b> </h5>
-                       <p style='text-align:center;'> <a href='#' style='color: red;'> Delete Account </a> </p>
+<!--                       <p style='text-align:center;'> <a href='#' style='color: red;' 
+                            onclick='deleteAcc(<?php echo $row['id']; ?>)'> Delete Account </a> </p>-->
+                            <button type='button' class='btn btn-danger text-light' 
+                                    onclick='deleteAcc(<?php echo $row['id']; ?>)'>  Delete Account </button>
                     </div>
                 </div>
             </section>
