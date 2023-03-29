@@ -17,3 +17,10 @@ function getCurrentDate()
     date_default_timezone_set('Asia/Singapore');
     return date('Y-m-d');
 }
+
+function getCurrentDateTime(): string
+{
+    $timezone = new DateTimeZone('Asia/Singapore');
+    $datetime = new DateTime('now', $timezone);
+    return $datetime->format('Y-m-d H:i:s');
+}

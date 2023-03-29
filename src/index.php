@@ -18,7 +18,7 @@
 
 <body>
   <?php
-  require "php_util/util.php";
+  require_once "php_util/util.php";
   $connection = createDatabaseConnection();
   include "nav.php";
   include "php_book_browser/indexBrowserHelper.php";
