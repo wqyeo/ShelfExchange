@@ -12,9 +12,9 @@ class BookInformationFetcher
 
     public const RELATED_BOOK_LIST_COUNT = 8;
 
-    public function __construct(int $bookId)
+    public function __construct(int $bookId, mysqli $connection)
     {
-        $this->databaseHelper = new BookDatabaseHelper();
+        $this->databaseHelper = new BookDatabaseHelper($connection);
         $this->bookInformation = $this->databaseHelper->getBookInfo($bookId);
     }
 

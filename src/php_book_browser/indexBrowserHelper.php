@@ -12,9 +12,9 @@ class IndexBrowserHelper
     public const FEATURED_LIST_COUNT = 4;
     public const INTEREST_LIST_COUNT = 8;
 
-    public function __construct()
+    public function __construct(mysqli $connection)
     {
-        $this->databaseHelper = new BookDatabaseHelper();
+        $this->databaseHelper = new BookDatabaseHelper($connection);
     }
     /**
      * Create and generate a HTML code snippet for interest book list.
@@ -79,10 +79,5 @@ class IndexBrowserHelper
         } else {
             echo "Failed to get any resulting books, refresh the page or contact support!";
         }
-    }
-
-    public function dispose(): void
-    {
-        $this->databaseHelper->dispose();
     }
 }

@@ -2,20 +2,14 @@
 
 /**
  * Helper class to fetch books from database
- * NOTE: Remember to call dispose when done.
  */
 class BookDatabaseHelper
 {
     private mysqli $connection;
 
-    public function __construct()
+    public function __construct(mysqli $connection)
     {
-        require 'php_util/util.php';
-        $this->connection = createDatabaseConnection();
-
-        if ($this->connection->connect_error) {
-            echo "Connection failed";
-        }
+        $this->connection = $connection;
     }
 
     /**
@@ -199,10 +193,5 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
         }
 
         return $books;
-    }
-
-    public function dispose(): void
-    {
-        $this->connection->close();
     }
 }

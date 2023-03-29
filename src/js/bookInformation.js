@@ -26,7 +26,7 @@ function displayBookTags(bookTags) {
     // Append tag name,
     // Href to tag information when clicked on.
     html +=
-      '<a href="tagInformation?tag=' +
+      '<a href="tagInformation.php?tag=' +
       bookTags[i].id +
       '">' +
       bookTags[i].name +
@@ -45,7 +45,7 @@ function displayBookAuthors(bookAuthors) {
       html += ", ";
     }
     html +=
-      "<a href='authorInformation?author=" +
+      "<a href='authorInformation.php?author=" +
       bookAuthors[i].id +
       "'>" +
       bookAuthors[i].name +

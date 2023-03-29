@@ -16,6 +16,9 @@
 
 <body class="d-flex flex-column h-100">
 <?php
+include "php_util/util.php";
+$connection = createDatabaseConnection();
+
 include "nav.php";
 
 ?>
@@ -33,7 +36,7 @@ include "nav.php";
 include "php_util/bookInformationFetcher.php";
 
 $bookId = $_GET['book'];
-$bookInformationFetcher = new BookInformationFetcher($bookId);
+$bookInformationFetcher = new BookInformationFetcher($bookId, $connection);
 $bookInformation = $bookInformationFetcher->getBookInformation();
 ?>
 <script src="js/bookInformation.js"></script>
@@ -93,7 +96,9 @@ if (isset($bookInformation)) {
   </section>
 
 <?php
-include "footer.php"
+include "footer.php";
+$connection->close();
+
 ?>
 
 </body>
