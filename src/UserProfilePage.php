@@ -71,7 +71,13 @@
                     
                     <div class="col">
                        <h5> <b> Settings </b> </h5>
+<<<<<<< Updated upstream
                        <p style="text-align:center;"> <a href="#" style="color: red;"> Delete Account </a> </p>
+=======
+                       <p style='text-align:center;'> <a href='#' style='color: red;' 
+                                                        onclick='return confirm("Are you sure you want to
+                                                        delete your account?")'> Delete Account </a> </p>
+>>>>>>> Stashed changes
                     </div>
                 </div>
             </section>

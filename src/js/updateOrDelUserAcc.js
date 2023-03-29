@@ -29,16 +29,21 @@ function updateDetails() {
 }
 
 function deleteUser(deleteID) {
-    $.ajax({
-        url: "delete.php",
-        type: 'post',
-        data: {
-            deleteid: deleteID
-        },
-        success: function (data, status) {
-            location.href = 'testAPAcc.php';
+    if(confirm("Are you sure you want to delete this user record?")) {
+        $.ajax({
+            url: "delete.php",
+            type: 'post',
+            data: {
+                deleteid: deleteID
+            },
+            success: function (data, status) {
+                location.href = 'testAPAcc.php';
 
-        }
-    });
+            }
+        });
+    }
+    else {
+        location.href = 'testAPAcc.php';
+    }
 }
 
