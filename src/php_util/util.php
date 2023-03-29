@@ -6,8 +6,7 @@
  *
 * Returns the database connection
 */
-
-function createDatabaseConnection()
+function createDatabaseConnection(): mysqli
 {
     $config = parse_ini_file('../../private/db-config.ini');
     return new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
@@ -19,5 +18,9 @@ function getCurrentDate()
     return date('Y-m-d');
 }
 
-
-?>
+function getCurrentDateTime(): string
+{
+    $timezone = new DateTimeZone('Asia/Singapore');
+    $datetime = new DateTime('now', $timezone);
+    return $datetime->format('Y-m-d H:i:s');
+}

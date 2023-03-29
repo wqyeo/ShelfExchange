@@ -12,17 +12,20 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+  <link href="css/browseList.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
-            include "nav.php";
+        include "php_util/util.php";
+        $connection = createDatabaseConnection();
+        include "nav.php";
         include "php_book_browser/searchBrowserHelper.php";
         $searchQuery = "";
         // get search query
-if (isset($_GET['query'])) {
+        if (isset($_GET['query'])) {
             $searchQuery = $_GET['query'];
         }
-        $bookListGenerator = new SearchBrowserHelper($searchQuery);
+        $bookListGenerator = new SearchBrowserHelper($searchQuery, $connection);
 
         ?>
 
@@ -77,7 +80,7 @@ if ($bookListGenerator->searchResultCount < 4) {
 
 // Include footer and end.
 include "footer.php";
-        $bookListGenerator->dispose();
+        $connection->close();
         ?>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

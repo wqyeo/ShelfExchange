@@ -45,4 +45,3 @@ function isEmptyOrWhitespace(str) {
   return (str.trim() === "" || str.length === 0);
 }
 //endregion
-
