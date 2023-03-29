@@ -1,7 +1,7 @@
 
 <?php
 
-require "php_util/bookDatabaseHelper.php";
+require_once "php_util/bookDatabaseHelper.php";
 
 /**
  * Helper class to generate book listing HTML code snippets
@@ -19,9 +19,9 @@ class SearchBrowserHelper
 
     public const RECOMMEND_BOOKS_COUNT = 4;
 
-    public function __construct(string $searchQuery)
+    public function __construct(string $searchQuery, mysqli $connection)
     {
-        $this->databaseHelper = new BookDatabaseHelper();
+        $this->databaseHelper = new BookDatabaseHelper($connection);
         $this->searchResultCount = 0;
         $this->searchQuery = $searchQuery;
     }
@@ -32,8 +32,7 @@ class SearchBrowserHelper
      */
     public function recommendRandomBooks(): void
     {
-        // TODO: Make it actually show featured;
-        $booksResult = $this->databaseHelper->randomlyFetchBooks(4);
+        $booksResult = $this->databaseHelper->randomlyFetchBooks($this::RECOMMEND_BOOKS_COUNT);
         if (isset($booksResult)) {
             $this->generateListByResult($booksResult);
         } else {
@@ -98,10 +97,5 @@ class SearchBrowserHelper
         } else {
             echo "Got zero results from your search...";
         }
-    }
-
-    public function dispose(): void
-    {
-        $this->databaseHelper->dispose();
     }
 } ?>

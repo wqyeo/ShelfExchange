@@ -18,10 +18,11 @@
 
 <body>
   <?php
+  require_once "php_util/util.php";
+  $connection = createDatabaseConnection();
   include "nav.php";
   include "php_book_browser/indexBrowserHelper.php";
-
-  $bookListGenerator = new IndexBrowserHelper();
+  $bookListGenerator = new IndexBrowserHelper($connection);
 
   ?>
 
@@ -74,7 +75,7 @@
   </section>
   <?php
   include "footer.php";
-  $bookListGenerator->dispose();
+  $connection->close();
   ?>
   <!-- Bootstrap core JS-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

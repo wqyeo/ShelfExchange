@@ -1,9 +1,10 @@
 <?php
+
     require 'php_error_models/loginErrorCode.php';
 
     ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Check if all required fields are present and not empty
         if (empty($_POST["email"]) || empty($_POST["password"])) {
@@ -62,7 +63,6 @@ error_reporting(E_ALL);
         }
         // Fetch result from executed statement
         $result = $statement->get_result();
-
         if ($result-> num_rows <= 0) {
             // Shouldn't have empty results, likely failed due to email not found.
             redirectWithError(LoginErrorCode::EMAIL_ACCOUNT_NOT_FOUND);
@@ -72,6 +72,8 @@ error_reporting(E_ALL);
         // Since email bind to accounts are unique,
         // we can just fetch the first associated row.
         $row = $result->fetch_assoc();
+        $statement->close();
+
         $hashedPassword = $row["password"];
         if (!password_verify($password, $hashedPassword)) {
             // Password mismatch;
@@ -79,13 +81,13 @@ error_reporting(E_ALL);
             exit();
         }
 
-        $statement->close();
+        include "php_util/userSessionHelper.php";
+        $userSessionHelper = new UserSessionHelper($connection);
+        $userSessionHelper->createNewUserSession($row['id'], $row['username'], $row['profile_picture']);
+
         $connection->close();
         return $row;
     }
-        // Search all books based on the searchQuery,
-        // where author, tags and book title are matching,
-        // order by book title matching first, then author, then tags.
 
     // Prepare a SQL statement that finds the user by email
     function prepareBindedFindUserStatement($connection, string $email)
