@@ -67,7 +67,7 @@
             
             <div id='content'>
                 <input type='hidden' name='id' value='<?php echo $row['id']; ?>'/>
-                <a href='EditProfile.php'><img src='images/editprof.png' class='rounded circle' style='height:20px; width:20px;'></a>
+                <a href='EditProfile.php?user=<?php echo $row['id']; ?>'><img src='images/editprof.png' class='rounded circle' style='height:20px; width:20px;'></a>
             </div>
             <h3 style='padding-top: 5px; padding-bottom: 10px;'> Welcome, <?php echo $row['username']; ?> </h3>
             
