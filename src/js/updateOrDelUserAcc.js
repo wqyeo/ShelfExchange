@@ -31,7 +31,7 @@ function updateDetails() {
 function deleteUser(deleteID) {
     if(confirm("Are you sure you want to delete this user record?")) {
         $.ajax({
-            url: "delete.php",
+            url: "deleteUser.php",
             type: 'post',
             data: {
                 deleteid: deleteID
