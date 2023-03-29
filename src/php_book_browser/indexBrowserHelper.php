@@ -1,6 +1,6 @@
 <?php
 
-include "php_util/bookDatabaseHelper.php";
+include_once "php_util/bookDatabaseHelper.php";
 
 /**
  * Helper class to generate book listing HTML code snippets
