@@ -37,7 +37,7 @@ function updateDetails() {
         UserId: UserId
     }, function (data, status) {
         $('#updateUserDetails').modal('hide');
-
+        location.href = 'testAPAcc.php';
     });
 }
 
