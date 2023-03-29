@@ -21,7 +21,12 @@
     </head>
     <body>
         <?php
-            include "nav.php";
+            include "nav.php"
+        ?>
+
+
+         <?php
+        
             function getUserContact(){
                 $servername = "localhost";
                 $dbusername = "shelfdev";
