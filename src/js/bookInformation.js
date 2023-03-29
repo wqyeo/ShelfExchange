@@ -55,8 +55,8 @@ function displayBookAuthors(bookAuthors) {
   document.getElementById("book-info").insertAdjacentHTML("beforeend", html);
 }
 
-function displayReviews(bookReviews) {
-  const reviewList = document.querySelector("#reviews-information");
+function displayReviews(bookReviews, reviewDocId) {
+  const reviewList = document.querySelector(reviewDocId);
   if (
     bookReviews == undefined ||
     bookReviews == null ||
