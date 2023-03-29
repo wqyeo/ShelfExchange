@@ -178,7 +178,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                   </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="update-book-form">
                         <div class="form-group">
                             <label for="update-title">Title</label>
                             <input type="text" class="form-control" id="update-title" value="">

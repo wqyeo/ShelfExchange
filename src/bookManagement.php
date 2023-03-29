@@ -47,7 +47,7 @@ function getBooks()
     mysqli_close($conn); 
 }
 
-function updateBook($bookId, $title, $image)
+function updateBook($bookId, $title, $author, $genre, $release_date, $image)
 {
     //Create Database connection
     $servername = "localhost";
@@ -106,11 +106,11 @@ function updateBook($bookId, $title, $image)
     }
     
     // Prepare update statement
-    $sql = "UPDATE shelf_exchange.book SET title=?, image=? WHERE id=?";
+    $sql = "UPDATE shelf_exchange.book SET title=?, author=?, genre=?, release_date=?, image=? WHERE id=?";
     $stmt = mysqli_prepare($conn, $sql);
     
     // Bind parameters
-    mysqli_stmt_bind_param($stmt, "ssi", $title, $image_path, $bookId);
+    mysqli_stmt_bind_param($stmt, "sssssi", $title, $author, $genre, $release_date, $image_path, $bookId);
 
     // Execute statement
     $result = mysqli_stmt_execute($stmt);
