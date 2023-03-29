@@ -3,8 +3,6 @@
 
     include "php_util/util.php";
     $connection = createDatabaseConnection();
-    include_once "php_util/userSessionHelper.php";
-    $userSessionHelper = new UserSessionHelper($connection);
     
     $query = "SELECT * FROM shelf_exchange.user";
     $result = mysqli_query($conn, $query);

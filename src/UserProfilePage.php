@@ -38,7 +38,7 @@
         </script>
 
         <!-- Custom JS -->
-        <script defer src="js/main.js"></script>
+        <script defer src="js/updateOrDelUserAcc.js"></script>
 
     </head>
     <body>
