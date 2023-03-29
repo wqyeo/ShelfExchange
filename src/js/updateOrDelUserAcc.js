@@ -47,3 +47,24 @@ function deleteUser(deleteID) {
     }
 }
 
+//function deleteAcc(deleteID){
+//    if(confirm("Are you sure you want to delete this user record?")) {
+//        if(confirm("Are you sure? This action is permanent and cannot be undone.")){
+//            $.ajax({
+//                url: "deleteUser.php",
+//                type: 'post',
+//                data: {
+//                    deleteid: deleteID
+//                },
+//                success: function (data, status) {
+//                    location.href = 'signUp.php';
+//
+//                }
+//            });
+//        }
+//    }
+//    else {
+//        location.href = 'UserProfilePage.php';
+//    }
+//}
+

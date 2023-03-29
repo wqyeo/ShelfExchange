@@ -17,7 +17,8 @@
 
         $rowResult = authenticateUser($emailValidated, $passwordValidated);
         // TODO: Link to accounts page
-        header("Location: login.php?success=login_complete");
+        //header("Location: login.php?success=login_complete");
+        header("Location: UserProfilePage.php?success=login_complete");
         exit();
     } else {
         // Form was not submitted
@@ -80,7 +81,7 @@
             redirectWithError(LoginErrorCode::PASSWORD_INCORRECT);
             exit();
         }
-
+        
         include "php_util/userSessionHelper.php";
         $userSessionHelper = new UserSessionHelper($connection);
         $userSessionHelper->createNewUserSession($row['id'], $row['username'], $row['profile_picture']);
