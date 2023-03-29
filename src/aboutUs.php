@@ -87,9 +87,9 @@
 
                         foreach ($users as $user)
                         {
-                            echo  '<p> Name:  </p>'. $seller['name'];
+                            echo  '<p> Name:  </p>'. $user['name'];
                             echo '<p> Email:  </p>'. $user['email'];
-                            echo '<p> Contact:  </p>'. $seller['contact'];
+                            echo '<p> Contact:  </p>'. $user['contact'];
                         }
                         ?>
                                 
