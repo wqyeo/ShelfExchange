@@ -74,8 +74,6 @@ error_reporting(E_ALL);
         // Since email bind to accounts are unique,
         // we can just fetch the first associated row.
         $row = $result->fetch_assoc();
-        $_SESSION['username'] = $row['username'];
-        $testvar = $_SESSION['username'];
         
         $hashedPassword = $row["password"];
         if (!password_verify($password, $hashedPassword)) {
@@ -83,7 +81,21 @@ error_reporting(E_ALL);
             redirectWithError(LoginErrorCode::PASSWORD_INCORRECT);
             exit();
         }
-    
+        
+        $_SESSION['username'] = $row['username']; // Upon successful login, save username into session.
+        $_SESSION['email'] = $row['email']; // Upon successful login, save email into session.
+        $user_id = $row['id'];
+
+        $token = base64_encode(random_bytes(32));
+        $expiration = time() + (60 * 60 * 24 * 30);
+        setcookie('remember_token', $token, $expiration, '/', '', false, true);
+        $statement = $connection->prepare("INSERT INTO session_token (token, expiration, user_id) VALUES (?,?,?)");
+        $statement->bind_param("ssi", $token, date('Y-m-d H:i:s',$expiration), $user_id);
+        //$connection->prepare($statement);
+        if($statement->execute()){
+            $_SESSION['token'] = $token;
+        }
+        
         $statement->close();
         $connection->close();
         return $row;
