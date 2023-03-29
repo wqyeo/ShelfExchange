@@ -47,6 +47,20 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
         return $this->connection->query($sql);
     }
 
+    public function getUserBookReview(int $bookId, int $userId): ?array
+    {
+        $statement = $this->connection->prepare("SELECT review.*, user.username, user.profile_picture FROM review LEFT JOIN user ON review.user_id = user.id WHERE review.user_id=? AND review.book_id=?");
+        $statement->bind_param("ii", $userId, $bookId);
+        $statement->execute();
+        $result = $statement->get_result();
+        $reviews = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($reviews, $row);
+        }
+        $statement->close();
+        return $reviews;
+    }
+
 
     //#region Book Information Fetching
     /**
@@ -60,14 +74,14 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
      * - 'language' The language of the book.
      * - 'reviews' The reviews for this book.
      */
-    public function getBookInfo(int $bookId): ?array
+    public function getBookInfo(int $bookId, ?int $excludeUserId=null): ?array
     {
         // TODO: Get book price and stock (inventory)
         $bookInfo = $this->getBook($bookId);
         $languageInfo = $this->getLanguage($bookInfo['language_id']);
         $authors = $this->getAuthors($bookId);
         $tags = $this->getTags($bookId);
-        $reviews = $this->getReviews($bookId);
+        $reviews = $this->getReviews($bookId, $excludeUserId);
 
         // Combine information into a single array
         $bookInfo['language'] = $languageInfo;
@@ -131,9 +145,13 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
     /**
     * Additionally, includes the username and user's profile picture for the review.
     */
-    private function getReviews(int $bookId): ?array
+    private function getReviews(int $bookId, ?int $excludeUserId=null): ?array
     {
-        $statement = $this->connection->prepare("SELECT review.*, user.username, user.profile_picture FROM review LEFT JOIN user ON review.user_id = user.id WHERE review.book_id=?");
+        $exclude = '';
+        if (isset($excludeUserId) && !empty($excludeUserId)) {
+            $exclude = ' AND review.user_id != ' . $excludeUserId;
+        }
+        $statement = $this->connection->prepare("SELECT review.*, user.username, user.profile_picture FROM review LEFT JOIN user ON review.user_id = user.id WHERE review.book_id=?" . $exclude);
         $statement->bind_param("i", $bookId);
         $statement->execute();
         $result = $statement->get_result();

@@ -12,10 +12,21 @@ class BookInformationFetcher
 
     public const RELATED_BOOK_LIST_COUNT = 8;
 
-    public function __construct(int $bookId, mysqli $connection)
+    private ?array $currentUserReviewInformation;
+
+    public function __construct(int $bookId, mysqli $connection, ?int $currentUserId)
     {
         $this->databaseHelper = new BookDatabaseHelper($connection);
-        $this->bookInformation = $this->databaseHelper->getBookInfo($bookId);
+        $this->bookInformation = $this->databaseHelper->getBookInfo($bookId, $currentUserId);
+
+        if (isset($currentUserId) && !empty($currentUserId)) {
+            $this->currentUserReviewInformation = $this->databaseHelper->getUserBookReview($bookId, $currentUserId);
+        }
+    }
+
+    public function getCurrentUserReview(): ?array
+    {
+        return $this->currentUserReviewInformation;
     }
 
     public function getBookInformation(): ?array
