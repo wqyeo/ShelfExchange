@@ -204,7 +204,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                  <button type="submit" form="updateBookForm" class="btn btn-primary">Update Book</button>
+                  <button type="submit" form="update-book-form" name="" class="btn btn-primary">Update Book</button>
                 </div>
               </div>
             </div>

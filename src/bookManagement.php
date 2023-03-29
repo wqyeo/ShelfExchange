@@ -118,6 +118,19 @@ function updateBook($bookId, $title, $image)
     // Close statement and connection
     mysqli_stmt_close($stmt);
     mysqli_close($conn);
+    
+    // Check if update was successful and return appropriate response
+    if ($result) 
+    {
+      echo "Book updated successfully";
+    } else 
+    {
+      echo "Error updating book";
+    }
+
+    // Add console.log statements to check if function is being called correctly
+    error_log("updateBook called with bookId: ".$bookId.", title: ".$title.", releaseDate: ".$releaseDate.", image: ".$image);
+    error_log("Query executed: ".$query);
 
     return $result;
 }
