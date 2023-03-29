@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 
 <?php
+    
+    
     // i think need persistent login so can fetch data based on email 
     // right now only fetch the first row in database
     $servername = "localhost";
@@ -57,7 +59,8 @@
         <main class="container rounded p-3 my-3 border"> 
             
             <div id='content'>
-                <a href='EditProfile.php'> <img src='images/editprof.png' class='rounded circle' style='height:20px; width:20px;'> </a>
+                <input type='hidden' name='id' value='<?php echo $result['id']; ?>'/>
+                <a href='EditProfile.php'><img src='images/editprof.png' class='rounded circle' style='height:20px; width:20px;'></a>
             </div>
             <h3 style='padding-top: 5px; padding-bottom: 10px;'> Welcome, <?php echo $result['username']; ?> </h3>
             
@@ -82,7 +85,7 @@
 
                     <div class='col'> 
                         <h5> <b> About Me </b> </h5>
-                        <p style='text-align:center;'> Add a bio now! </p>
+                        <p style='text-align:center;'> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book</p>
                     </div>
                     
                     <div class='col'>
