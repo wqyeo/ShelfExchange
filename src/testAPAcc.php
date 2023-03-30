@@ -41,44 +41,13 @@ include "nav.php";
     
     <body>
         <?php
-function getBooks(mysqli $connection)
-{
-    // SQL query to retrieve books
-    $sql = "SELECT * FROM shelf_exchange.book";
-
-    // Execute the query and store the results in a variable
-    $books = mysqli_query($connection, $sql);
-
-    // Check if any results were returned
-    if (mysqli_num_rows($books) > 0) {
-        return $books;
-    } else {
-        echo "No results found.";
-    }
-
-    // Close the database connection
-    mysqli_close($connection);
-}
-function getUsers(mysqli $connection)
-{
-    // SQL query to retrieve books
-    $sql = "SELECT * FROM shelf_exchange.user";
-    // Execute the query and store the results in a variable
-    $users = mysqli_query($connection, $sql);
-
-    // Check if any results were returned
-    if (mysqli_num_rows($users) > 0) {
-        return $users;
-    } else {
-        echo "No results found.";
-    }
-
-    // Close the database connection
-    mysqli_close($connection);
-}
-$query = "SELECT * FROM shelf_exchange.user";
-$result = mysqli_query($connection, $query);
-?>
+        
+        
+        
+        
+        $query = "SELECT * FROM shelf_exchange.user";
+        $result = mysqli_query($connection, $query);
+        ?>
      
         <main class="container rounded p-3 my-3 border"> 
            
@@ -243,7 +212,7 @@ foreach ($book as $book) {
         </div>
     </body>
     <script>
-       
+       //still in progress
         function addUser(){
             $('#createNewUser').modal("show");
             var addName = $('#createUsername').val();

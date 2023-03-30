@@ -12,5 +12,5 @@ if (isset($_POST['deleteid'])) {
     $unique = $_POST['deleteid'];
 
     $sql="DELETE FROM user WHERE id=$unique";
-    $result = mysqli_query($conn, $sql);
+    $result = mysqli_query($connection, $sql);
 }

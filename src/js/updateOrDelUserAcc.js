@@ -24,7 +24,7 @@ function updateDetails() {
         UserId: UserId
     }, function (data, status) {
         $('#updateUserDetails').modal('hide');
-        location.href = 'testAPAcc.php';
+        location.href = 'adminPage.php';
     });
 }
 
@@ -37,13 +37,13 @@ function deleteUser(deleteID) {
                 deleteid: deleteID
             },
             success: function (data, status) {
-                location.href = 'testAPAcc.php';
+                location.href = 'adminPage.php';
 
             }
         });
     }
     else {
-        location.href = 'testAPAcc.php';
+        location.href = 'adminPage.php';
     }
 }
 
