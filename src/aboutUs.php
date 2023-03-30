@@ -26,10 +26,6 @@
 
 
          <?php
-            include "php_util/util.php";
-        $connection = createDatabaseConnection();
-
-
         function getUserContact()
         {
             $servername = "localhost";
