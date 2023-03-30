@@ -24,10 +24,14 @@ class UserCartHelper
 
     private function getBookIdCarts(): array
     {
-        $cookieValue = $_COOKIE[$this::CART_LIST_COOKIE_NAME];
-        $cookieValue = trim($cookieValue, '[]'); // remove the brackets
-        $valueArray = explode(",", $cookieValue);
-        return array_map('intval', $valueArray);
+        if (isset($_COOKIE[$this::CART_LIST_COOKIE_NAME])) {
+            $cookieValue = $_COOKIE[$this::CART_LIST_COOKIE_NAME];
+            $cookieValue = trim($cookieValue, '[]'); // remove the brackets
+            $valueArray = explode(",", $cookieValue);
+            return array_map('intval', $valueArray);
+        } else {
+            return array();
+        }
     }
 
     public function getBookInventoryFromCarts(): ?array

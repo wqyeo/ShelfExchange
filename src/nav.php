@@ -1,11 +1,4 @@
-<?php
-ini_set('display_errors', 'On');
-error_reporting(E_ALL | E_STRICT);
-?>
-
-
   <script src="js/userCartHelper.js"></script>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
      <div class="container px-4 px-lg-5">
          <a class="navbar-brand" href="index.php">Shelf Exchange</a>

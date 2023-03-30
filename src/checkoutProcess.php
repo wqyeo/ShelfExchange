@@ -1,28 +1,20 @@
 <?php
 
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once "php_error_models/checkoutErrorCode.php";
 require_once "php_util/util.php";
 
 // Check if the form has been submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $fullName = $_POST['fullName'];
-    $email = $_POST['email'];
-    $address = $_POST['address'];
+    $address = $_POST['address-one'];
     $cardNumber = $_POST['cardNumber'];
     $expiration = $_POST['expiration'];
     $cvv = $_POST['cvv'];
-    /*
-        $errorList = validateFormInputs($fullName, $email, $address, $cardNumber, $expiration, $cvv);
-        if (!empty($errorList) || count(errorList) != 0) {
-            redirectWithErrorCode(CheckoutErrorCode::MISSING_FIELDS);
-            exit();
-        }
-    */
+    $errorList = validateFormInputs($fullName, $address, $cardNumber, $expiration, $cvv);
+    if (count($errorList) != 0) {
+        redirectWithErrorCode(CheckoutErrorCode::MISSING_FIELDS);
+        exit();
+    }
     // Connect to the database
     $connection = createDatabaseConnection();
 
@@ -36,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Process the checkout
     process_checkout($connection, $address, $cardNumber, $expiration, $cvv);
     $connection->close();
+    header("Location: index.php?transaction=success");
 } else {
     header("Location: index.php?transaction=failure");
 }
@@ -89,19 +82,11 @@ function bindBookOrders($connection, $orderId, $bookInventoryInformations)
 
         $stmt = $connection->prepare("INSERT INTO book_order (book_inventory_id, order_id, quantity, cost_per_quantity) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("iiid", $bookInventoryId, $orderId, $quantity, $costPerQuantity);
-        if ($stmt->execute()) {
-            echo "\n1-Ok";
-        } else {
-            echo $stmt->error;
-        }
         $stmt->close();
 
         // Decrement the book inventory quantity by the ordered quantity
         $updateStmt = $connection->prepare("UPDATE book_inventory SET quantity = quantity - ? WHERE id = ?");
         $updateStmt->bind_param("ii", $quantity, $bookInventoryId);
-        if ($updateStmt->execute()) {
-            echo "\n2-Ok";
-        };
         $updateStmt->close();
     }
 }
@@ -125,8 +110,7 @@ function createOrder($connection, $userId)
     return $newOrderId;
 }
 
-/*
-function validateFormInputs($fullName, $email, $address, $cardNumber, $expiration, $cvv)
+function validateFormInputs($fullName, $address, $cardNumber, $expiration, $cvv)
 {
     $errors = array();
 
@@ -135,19 +119,7 @@ function validateFormInputs($fullName, $email, $address, $cardNumber, $expiratio
         $errors[] = "Please enter your full name";
     }
 
-    // Validate email
-    if (empty($email)) {
-        $errors[] = "Please enter your email";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Invalid email format";
-    }
-
-    // Validate address
-    if (empty($address)) {
-        $errors[] = "Please enter your address";
-    }
-
-    // Validate card number
+    $cardNumber = preg_replace('/\s+/', '', $cardNumber);
     if (empty($cardNumber)) {
         $errors[] = "Please enter your card number";
     } elseif (!preg_match("/^[0-9]{16}$/", $cardNumber)) {
@@ -170,4 +142,4 @@ function validateFormInputs($fullName, $email, $address, $cardNumber, $expiratio
 
     // Return errors array
     return $errors;
-}*/
+}
