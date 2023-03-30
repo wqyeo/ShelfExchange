@@ -61,16 +61,32 @@
         
         <main class="container mt-3">
             <form action="processSignUp.php" method="post" onsubmit="return validateForm()">
+                
+                <div class="mb-3">
+                  <label for="fname" class="form-label">First Name</label>
+                  <input type="text" class="form-control" id="fname" name="fname" required>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="lname" class="form-label">Last Name</label>
+                  <input type="text" class="form-control" id="lname" name="lname" required>
+                </div>
+                
                 <div class="mb-3">
                   <label for="username" class="form-label">Username</label>
                   <input type="text" class="form-control" id="username" name="username" required>
                   <div id="usernameError" class="text-danger"><?php echo $usernameErrorMessage; ?></div>
-               </div>
+                </div>
                 
                 <div class="mb-3">
                   <label for="email" class="form-label">Email</label>
                   <input type="email" class="form-control" id="email" name="email" required>
-        <div id="emailError" class="text-danger"><?php echo $emailErrorMessage; ?></div>
+                    <div id="emailError" class="text-danger"><?php echo $emailErrorMessage; ?></div>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="contactNo" class="form-label">Contact Number</label>
+                  <input type="text" class="form-control" id="contactNo" name="contactNo" required>
                 </div>
                 
                 <div class="mb-3">
