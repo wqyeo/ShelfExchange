@@ -95,9 +95,9 @@
 
                         foreach ($users as $user)
                         {
-                            echo  '<p> Name:  </p>'. $user['fname'] . $user['lname'];
-                            echo '<p> Email:  </p>'. $user['email'];
-                            echo '<p> Contact:  </p>'. $user['contactNo'] . "/n";
+                            echo  $user['fname'] . $user['lname'] . "<br>";
+                            echo $user['email'] . "<br>";
+                            echo $user['contactNo'] . "<br><br>";
                         }
                         ?>
                                 
