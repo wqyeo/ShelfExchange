@@ -64,12 +64,12 @@ class IndexBrowserHelper
                 $cartButton = "";
                 if ($bookQuantity >= 1) {
                     $cartButton = '<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                <div class="text-center"><a class="btn btn-outline-dark mt-auto" onclick="addToCart(' . $row["id"] . ')" href="#">Add to Cart</a></div>
                 <div class="text-center">' . $row['cost_per_quantity'] . '</div>
+                <div class="text-center"><a id="cart-btn-'. $row["id"] . '" class="btn btn-outline-dark mt-auto" onclick="addToCart(' . $row["id"] . ')" href="#">Add to Cart</a></div>
               </div>';
                 } else {
                     $cartButton = '<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                <div class="text-center"><a class="btn btn-secondary btn-outline-dark mt-auto text-white" href="#" disabled>Out of Stock</a></div>
+                <div class="text-center"><a id="cart-btn-'. $row["id"] . '" class="btn btn-secondary btn-outline-dark mt-auto text-white" href="#" disabled>Out of Stock</a></div>
               </div>';
                 }
 
