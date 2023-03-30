@@ -95,14 +95,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                     echo "<td> <figure> <img src='" . $book['image'] . "' width='200' height='300'></figure></td>";
                                     echo "<td>" . $book['title'] . "</td>";
                                     echo "<td>" . $book['release_date'] . "</td>";
-                                    echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#updateBookModal' data-book-id='" . $book['id'] . "' data-book-title='" . rawurlencode($book['title']) . "' data-book-release-date='" . $book['release_date'] . "' data-book-description='" . $book['description'] . "'>Update</button></td>";
+                                    echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#updateBookModal' data-book-id='" . $book['id'] . "' data-book-title='" . rawurlencode($book['title']) . "' data-book-release-date='" . $book['release_date'] . "' data-book-description='" . rawurlencode($book['description']) . "' data-book-language-id='" . $book['language_id'] . "'>Update</button></td>";
                                     echo "</tr>";
                                 }
                                 ?>
 
                                 <tr>
-                                    <td colspan="4" style="text-align:center">
-                                        <button class='btn btn-primary btn-block' data-toggle='modal' data-target='#addBookModal'>Add Book</button>
+                                    <td style="text-align:center" colspan="4">
+                                        <button class='btn btn-primary' data-toggle='modal' data-target='#addBookModal'>Add Book</button>
                                     </td>
                                 </tr>
                             </table>
@@ -139,7 +139,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                             </div>
                             <div class="form-group">
                                 <label for="update-description">Description</label>
-                                <textarea class="form-control" id="update-description" rows="3" name="description" placeholder="Enter book description"></textarea>
+                                <textarea class="form-control" id="update-description" rows="3" name="update-description" placeholder="Enter book description"></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="update-language-id">Language:</label>
@@ -175,26 +175,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="addBookForm" enctype="multipart/form-data">
+                        <form id="addBookForm">
                             <div class="form-group">
                                 <label for="add-title">Title</label>
                                 <input type="text" class="form-control" id="add-title" name="add-title" required>
                             </div>
                             <div class="form-group">
-                                <label for="add-release_date">Release Date</label>
-                                <input type="date" class="form-control" id="add-release_date" name="add-release_date" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="add-image">Image</label>
-                                <input type="file" class="form-control-file" id="add-image" name="add-image">
+                                <label for="add-release-date">Release Date</label>
+                                <input type="date" class="form-control" id="add-release-date" name="add-release-date" required>
                             </div>
                             <div class="form-group">
                                 <label for="add-description">Description</label>
-                                <textarea class="form-control" id="add-description" name="add-description" rows="3" required></textarea>
+                                <textarea class="form-control" id="add-description" name="add-description" required></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="add-language-id">Language:</label>
-                                <select class="form-control" name="add-language-id" id="add-language-id" required>
+                                <label for="add-language-id">Language</label>
+                                <select class="form-control" id="add-language-id" name="add-language-id" required>
                                     <?php
                                     $language_query = "SELECT * FROM shelf_exchange.book_language";
                                     $language_result = mysqli_query($conn, $language_query);
@@ -204,15 +200,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                     ?>
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label for="add-image">Image</label>
+                                <input type="file" class="form-control" id="add-image" name="add-image">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Book</button>
                         </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" form="addBookForm">Add Book</button>
                     </div>
                 </div>
             </div>
         </div>
+
     </body>
 
     <?php
