@@ -1,0 +1,8 @@
+.review-date {
+  font-size: 0.8rem; /* set the font size to 80% of the default size */
+  opacity: 0.7; /* set the opacity to 70% */
+}
+
+ul {
+  list-style-type: none;
+}

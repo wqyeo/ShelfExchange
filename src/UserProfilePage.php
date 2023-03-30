@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 
 <?php
-    
-    
     include "php_util/util.php";
-    $connection = createDatabaseConnection();    
-    
+$connection = createDatabaseConnection();
 ?>
 <html>
     <head>
@@ -39,13 +36,11 @@
 
         <!-- Custom JS -->
         <script defer src="js/updateOrDelUserAcc.js"></script>
-
+        <link rel="stylesheet" href="css/userReviews.css">
     </head>
     <body>
         <?php
         include "nav.php";
-        ?>
-        <?php
             // checks if user is logged in
             if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
                 $id = $userSessionHelper->getUserInformation()['user_id'];
@@ -56,15 +51,30 @@
                 if ($result->num_rows > 0){
                     $row = $result->fetch_assoc(); 
                 }
-                if ($id == "22" || $id == "24" || $id == "28")
-                {
-                    header("Location: adminPage.php");
-                }
+                
             }
             else {
                 header("Location: login.php");
             }
         ?>
+
+//TODO: Display other user if requested.
+$targetUserProfileId = $userSessionHelper->getUserInformation()['user_id'];
+// checks if user is logged in
+if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
+    $id = $userSessionHelper->getUserInformation()['user_id'];
+    $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
+    $sel->bind_param("i", $id);
+    $sel->execute();
+    $result = $sel->get_result();
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+    }
+    $sel->close();
+} else {
+    header("Location: login.php");
+}
+?>
 
         <main class="container rounded p-3 my-3 border"> 
             
@@ -108,11 +118,44 @@
                     </div>
                 </div>
             </section>
-            
+
+<?php
+include_once "php_display/userInformationDisplay.php";
+$userReviewDisplay = new UserReviewsDisplay($connection, $userSessionHelper->getUserInformation()['user_id']);
+?>
+
+?<!--Show User Reviews and Orders-->
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#user-reviews">Reviews</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#user-orders">Orders</a>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <div id="user-reviews" class="tab-pane active">
+    <div class="container mt-5">
+        <ul class="review-list">
+<?php
+$userReviewDisplay->displayReviews();
+?>
+</ul></div> 
+    </div>
+  <div id="user-orders" class="tab-pane">
+    <div class="container mt-5">
+        <ul class="review-list">
+<?php $userReviewDisplay->displayOrders(); ?>  
+</ul></div> 
+</div>
+</div>
+
+
         </main>
         <?php
-            include "footer.php";
-        ?>
+    include "footer.php";
+$connection->close();
+?>
     </body>
 </html>
-
