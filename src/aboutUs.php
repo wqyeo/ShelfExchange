@@ -46,8 +46,7 @@
                 }
 
                 
-                $sql = "SELECT * FROM shelf_exchange.user"
-                        . "INNER JOIN shelf_exchange.seller on user.id = seller.user_id";
+                $sql = "SELECT * FROM shelf_exchange.user INNER JOIN shelf_exchange.seller ON user.id = seller.user_id";
                 // Execute the query and store the results in a variable
                 $users = mysqli_query($conn, $sql);
 
@@ -97,7 +96,7 @@
                         {
                             echo  $user['fname'] . $user['lname'] . "<br>";
                             echo $user['email'] . "<br>";
-                            echo $user['contactNo'] . "<br><br>";
+                            echo $user['contact_no'] . "<br><br>";
                         }
                         ?>
                                 
