@@ -21,6 +21,47 @@ function addToCart(bookId) {
   }
 }
 
+function removeFromCart(bookId) {
+  let cartArray = getCartsArray();
+  if (!cartArray.some((el) => el === bookId)) {
+    // Doesnt exist to remove
+    return;
+  }
+
+  var elementIndex = cartArray.indexOf(bookId);
+  cartArray.splice(elementIndex, 1);
+  saveCartsArray(cartArray);
+
+  var cartElement = document.getElementById("book-cart-element-" + bookId);
+  if (cartElement != null) {
+    cartElement.remove();
+  }
+
+  if (cartArray.length <= 0) {
+    var checkoutBtn = document.getElementById("checkout-btn");
+    if (checkoutBtn != null) {
+      checkoutBtn.classList.remove("btn-success");
+      checkoutBtn.classList.add("btn-secondary");
+      checkoutBtn.classList.add("text-white");
+      checkoutBtn.disabled = true;
+      checkoutBtn.innerHTML = "No Items in Cart";
+    }
+  }
+}
+function setCheckoutState() {
+  var cartArray = getCartsArray();
+  if (cartArray.length <= 0) {
+    var checkoutBtn = document.getElementById("checkout-btn");
+    if (checkoutBtn != null) {
+      checkoutBtn.classList.remove("btn-success");
+      checkoutBtn.classList.add("btn-secondary");
+      checkoutBtn.classList.add("text-white");
+      checkoutBtn.disabled = true;
+      checkoutBtn.innerHTML = "No Items in Cart";
+    }
+  }
+}
+
 function saveCartsArray(cartsArray) {
   document.cookie = CART_LIST_COOKIE_NAME + "=" + JSON.stringify(cartsArray);
 }
