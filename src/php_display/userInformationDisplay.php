@@ -21,7 +21,8 @@ class UserReviewsDisplay
     {
         $query = "SELECT review.book_id, review.comment, review.created_at, book.image, book.title, review.rating FROM review JOIN book ON book.id = review.book_id WHERE review.user_id = ?";
         $statement = $this->connection->prepare($query);
-        $statement->bind_param("i", $this->userId);
+        $userId = $this->userId;
+        $statement->bind_param("i", $userId);
         if ($statement->execute()) {
             // Bind variables to the result set columns
             $statement->bind_result($bookId, $comment, $createdAt, $image, $title, $rating);
@@ -65,24 +66,24 @@ class UserReviewsDisplay
 
     public function displayOrders(): void
     {
-        $orderHistoryQuery = "SELECT id, order_date FROM order_history WHERE user_id = ?";
+        $orderHistoryQuery = "SELECT order_history.id, order_history.order_date FROM order_history WHERE order_history.user_id = ?";
         $orderHistoryStatement = $this->connection->prepare($orderHistoryQuery);
-        $orderHistoryStatement->bind_param("i", $this->userId);
+        $userId = $this->userId;
+        $orderHistoryStatement->bind_param("i", $userId);
 
         if ($orderHistoryStatement->execute()) {
             $orderHistoryStatement->bind_result($orderHistoryId, $orderDate);
             // Fetch the result set
             while ($orderHistoryStatement->fetch()) {
-                $ordersQuery = "SELECT quantity, cost_per_quantity FROM book_order WHERE order_id = ?";
+                $ordersQuery = "SELECT book_order.quantity, book_order.cost_per_quantity FROM book_order WHERE book_order.order_id = ?";
                 $ordersStatement = $this->connection->prepare($ordersQuery);
                 $ordersStatement->bind_param("i", $orderHistoryId);
                 $ordersStatement->execute();
-
                 $orderPrice = 0.0;
-                $result = $ordersStatement->get_result();
 
-                while ($row = $result->fetch_assoc()) {
-                    $orderPrice += $row['quantity'] * $row['cost_per_quantity'];
+                $ordersStatement->bind_result($quantity, $costPerQuantity);
+                while ($ordersStatement->fetch()) {
+                    $orderPrice += $costPerQuantity;
                 }
                 $this->showOrder($orderHistoryId, $orderDate, $orderPrice);
                 $ordersStatement->close();

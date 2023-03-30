@@ -22,7 +22,9 @@ function displayBookInformation(bookInformation) {
       price = bookInventory["cost_per_quantity"];
       pricePrefix = "$";
       cartButton =
-        '<button class="btn btn-primary mb-3" onclick="addToCart(' +
+        '<button id="cart-btn-' +
+        bookInformation["id"] +
+        '" class="btn btn-primary mb-3" onclick="addToCart(' +
         bookInformation["id"] +
         ')">Add To Cart</button>';
     }
