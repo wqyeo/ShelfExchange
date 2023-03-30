@@ -59,50 +59,41 @@
             }
             
             // update profile not working, will continue tmr night
-            if(isset($_POST['userID'])) {
-                $userid = $userSessionHelper->getUserInformation()['user_id'];
-                $username = $_POST['username'];
-                $email = $_POST['email'];
-
-                if((!empty($username)) && !empty($email)){
-                    $stmt = $connection->prepare("UPDATE user SET username='$username',email='$email' WHERE id=? ");
-                    $stmt->bind_param("ssi", $username, $email, $userid);
-                    $stmt->execute();
-                    $updatedResults = $stmt->get_result();
-                    if ($updatedResults){
-                        echo "<script> alert('UPDATED SUCCESSFULLY')</script>";
-                    }else
-                    {
-                        echo "<script> alert('UPDATED FAILED')</script>";
-                    }
-                    header("Location: UserProfilePage.php?user='. $userSessionHelper->getUserInformation()['user_id'] . '");
-                }
-                else {
-                    header("Location: UserProfilePage.php?user='. $userSessionHelper->getUserInformation()['user_id'] . '");
-                }
-            }
+            
         ?>
         
         <main class="container rounded p-3 my-3 border"> 
             <h2> Edit Profile </h2>
-            <form action="UserProfilePage.php" method="POST">
-                <input type='hidden' name='id' value='<?php echo $row['id'];?>'/>
+            <form action="updateProfile.php" method="POST">
+                <input type="hidden" id="userID" value="<?php echo $row['id']; ?>">
                 <div class="form-group"> 
                     <label for="username">Username:</label>
-                    <input class="form-control" type="text" maxlength="45" id="username" name="username"
+                    <input class="form-control" type="text" maxlength="45" id="updateusername" name="updateusername"
                         value='<?php echo $row['username'];?>'>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input class="form-control" type="email" required id="email" name="email"
+                    <input class="form-control" type="email" id="updateemail" name="updateemail"
                         value='<?php echo $row['email'];?>'>
                 </div>
+                
+                <div class="form-group">
+                    <label for="contactno">Contact No:</label>
+                    <input class="form-control" type="text" id="updatecontact" name="updatecontact"
+                        value='<?php echo $row['contact_no'];?>'>
+                </div>
+                
+<!--                <div class="mb-3">
+                    <label for="profpic">Profile Picture:</label>
+                    <input class="form-control" type="file" id="updateprofpic" name="updateprofpic"
+                        value='<?php echo $row['profile_picture'];?>'>
+                </div>-->
 
                 <div class="form-group"> 
-                    <button class="btn btn-primary" type="submit" name='update'>Save Changes</button>
+                    <button class="btn btn-primary" type="submit" name='updateProf'>Save Changes</button>
                     <button class="btn btn-danger"> <a href="UserProfilePage.php?user=<?php echo $row['id']; ?>" class="text-light"> Cancel </a></button>
-                    <input type="hidden" id="userID" value="<?php echo $row['id']; ?>">
+                    
                 </div>
             </form>
             

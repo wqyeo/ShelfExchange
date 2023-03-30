@@ -1,15 +1,10 @@
 <?php
 
-$servername = "localhost";
-$dbusername = "shelfdev";
-$password = "lmao01234";
-$dbname = "shelf_exchange";
-
-// Create a connection to the database
-$conn = mysqli_connect($servername, $dbusername, $password, $dbname);
+include "php_util/util.php";
+$connection = createDatabaseConnection();   
 
 // Check connection
-if (!$conn) 
+if (!$connection) 
 {
     die("Connection failed: " . mysqli_connect_error());
 }

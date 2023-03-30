@@ -26,7 +26,10 @@
 
 
          <?php
-        
+            include "php_util/util.php";
+            $connection = createDatabaseConnection();
+         
+         
             function getUserContact(){
                 $servername = "localhost";
                 $dbusername = "shelfdev";
@@ -43,8 +46,7 @@
                 }
 
                 
-                $sql = "SELECT * FROM shelf_exchange.seller"
-                        . "INNER JOIN shelf_exchange.user on user.id = seller.user_id";
+                $sql = "SELECT * FROM shelf_exchange.user INNER JOIN shelf_exchange.seller ON user.id = seller.user_id";
                 // Execute the query and store the results in a variable
                 $users = mysqli_query($conn, $sql);
 
@@ -92,9 +94,9 @@
 
                         foreach ($users as $user)
                         {
-                            echo  '<p> Name:  </p>'. $user['name'];
-                            echo '<p> Email:  </p>'. $user['email'];
-                            echo '<p> Contact:  </p>'. $user['contact'];
+                            echo  $user['fname'] . $user['lname'] . "<br>";
+                            echo $user['email'] . "<br>";
+                            echo $user['contact_no'] . "<br><br>";
                         }
                         ?>
                                 
