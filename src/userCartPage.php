@@ -3,9 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
   <title>BookExchange</title>
   <!-- Favicon-->
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
@@ -17,6 +15,7 @@
 </head>
 
 
+<body class="d-flex flex-column h-100">
 <?php
   require_once "php_util/util.php";
 $connection = createDatabaseConnection();
@@ -40,6 +39,7 @@ $totalPrice = 0;
   </script>
 
 
+<main class="container">
 <!--Cart List-->
 <div class="container mb-2 my-2">
   <div class="row">
@@ -109,7 +109,7 @@ $totalPrice = 0;
     </div>
   </div>
 </div>
-
+</main>
  <?php
 include "footer.php";
 echo "<script>setCheckoutState()</script>";
@@ -117,6 +117,5 @@ $connection->close();
 ?>
   <!-- Bootstrap core JS-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
 
 </html>

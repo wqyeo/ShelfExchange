@@ -81,7 +81,7 @@
             redirectWithError(LoginErrorCode::PASSWORD_INCORRECT);
             exit();
         }
-        
+
         include "php_util/userSessionHelper.php";
         $userSessionHelper = new UserSessionHelper($connection);
         $userSessionHelper->createNewUserSession($row['id'], $row['username'], $row['profile_picture']);

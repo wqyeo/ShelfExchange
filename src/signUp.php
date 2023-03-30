@@ -57,7 +57,7 @@
                 $genericErrorMessage = "Password too short or long";
             }
         }
-    ?>
+        ?>
         
         <main class="container mt-3">
             <form action="processSignUp.php" method="post" onsubmit="return validateForm()">
@@ -109,7 +109,7 @@
             </form>
         </main>
         <?php
-        include "footer.php";
+            include "footer.php";
         ?>
     </body>
 </html>
