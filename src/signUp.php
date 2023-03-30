@@ -23,9 +23,12 @@
         <script defer src="js/signUp.js"></script>
     </head>
     <body class="d-flex flex-column h-100">
-        <?php
-        include "nav.php";
-        ?>
+<?php
+
+    include "php_util/util.php";
+$connection = createDatabaseConnection();
+include "nav.php";
+?>
   <script src="js/html_generator/headerCreator.js"></script>
 <script>
     const headerCreator = new HeaderCreator();
@@ -34,30 +37,30 @@
     </script>
   <!--Find and display server side error to user.-->
     <?php
-        require 'php_error_models/signUpErrorCode.php';
-        $errorMessage = $_GET['error'];
+require 'php_error_models/signUpErrorCode.php';
+$errorMessage = $_GET['error'];
 
-        $emailErrorMessage = "";
-        $usernameErrorMessage = "";
-        $genericErrorMessage = "";
-        if (isset($errorMessage)) {
-            if ($errorMessage == SignUpErrorCode::EMAIL_USED) {
-                $emailErrorMessage = "The email is already in use!";
-            } elseif ($errorMessage == SignUpErrorCode::USERNAME_USED) {
-                $usernameErrorMessage = "Sorry, the username is already taken!";
-            } elseif ($errorMessage == SignUpErrorCode::CONNECTION_FAILED_STATEMENT_ERROR || $errorMessage == SignUpErrorCode::CONNECTION_FAILED) {
-                $genericErrorMessage = "Error trying to sign up, contact support!";
-            } elseif ($errorMessage == SignUpErrorCode::MISSING_FIELDS) {
-                $genericErrorMessage = "Ensure all fields are filled!";
-            } elseif ($errorMessage == SignUpErrorCode::EMAIL_INPUT_INVALID) {
-                $emailErrorMessage = "The email doesn't seem correct.";
-            } elseif ($errorMessage == SignUpErrorCode::USERNAME_INPUT_INVALID) {
-                $usernameErrorMessage = "Username too long or short.";
-            } elseif ($errorMessage == SignUpErrorCode::PASSWORD_INPUT_INVALID) {
-                $genericErrorMessage = "Password too short or long";
-            }
-        }
-        ?>
+$emailErrorMessage = "";
+$usernameErrorMessage = "";
+$genericErrorMessage = "";
+if (isset($errorMessage)) {
+    if ($errorMessage == SignUpErrorCode::EMAIL_USED) {
+        $emailErrorMessage = "The email is already in use!";
+    } elseif ($errorMessage == SignUpErrorCode::USERNAME_USED) {
+        $usernameErrorMessage = "Sorry, the username is already taken!";
+    } elseif ($errorMessage == SignUpErrorCode::CONNECTION_FAILED_STATEMENT_ERROR || $errorMessage == SignUpErrorCode::CONNECTION_FAILED) {
+        $genericErrorMessage = "Error trying to sign up, contact support!";
+    } elseif ($errorMessage == SignUpErrorCode::MISSING_FIELDS) {
+        $genericErrorMessage = "Ensure all fields are filled!";
+    } elseif ($errorMessage == SignUpErrorCode::EMAIL_INPUT_INVALID) {
+        $emailErrorMessage = "The email doesn't seem correct.";
+    } elseif ($errorMessage == SignUpErrorCode::USERNAME_INPUT_INVALID) {
+        $usernameErrorMessage = "Username too long or short.";
+    } elseif ($errorMessage == SignUpErrorCode::PASSWORD_INPUT_INVALID) {
+        $genericErrorMessage = "Password too short or long";
+    }
+}
+?>
         
         <main class="container mt-3">
             <form action="processSignUp.php" method="post" onsubmit="return validateForm()">
@@ -109,7 +112,7 @@
             </form>
         </main>
         <?php
-            include "footer.php";
-        ?>
+    include "footer.php";
+?>
     </body>
 </html>

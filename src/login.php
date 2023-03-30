@@ -21,6 +21,9 @@
 
 <body class="d-flex flex-column h-100">
     <?php
+
+    include "php_util/util.php";
+    $connection = createDatabaseConnection();
     include "nav.php";
     ?>
     <script src="js/html_generator/headerCreator.js"></script>
