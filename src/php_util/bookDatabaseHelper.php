@@ -282,6 +282,50 @@ ORDER BY RAND() LIMIT " . $bookCount;
         return $books;
     }
 
+    public function getBookInventoryByBookId(array $bookIds): ?array
+    {
+        // Convert the book IDs array to a string with comma-separated placeholders for the prepared statement
+        $placeholders = rtrim(str_repeat('?,', count($bookIds)), ',');
+
+        // Prepare the SQL query to select the books with the given IDs, along with their inventory information and author names and tag names
+        $query = "SELECT book_inventory.*
+                    FROM book_inventory
+                    WHERE book_inventory.book_id IN ($placeholders)
+                    GROUP BY book_inventory.book_id, book_inventory.id";
+
+        // Create a prepared statement
+        $stmt = $this->connection->prepare($query);
+
+        // Bind the book IDs array to the prepared statement placeholders
+        $types = str_repeat('i', count($bookIds));
+
+        $stmt->bind_param($types, ...$bookIds);
+
+        // Execute the prepared statement
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        // Create an array to hold the book objects
+        $bookInventory = array();
+        // Loop through the rows in the result set and create a book object for each one
+        while ($row = $result->fetch_assoc()) {
+            $inventory = new stdClass();
+            $inventory->id = $row['id'];
+            $inventory->cost_per_quantity = $row['cost_per_quantity'];
+            $inventory->quantity = $row['quantity'];
+            $inventory->book_id = $row['book_id'];
+            $bookInventory[] = $inventory;
+        }
+
+        // Free the result set and close the prepared statement
+        $result->free();
+        $stmt->close();
+
+        // Return the array of book objects
+        return $bookInventory;
+    }
+
     /**
      * Get information about
      * @param array $bookIds List of book ids to get data.

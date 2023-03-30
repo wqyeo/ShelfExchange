@@ -17,13 +17,32 @@ class UserCartHelper
         $this->bookDatabase = new BookDatabaseHelper($connection);
     }
 
+    public function clearCart(): void
+    {
+        setcookie($this::CART_LIST_COOKIE_NAME, "", time() - 3600);
+    }
 
     private function getBookIdCarts(): array
     {
-        $cookieValue = $_COOKIE[$this::CART_LIST_COOKIE_NAME];
-        $cookieValue = trim($cookieValue, '[]'); // remove the brackets
-        $valueArray = explode(",", $cookieValue);
-        return array_map('intval', $valueArray);
+        if (isset($_COOKIE[$this::CART_LIST_COOKIE_NAME])) {
+            $cookieValue = $_COOKIE[$this::CART_LIST_COOKIE_NAME];
+            $cookieValue = trim($cookieValue, '[]'); // remove the brackets
+            $valueArray = explode(",", $cookieValue);
+            return array_map('intval', $valueArray);
+        } else {
+            return array();
+        }
+    }
+
+    public function getBookInventoryFromCarts(): ?array
+    {
+        $bookIds = $this->getBookIdCarts();
+
+        if (empty($bookIds) || 0 === count($bookIds)) {
+            return array();
+        } else {
+            return $this->bookDatabase->getBookInventoryByBookId($bookIds);
+        }
     }
 
     public function getCartBooks(): ?array

@@ -100,7 +100,7 @@ function saveNewUser($newUsername, $newPassword, $newEmail, $newFname, $newLname
 
     // Check if an account with same username/exists first.
     $errorCode = accountExists($connection, $newUsername, $newEmail);
-    if ($errorCode != NULL){
+    if ($errorCode != null) {
         redirectWithError($errorCode);
         exit();
     }
@@ -145,7 +145,7 @@ function accountExists($connection, string $username, string $email): string
                 $errorCode = SignUpErrorCode::EMAIL_USED;
             }
 
-            if ($errorCode != NULL){
+            if ($errorCode != null) {
                 // There is already an error,
                 // break out of loop to return it.
                 break;

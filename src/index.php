@@ -15,8 +15,6 @@
   <link href="css/styles.css" rel="stylesheet" />
   <link href="css/browseList.css" rel="stylesheet"/>
 </head>
-
-<body>
   <?php
   require_once "php_util/util.php";
   $connection = createDatabaseConnection();
