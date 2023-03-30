@@ -5,9 +5,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
 -->
 
 <html lang="en">
-    <?php
-        include "nav.php"
-    ?>
+<?php
+
+include_once "php_util/util.php";
+$connection = createDatabaseConnection();
+include "nav.php";
+?>
     <head>
         <title>Admin Page</title>
         <meta charset="UTF-8">
@@ -38,92 +41,44 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
     
     <body>
         <?php
-        include 'util.php';
-        function getBooks() 
-        {
-            //Create Database connection
-            $servername = "localhost";
-            $dbusername = "shelfdev";
-            $password = "lmao01234";
-            $dbname = "shelf_exchange";
-            
-            // Create a connection to the database
-            $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
+function getBooks(mysqli $connection)
+{
+    // SQL query to retrieve books
+    $sql = "SELECT * FROM shelf_exchange.book";
 
-            // Check connection
-            if (!$conn) 
-            {
-                die("Connection failed: " . mysqli_connect_error());
-            }
+    // Execute the query and store the results in a variable
+    $books = mysqli_query($connection, $sql);
 
-            // SQL query to retrieve books
-            $sql = "SELECT * FROM shelf_exchange.book";
-            
-            // Execute the query and store the results in a variable
-            $books = mysqli_query($conn, $sql);
-            
-            // Check if any results were returned
-            if (mysqli_num_rows($books) > 0) 
-            {
-                return $books;
-            } 
-            else 
-            {
-                echo "No results found.";
-            }
+    // Check if any results were returned
+    if (mysqli_num_rows($books) > 0) {
+        return $books;
+    } else {
+        echo "No results found.";
+    }
 
-            // Close the database connection
-            mysqli_close($conn);
-        }
-        function getUsers(){
-            $servername = "localhost";
-            $dbusername = "shelfdev";
-            $password = "lmao01234";
-            $dbname = "shelf_exchange";
-            
-            // Create a connection to the database
-            $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
+    // Close the database connection
+    mysqli_close($connection);
+}
+function getUsers(mysqli $connection)
+{
+    // SQL query to retrieve books
+    $sql = "SELECT * FROM shelf_exchange.user";
+    // Execute the query and store the results in a variable
+    $users = mysqli_query($connection, $sql);
 
-            // Check connection
-            if (!$conn) 
-            {
-                die("Connection failed: " . mysqli_connect_error());
-            }
+    // Check if any results were returned
+    if (mysqli_num_rows($users) > 0) {
+        return $users;
+    } else {
+        echo "No results found.";
+    }
 
-            // SQL query to retrieve books
-            $sql = "SELECT * FROM shelf_exchange.user";
-            // Execute the query and store the results in a variable
-            $users = mysqli_query($conn, $sql);
-            
-            // Check if any results were returned
-            if (mysqli_num_rows($users) > 0) 
-            {
-                return $users;
-            } 
-            else 
-            {
-                echo "No results found.";
-            }
-
-            // Close the database connection
-            mysqli_close($conn);
-        }
-        $servername = "localhost";
-        $dbusername = "shelfdev";
-        $password = "lmao01234";
-        $dbname = "shelf_exchange";
-
-        // Create a connection to the database
-        $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
-
-        // Check connection
-        if (!$conn) 
-        {
-            die("Connection failed: " . mysqli_connect_error());
-        }
-        $query = "SELECT * FROM shelf_exchange.user";
-        $result = mysqli_query($conn, $query);
-        ?>
+    // Close the database connection
+    mysqli_close($connection);
+}
+$query = "SELECT * FROM shelf_exchange.user";
+$result = mysqli_query($connection, $query);
+?>
      
         <main class="container rounded p-3 my-3 border"> 
            
@@ -172,11 +127,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                 </tr>
                                 <!-- try use while loop -->
                                 <?php
-                                //$users = getUsers();
-                                while ($row = mysqli_fetch_array($result)) {
-                                    //foreach ($users as $user)
-                                
-                                ?>
+                        //$users = getUsers();
+                        while ($row = mysqli_fetch_array($result)) {
+                            //foreach ($users as $user)
+
+                            ?>
                                     <tr>
                                     <td><?php echo $row["id"]; ?></td>
                                     <td><?php echo $row["username"]; ?> </td>
@@ -185,8 +140,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                     <td><button type='button' class='btn btn-danger text-light' onclick='deleteUser(<?php echo $row["id"]; ?>)'>  Delete </button></td>
                                     </tr>
                                 <?php
-                                }
-                                ?>
+                        }
+?>
                             </table>
                         </div>
                     </div>
@@ -204,17 +159,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                 </tr>
                                 
                                 <?php
-                                $books = getBooks();
-                                
-                                foreach ($book as $book)
-                                {
-                                    echo "<tr>";
-                                    echo "<td> <img src='" .$book['image'] . "'></td>";
-                                    echo "<td>" . $book['title'] . "</td>";
-                                    echo "<td>" . $book['release_date'] . "</td>";
-                                    echo "</tr>";
-                                }
-                                ?>
+$books = getBooks($connection);
+
+foreach ($book as $book) {
+    echo "<tr>";
+    echo "<td> <img src='" .$book['image'] . "'></td>";
+    echo "<td>" . $book['title'] . "</td>";
+    echo "<td>" . $book['release_date'] . "</td>";
+    echo "</tr>";
+}
+?>
                             </table>
                         </div>
                     </div>
@@ -313,7 +267,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         }
     </script>
     <?php
-        include "footer.php"
-    ?>
+        include "footer.php";
+$connection->close();
+?>
 </html>
-

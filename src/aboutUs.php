@@ -27,42 +27,39 @@
 
          <?php
             include "php_util/util.php";
-            $connection = createDatabaseConnection();
-         
-         
-            function getUserContact(){
-                $servername = "localhost";
-                $dbusername = "shelfdev";
-                $password = "lmao01234";
-                $dbname = "shelf_exchange";
+        $connection = createDatabaseConnection();
 
-                // Create a connection to the database
-                $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
 
-                // Check connection
-                if (!$conn) 
-                {
-                    die("Connection failed: " . mysqli_connect_error());
-                }
+        function getUserContact()
+        {
+            $servername = "localhost";
+            $dbusername = "shelfdev";
+            $password = "lmao01234";
+            $dbname = "shelf_exchange";
 
-                
-                $sql = "SELECT * FROM shelf_exchange.user INNER JOIN shelf_exchange.seller ON user.id = seller.user_id";
-                // Execute the query and store the results in a variable
-                $users = mysqli_query($conn, $sql);
+            // Create a connection to the database
+            $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
 
-                // Check if any results were returned
-                if (mysqli_num_rows($users) > 0) 
-                {
-                    return $users;
-                } 
-                else 
-                {
-                    echo "No results found.";
-                }
-
-                // Close the database connection
-                mysqli_close($conn);
+            // Check connection
+            if (!$conn) {
+                die("Connection failed: " . mysqli_connect_error());
             }
+
+
+            $sql = "SELECT * FROM shelf_exchange.user INNER JOIN shelf_exchange.seller ON user.id = seller.user_id";
+            // Execute the query and store the results in a variable
+            $users = mysqli_query($conn, $sql);
+
+            // Check if any results were returned
+            if (mysqli_num_rows($users) > 0) {
+                return $users;
+            } else {
+                echo "No results found.";
+            }
+
+            // Close the database connection
+            mysqli_close($conn);
+        }
         ?>
   <script src="js/html_generator/headerCreator.js"></script>
   <script>
@@ -92,13 +89,12 @@
                     <?php
                     $users = getUserContact();
 
-                        foreach ($users as $user)
-                        {
-                            echo  $user['fname'] . " " . $user['lname'] . "<br>";
-                            echo $user['email'] . "<br>";
-                            echo $user['contact_no'] . "<br><br>";
-                        }
-                        ?>
+        foreach ($users as $user) {
+            echo  $user['fname'] . " " . $user['lname'] . "<br>";
+            echo $user['email'] . "<br>";
+            echo $user['contact_no'] . "<br><br>";
+        }
+        ?>
                                 
 
                 </div>
