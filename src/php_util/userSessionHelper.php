@@ -32,7 +32,7 @@ class UserSessionHelper
         $statement->execute();
         $statement->close();
     }
-    
+
     private function fetchUserInformation(string $token): void
     {
         $sql = "SELECT s.*, u.username, u.profile_picture FROM user u JOIN session_token s ON u.id = s.user_id WHERE s.token = ?";

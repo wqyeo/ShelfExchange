@@ -82,11 +82,13 @@ function bindBookOrders($connection, $orderId, $bookInventoryInformations)
 
         $stmt = $connection->prepare("INSERT INTO book_order (book_inventory_id, order_id, quantity, cost_per_quantity) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("iiid", $bookInventoryId, $orderId, $quantity, $costPerQuantity);
+        $stmt->execute();
         $stmt->close();
 
         // Decrement the book inventory quantity by the ordered quantity
         $updateStmt = $connection->prepare("UPDATE book_inventory SET quantity = quantity - ? WHERE id = ?");
         $updateStmt->bind_param("ii", $quantity, $bookInventoryId);
+        $updateStmt->execute();
         $updateStmt->close();
     }
 }
