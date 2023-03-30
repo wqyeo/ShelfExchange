@@ -28,8 +28,10 @@ error_reporting(E_ALL | E_STRICT);
 <?php
 function showSignUpLogin(): void
 {
-    echo ' <li class="nav-item"><a class="nav-link" href="signUp.php">Sign up</a></li>
-                     <li class="nav-item"><a class="nav-link" href="login.php">Log in</a></li>';
+    echo ' <li class="nav-item">
+            <a class="nav-link" href="signUp.php">Sign up</a></li>
+            <li class="nav-item">
+            <a class="nav-link" href="login.php">Log in</a></li>';
 }
 
 if (!isset($connection)) {
@@ -40,7 +42,8 @@ if (!isset($connection)) {
 
     if ($userSessionHelper->isLoggedIn()) {
         echo '<li><img width="42" height="42" src="' . $userSessionHelper->getUserInformation()['profile_picture']  . '" alt="profile picture"></li>
-<li><a class="nav-link" href="UserProfilePage.php?user=' . $userSessionHelper->getUserInformation()['user_id'] . '">' . $userSessionHelper->getUserInformation()['username']  . '</a> ';
+<li><a class="nav-link" href="UserProfilePage.php?user=' . $userSessionHelper->getUserInformation()['user_id'] . '">' . $userSessionHelper->getUserInformation()['username']  . '</a> '
+                . '<li class="nav-item"><a class="nav-link" href="processLogout.php">Logout</a></li>';
     } else {
         showSignUpLogin();
     }

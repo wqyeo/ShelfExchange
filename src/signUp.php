@@ -64,7 +64,7 @@
                 
                 <div class="mb-3">
                   <label for="fname" class="form-label">First Name</label>
-                  <input type="text" class="form-control" id="fname" name="fname" required>
+                  <input type="text" class="form-control" id="fname" name="fname">
                 </div>
                 
                 <div class="mb-3">
