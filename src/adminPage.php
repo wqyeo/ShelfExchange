@@ -4,6 +4,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to c
 Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edit this template
 -->
 <html lang="en">
+
+    <?php
+
+        include_once "php_util/util.php";
+        $connection = createDatabaseConnection();
+        $query = "SELECT * FROM shelf_exchange.user";
+        $result = mysqli_query($connection, $query);
+        include "nav.php";
+    ?>
+
     <head>
         <title>Admin Page</title>
         <meta charset="UTF-8">
@@ -28,14 +38,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         </script>
 
         <!-- Custom JS & CSS -->
+
         <script defer src="js/main.js"></script>
         <script defer src="js/updateBook.js"></script>
+        <script defer src="js/updateOrDelUserAcc.js"></script>
+
         <link rel="stylesheet" href="css/adminPage.css">
     </head>
 
     <body>
         <?php
-        include "nav.php";
+        
         include "book_functions.php";
         ?>
         <main class="container rounded p-3 my-3 border"> 
@@ -71,16 +84,32 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 <section id='accManagement' style='padding-bottom: 50px;'>
                     <div class='row'>
                         <div class="col">
-                            <div class='dropdown' style='text-align: center;'>
-                                <button class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Account Management
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
-                            </div>
+                            <h1> ACCOUNT MANAGEMENT </h1> 
+                            <button type='button' class='btn btn-success' data-toggle='modal' data-target='#createNewUser'> Create New User </button>
+                            <table class="table table-bordered text-center"> 
+                                <tr class="bg-dark text-white">
+                                    <th> User ID </th>
+                                    <th> Username </th>
+                                    <th> Email </th>
+                                    <th> Edit User </th>
+                                    <th> Delete User </th>
+                                </tr>
+                                
+                                <?php
+                        
+                                    while ($row = mysqli_fetch_array($result)) {
+                                ?>
+                                    <tr>
+                                    <td><?php echo $row["id"]; ?></td>
+                                    <td><?php echo $row["username"]; ?> </td>
+                                    <td><?php echo $row["email"]; ?></td>
+                                    <td><button type='button' class='btn btn-primary' onclick='getUserDetails(<?php echo $row["id"]; ?>)'> Edit </button></td> 
+                                    <td><button type='button' class='btn btn-danger text-light' onclick='deleteUser(<?php echo $row["id"]; ?>)'>  Delete </button></td>
+                                    </tr>
+                                <?php
+                                    }
+                                ?>
+                            </table>
 
                         </div>
                     </div>
@@ -119,6 +148,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 </section>
             </div>
         </main>
+
 
         <!-- Book Update Modal -->
         <div class="modal fade" id="updateBookModal" tabindex="-1" role="dialog" aria-labelledby="updateBookModalLabel" aria-hidden="true">
@@ -221,7 +251,101 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
     </main>
 </body>
 
-<?php
-include "footer.php"
-?>
+        <!-- add user modal -->
+        <div class="modal fade" id="createNewUser" tabindex="-1" role="dialog" aria-labelledby="createUser" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="createUser">Create User</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    
+                    <div class="form-group">
+                        <label for="createUsername">Username</label>
+                        <input type="text" class="form-control" id="createUsername">
+                    </div>
+                    <div class="form-group">
+                        <label for="createEmail">Email</label>
+                        <input type="text" class="form-control" id="createEmail">
+                    </div>
+                    <div class="form-group">
+                        <label for="createPassword">Password</label>
+                        <input type="password" class="form-control" id="createPassword">
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="button" name="create" form="createUser" id="create" class="btn btn-primary"
+                          onclick='addUser()'>Create</button>
+                  
+                </div>
+              </div>
+            </div>
+        </div>
+        <!-- update modal --> 
+        <div class="modal fade" id="updateUserDetails" tabindex="-1" role="dialog" aria-labelledby="updateUser" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="updateUser">Update User</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="updateUsername">Username</label>
+                        <input type="text" class="form-control" id="updateUsername">
+                    </div>
+                    <div class="form-group">
+                        <label for="updateEmail">Email</label>
+                        <input type="text" class="form-control" id="updateEmail">
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" name="update" form="updateUser" id="update" class="btn btn-primary"
+                            onclick='updateDetails()'>Update User</button>
+                    <input type="hidden" id="UserId" value="<?php echo $row['id']; ?>">
+                </div>
+              </div>
+            </div>
+        </div>
+        
+    </body>
+    <script>
+       //still in progress
+        function addUser(){
+            $('#createNewUser').modal("show");
+            var addName = $('#createUsername').val();
+            var addEmail = $('#createEmail').val();
+            var addPassword = $('#createPassword').val();
+            
+            $.ajax({
+                url:"createUser.php",
+                type:'post',
+                data:{
+                    sendEmail: addEmail,
+                    sendName: addName,
+                    sendPassword: addPassword
+                }
+                success:function(data,status){
+                    $('#createNewUser').modal("hide");
+//                    location.href='testAPAcc.php';
+                    
+                }
+            });
+        }
+    </script>
+    <?php
+        include "footer.php";
+    $connection->close();
+    ?>
+
 </html>

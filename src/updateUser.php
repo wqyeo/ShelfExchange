@@ -13,7 +13,7 @@ if (isset($_POST['updateID'])) {
     $user_id = $_POST['updateID'];
 
     $sql = "SELECT * FROM user WHERE id=$user_id";
-    $result = mysqli_query($conn, $sql);
+    $result = mysqli_query($connection, $sql);
     $response=array();
     while ($row= mysqli_fetch_assoc($result)) {
         $response = $row;
@@ -33,9 +33,9 @@ if (isset($_POST['UserId'])) {
 
     $sql = "UPDATE user SET username='$name', email='$email' where id='$uniqueid'";
 
-    $result = mysqli_query($conn, $sql);
+    $result = mysqli_query($connection, $sql);
     if ($result) {
-        header("location: testAPAcc.php");
+        header("location: adminPage.php");
     } else {
         echo "failed";
         echo "<script> alert('failed') </script>";
