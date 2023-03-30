@@ -94,7 +94,7 @@
 
                         foreach ($users as $user)
                         {
-                            echo  $user['fname'] . $user['lname'] . "<br>";
+                            echo  $user['fname'] . " " . $user['lname'] . "<br>";
                             echo $user['email'] . "<br>";
                             echo $user['contact_no'] . "<br><br>";
                         }
