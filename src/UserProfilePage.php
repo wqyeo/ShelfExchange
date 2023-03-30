@@ -87,11 +87,12 @@
                         <!--<a href='#' style='font-size: 10px;'> Edit Profile </a>-->
                         <p> Name: <?php echo $row['username']; ?>  </p>
                         <p> Email: <?php echo $row['email']; ?> </p>
+                        <p> Contact No: <?php echo $row['contact_no']; ?> </p>
 
                     </div>
 
                     <div class='col'> 
-                        <h5> <b> About Me </b> </h5>
+                        <h5> <b> Favourite Books </b> </h5>
                         <p style='text-align:center;'> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book</p>
                     </div>
                     
@@ -99,7 +100,7 @@
                        <h5> <b> Settings </b> </h5>
 <!--                       <p style='text-align:center;'> <a href='#' style='color: red;' 
                             onclick='deleteAcc(<?php echo $row['id']; ?>)'> Delete Account </a> </p>-->
-                            <button type='button' class='btn btn-danger text-light' 
+                            <button type='button' class='btn btn-danger text-light' style="display: block; margin: 0 auto"
                                     onclick='deleteAcc(<?php echo $row['id']; ?>)'>  Delete Account </button>
                     </div>
                 </div>
