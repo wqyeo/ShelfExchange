@@ -314,7 +314,6 @@ ORDER BY RAND() LIMIT " . $bookCount;
             $inventory->id = $row['id'];
             $inventory->cost_per_quantity = $row['cost_per_quantity'];
             $inventory->quantity = $row['quantity'];
-            $inventory->book_id = $row['book_id'];
             $bookInventory[] = $inventory;
         }
 

@@ -17,6 +17,10 @@ class UserCartHelper
         $this->bookDatabase = new BookDatabaseHelper($connection);
     }
 
+    public function clearCart(): void
+    {
+        setcookie($this::CART_LIST_COOKIE_NAME, "", time() - 3600);
+    }
 
     private function getBookIdCarts(): array
     {
@@ -24,6 +28,17 @@ class UserCartHelper
         $cookieValue = trim($cookieValue, '[]'); // remove the brackets
         $valueArray = explode(",", $cookieValue);
         return array_map('intval', $valueArray);
+    }
+
+    public function getBookInventoryFromCarts(): ?array
+    {
+        $bookIds = $this->getBookIdCarts();
+
+        if (empty($bookIds) || 0 === count($bookIds)) {
+            return array();
+        } else {
+            return $this->bookDatabase->getBookInventoryByBookId($bookIds);
+        }
     }
 
     public function getCartBooks(): ?array
