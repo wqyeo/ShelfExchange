@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 
 <?php
-    
-    
-    include "php_util/util.php";
-    $connection = createDatabaseConnection();    
-    
+include "php_util/util.php";
+$connection = createDatabaseConnection();
 ?>
 <html>
     <head>
-        
+
         <title> <?php echo $row['username']; ?> Account</title>"
-        
+
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -42,44 +39,46 @@
 
     </head>
     <body>
+<?php
+include "nav.php";
+?>
         <?php
-        include "nav.php";
-        ?>
-        <?php
-            // checks if user is logged in
-            if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
-                $id = $userSessionHelper->getUserInformation()['user_id'];
-                $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
-                $sel->bind_param("i", $id);
-                $sel->execute();
-                $result = $sel->get_result();
-                if ($result->num_rows > 0){
-                    $row = $result->fetch_assoc(); 
-                }
-                
+        // checks if user is logged in
+        if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
+            $id = $userSessionHelper->getUserInformation()['user_id'];
+            if ($id == "24" || $id == "26" || "28" ) {
+                header("Location: adminPage.php");
+                exit();
             }
-            else {
-                header("Location: login.php");
+            $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
+            $sel->bind_param("i", $id);
+            $sel->execute();
+            $result = $sel->get_result();
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
             }
+        } else {
+            header("Location: login.php");
+        }
         ?>
 
         <main class="container rounded p-3 my-3 border"> 
-            
+
             <div id='content'>
                 <input type='hidden' name='id' value='<?php echo $row['id']; ?>'/>
                 <a href='EditProfile.php?user=<?php echo $row['id']; ?>'><img src='images/editprof.png' class='rounded circle' style='height:20px; width:20px;'></a>
             </div>
             <h3 style='padding-top: 5px; padding-bottom: 10px;'> Welcome, <?php echo $row['username']; ?> </h3>
-            
+
             <section id='profilepic' style='text-align:center;'>
-                
+
                 <figure>
-  
+
                     <img class='img-thumbnail' src='images/genericprofpic.png' alt='profpic'>
                 </figure>
 
             </section>
-            
+
             <section id='personalinfo'> 
                 <div class='row'> 
                     <div class='col'> 
@@ -95,21 +94,21 @@
                         <h5> <b> Favourite Books </b> </h5>
                         <p style='text-align:center;'> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book</p>
                     </div>
-                    
+
                     <div class='col'>
-                       <h5> <b> Settings </b> </h5>
-<!--                       <p style='text-align:center;'> <a href='#' style='color: red;' 
-                            onclick='deleteAcc(<?php echo $row['id']; ?>)'> Delete Account </a> </p>-->
-                            <button type='button' class='btn btn-danger text-light' style="display: block; margin: 0 auto"
-                                    onclick='deleteAcc(<?php echo $row['id']; ?>)'>  Delete Account </button>
+                        <h5> <b> Settings </b> </h5>
+ <!--                       <p style='text-align:center;'> <a href='#' style='color: red;' 
+                             onclick='deleteAcc(<?php echo $row['id']; ?>)'> Delete Account </a> </p>-->
+                        <button type='button' class='btn btn-danger text-light' style="display: block; margin: 0 auto"
+                                onclick='deleteAcc(<?php echo $row['id']; ?>)'>  Delete Account </button>
                     </div>
                 </div>
             </section>
-            
+
         </main>
-        <?php
-            include "footer.php";
-        ?>
+<?php
+include "footer.php";
+?>
     </body>
 </html>
 

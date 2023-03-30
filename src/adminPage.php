@@ -38,13 +38,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         include "nav.php";
         include "book_functions.php";
         ?>
+
         <main class="container rounded p-3 my-3 border"> 
             <div class='col-4' style='display: inline-block;'>
                 <section id="profilepic" style='display: inline-block;'>
-
-
                     <figure>
-
                         <img class="img-thumbnail" src="images/genericprofpic.png" alt="Poodle"
                              title="View larger image..."/>
                     </figure>
@@ -57,9 +55,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                         <div class="col" style='display: inline-block;'> 
                             <h5 style='text-align:left;'><b> Personal Information </b> </h5>
                             <!--<a href="#" style="font-size: 10px;"> Edit Profile </a>-->
-                            <p> Name: (Name) </p>
-                            <p> Email: (Email) </p>
-                            <p> Contact: (Phone Number) </p>
+                            <p> Name: <?php echo $row['username']; ?>  </p>
+                            <p> Email: <?php echo $row['email']; ?> </p>
+                            <p> Contact No: <?php echo $row['contact_no']; ?> </p>
 
                         </div>
 
