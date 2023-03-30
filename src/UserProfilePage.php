@@ -41,6 +41,22 @@ $connection = createDatabaseConnection();
     <body>
         <?php
         include "nav.php";
+            // checks if user is logged in
+            if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
+                $id = $userSessionHelper->getUserInformation()['user_id'];
+                $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
+                $sel->bind_param("i", $id);
+                $sel->execute();
+                $result = $sel->get_result();
+                if ($result->num_rows > 0){
+                    $row = $result->fetch_assoc(); 
+                }
+                
+            }
+            else {
+                header("Location: login.php");
+            }
+        ?>
 
 //TODO: Display other user if requested.
 $targetUserProfileId = $userSessionHelper->getUserInformation()['user_id'];
