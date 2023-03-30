@@ -2,14 +2,9 @@
 <?php 
 
     include "php_util/util.php";
-    $connection = createDatabaseConnection();
-    include_once "php_util/userSessionHelper.php";
-    $userSessionHelper = new UserSessionHelper($connection);
+    $connection = createDatabaseConnection();  
     
-    $query = "SELECT * FROM shelf_exchange.user";
-    $result = mysqli_query($conn, $query);
-
-    $row = mysqli_fetch_assoc($result);    
+    
 ?>
 <html>
     <head>
@@ -40,21 +35,60 @@
         </script>
 
         <!-- Custom JS -->
-        <script defer src="js/main.js"></script>
+        <script defer src="js/updateOrDelUserAcc.js"></script>
 
     </head>
     <body>
         <?php
         include "nav.php";
         ?>
-        
+        <?php
+            // checks if user is logged in
+            if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
+                $id = $userSessionHelper->getUserInformation()['user_id'];
+                $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
+                $sel->bind_param("i", $id);
+                $sel->execute();
+                $result = $sel->get_result();
+                if ($result->num_rows > 0){
+                    $row = $result->fetch_assoc(); 
+                }
+            }
+            else {
+                header("Location: login.php");
+            }
+            
+            // update profile not working, will continue tmr night
+            if(isset($_POST['userID'])) {
+                $userid = $userSessionHelper->getUserInformation()['user_id'];
+                $username = $_POST['username'];
+                $email = $_POST['email'];
+
+                if((!empty($username)) && !empty($email)){
+                    $stmt = $connection->prepare("UPDATE user SET username='$username',email='$email' WHERE id=? ");
+                    $stmt->bind_param("ssi", $username, $email, $userid);
+                    $stmt->execute();
+                    $updatedResults = $stmt->get_result();
+                    if ($updatedResults){
+                        echo "<script> alert('UPDATED SUCCESSFULLY')</script>";
+                    }else
+                    {
+                        echo "<script> alert('UPDATED FAILED')</script>";
+                    }
+                    header("Location: UserProfilePage.php?user='. $userSessionHelper->getUserInformation()['user_id'] . '");
+                }
+                else {
+                    header("Location: UserProfilePage.php?user='. $userSessionHelper->getUserInformation()['user_id'] . '");
+                }
+            }
+        ?>
         
         <main class="container rounded p-3 my-3 border"> 
             <h2> Edit Profile </h2>
-            <form action="#" method="POST">
+            <form action="UserProfilePage.php" method="POST">
                 <input type='hidden' name='id' value='<?php echo $row['id'];?>'/>
                 <div class="form-group"> 
-                    <label for="username">Name:</label>
+                    <label for="username">Username:</label>
                     <input class="form-control" type="text" maxlength="45" id="username" name="username"
                         value='<?php echo $row['username'];?>'>
                 </div>
@@ -67,7 +101,8 @@
 
                 <div class="form-group"> 
                     <button class="btn btn-primary" type="submit" name='update'>Save Changes</button>
-                    <button class="btn btn-danger"> <a href="UserProfilePage.php" class="text-light"> Cancel </a></button>
+                    <button class="btn btn-danger"> <a href="UserProfilePage.php?user=<?php echo $row['id']; ?>" class="text-light"> Cancel </a></button>
+                    <input type="hidden" id="userID" value="<?php echo $row['id']; ?>">
                 </div>
             </form>
             

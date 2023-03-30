@@ -77,25 +77,43 @@ class BookInformationFetcher
         if (count($booksResult) > 0) {
             // For each result, generate HTML card.
             for ($i = 0; $i < count($booksResult); $i++) {
+                $row = $booksResult[$i];
+                // Check book quanity, to determine if we should disable
+                // the cart button.
+                $bookQuantity = -1;
+                if (isset($row['quantity'])) {
+                    $bookQuantity = $row['quantity'];
+                }
+
+                $cartButton = "";
+                if ($bookQuantity >= 1) {
+                    $cartButton = '<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                <div class="text-center">' . $row['cost_per_quantity'] . '</div>
+                <div class="text-center"><a id="cart-btn-'. $row["id"] . '" class="btn btn-outline-dark mt-auto" onclick="addToCart(' . $row["id"] . ')" href="#">Add to Cart</a></div>
+              </div>';
+                } else {
+                    $cartButton = '<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                <div class="text-center"><a id="cart-btn-'. $row["id"] . '" class="text-white btn btn-secondary btn-outline-dark mt-auto" href="#" disabled>Out of Stock</a></div>
+              </div>';
+                }
+
                 echo '<div class="col mb-5">
             <div class="card h-100">
               <!--Book image; Href to information-->
-            <a href="bookInformation.php?book=' . $booksResult[$i]["id"] . '"> 
-              <img class="card-img-top" src="' . $booksResult[$i]["image"] . '" alt="..." />
+            <a href="bookInformation.php?book=' . $row["id"] . '"> 
+              <img class="card-img-top" src="' . $row["image"] . '" alt="..." />
             </a>  
             <!-- Product details-->
               <div class="card-body p-4">
                 <div class="text-center">
                   <!--Book title; Href to information-->
-                <a href="bookInformation.php?book=' . $booksResult[$i]["id"] . '" class="text-decoration-none text-dark">
-                  <h5>' . $booksResult[$i]["title"] . '</h5>
+                <a href="bookInformation.php?book=' . $row["id"] . '" class="text-decoration-none text-dark">
+                  <h5>' . $row["title"] . '</h5>
                 </a>
                 </div>
               </div>
               <!-- Product actions-->
-              <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to Cart</a></div>
-              </div>
+                ' . $cartButton .  '
             </div>
           </div>';
             }

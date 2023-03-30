@@ -23,6 +23,45 @@
         <?php
             include "nav.php"
         ?>
+
+
+         <?php
+        
+            function getUserContact(){
+                $servername = "localhost";
+                $dbusername = "shelfdev";
+                $password = "lmao01234";
+                $dbname = "shelf_exchange";
+
+                // Create a connection to the database
+                $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
+
+                // Check connection
+                if (!$conn) 
+                {
+                    die("Connection failed: " . mysqli_connect_error());
+                }
+
+                
+                $sql = "SELECT * FROM shelf_exchange.seller"
+                        . "INNER JOIN shelf_exchange.user on user.id = seller.user_id";
+                // Execute the query and store the results in a variable
+                $users = mysqli_query($conn, $sql);
+
+                // Check if any results were returned
+                if (mysqli_num_rows($users) > 0) 
+                {
+                    return $users;
+                } 
+                else 
+                {
+                    echo "No results found.";
+                }
+
+                // Close the database connection
+                mysqli_close($conn);
+            }
+        ?>
   <script src="js/html_generator/headerCreator.js"></script>
   <script>
     const headerCreator = new HeaderCreator();
@@ -48,8 +87,17 @@
 
                 <div class="text-center mt-3">
                     <h3 class="display-4 fw-bolder">Contact Us</h3>
-                    <p> Name: (Name) </p>
-                    <p> Email: (Email) </p>
+                    <?php
+                    $users = getUserContact();
+
+                        foreach ($users as $user)
+                        {
+                            echo  '<p> Name:  </p>'. $user['name'];
+                            echo '<p> Email:  </p>'. $user['email'];
+                            echo '<p> Contact:  </p>'. $user['contact'];
+                        }
+                        ?>
+                                
 
                 </div>
             </section>

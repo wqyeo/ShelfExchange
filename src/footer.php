@@ -21,3 +21,13 @@
         <a href="#" class="text-white">Shelf Exchange</a> 2023. All rights reserved.</p>
     </div>
 </footer>
+
+<?php
+
+echo '<script>
+if (typeof setCartButtonStates === "function") {
+  setCartButtonStates();
+}
+</script>';
+
+?>

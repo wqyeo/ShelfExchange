@@ -19,12 +19,14 @@ class BookDatabaseHelper
     public function fetchBookBySearchQuery(string $searchQuery): mysqli_result
     {
         $searchQuery = mysqli_real_escape_string($this->connection, $searchQuery);
-        $sql = "SELECT DISTINCT book.*
+        $sql = "
+SELECT DISTINCT book.*, book_inventory.quantity, book_inventory.cost_per_quantity
 FROM book
 LEFT JOIN book_author ON book.id = book_author.book_id
 LEFT JOIN author ON author.id = book_author.author_id
 LEFT JOIN book_tag ON book.id = book_tag.book_id
 LEFT JOIN tag ON tag.id = book_tag.tag_id
+LEFT JOIN book_inventory ON book.id = book_inventory.book_id
 WHERE book.title LIKE CONCAT('%', ? ,'%')
   OR author.name LIKE CONCAT('%', ? ,'%')
   OR tag.name LIKE CONCAT('%', ? ,'%')";
@@ -43,7 +45,11 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
      */
     public function randomlyFetchBooks(int $bookCount): mysqli_result
     {
-        $sql = "SELECT * FROM book ORDER BY RAND() LIMIT " . $bookCount;
+        $sql = "
+SELECT book.*, book_inventory.quantity, book_inventory.cost_per_quantity
+FROM book
+LEFT JOIN book_inventory ON book.id = book_inventory.book_id
+ORDER BY RAND() LIMIT " . $bookCount;
         return $this->connection->query($sql);
     }
 
@@ -88,8 +94,20 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
         $bookInfo['authors'] = $authors;
         $bookInfo['tags'] = $tags;
         $bookInfo['reviews'] = $reviews;
+        $bookInfo['inventory'] = $this->getBookInventory($bookId);
 
         return $bookInfo;
+    }
+
+    private function getBookInventory(int $bookId): ?array
+    {
+        $statement = $this->connection->prepare("SELECT * FROM book_inventory WHERE book_id=?");
+        $statement->bind_param("i", $bookId);
+        $statement->execute();
+        $result = $statement->get_result();
+        $bookInventory = $result->fetch_assoc();
+        $statement->close();
+        return $bookInventory;
     }
 
     private function getBook(int $bookId): ?array
@@ -181,7 +199,8 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
         }
 
         // Prepare SQL statement to select books by tag
-        $sql = "SELECT book.* FROM book
+        $sql = "SELECT book.*, book_inventory.quantity, book_inventory.cost_per_quantity FROM book
+                LEFT JOIN book_inventory ON book.id = book_inventory.book_id
                 INNER JOIN book_tag ON book.id = book_tag.book_id
                 WHERE book_tag.tag_id = ? " . $exclude . "
                 ORDER BY RAND()
@@ -230,7 +249,8 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
         }
 
         // Prepare SQL statement to select books by tag
-        $sql = "SELECT book.* FROM book
+        $sql = "SELECT book.*, book_inventory.quantity, book_inventory.cost_per_quantity FROM book
+                LEFT JOIN book_inventory ON book.id = book_inventory.book_id
                 INNER JOIN book_author ON book.id = book_author.book_id
                 WHERE book_author.author_id = ? " . $exclude . "
                 ORDER BY RAND()
@@ -259,6 +279,63 @@ WHERE book.title LIKE CONCAT('%', ? ,'%')
             $statement->close();
         }
 
+        return $books;
+    }
+
+    /**
+     * Get information about
+     * @param array $bookIds List of book ids to get data.
+     */
+    public function getBooksByIds(array $bookIds): ?array
+    {
+        // Convert the book IDs array to a string with comma-separated placeholders for the prepared statement
+        $placeholders = rtrim(str_repeat('?,', count($bookIds)), ',');
+
+        // Prepare the SQL query to select the books with the given IDs, along with their inventory information and author names and tag names
+        $query = "SELECT book.*, book_inventory.quantity, book_inventory.cost_per_quantity, GROUP_CONCAT(author.name SEPARATOR ', ') as author_names, GROUP_CONCAT(tag.name SEPARATOR ', ') as tag_names
+                    FROM book
+                    LEFT JOIN book_inventory ON book.id = book_inventory.book_id
+                    LEFT JOIN book_author ON book.id = book_author.book_id
+                    LEFT JOIN author ON book_author.author_id = author.id
+                    LEFT JOIN book_tag ON book.id = book_tag.book_id
+                    LEFT JOIN tag ON book_tag.tag_id = tag.id
+                    WHERE book.id IN ($placeholders)
+                    GROUP BY book.id, book_inventory.quantity, book_inventory.cost_per_quantity";
+
+        // Create a prepared statement
+        $stmt = $this->connection->prepare($query);
+
+        // Bind the book IDs array to the prepared statement placeholders
+        $types = str_repeat('i', count($bookIds));
+
+        $stmt->bind_param($types, ...$bookIds);
+
+        // Execute the prepared statement
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        // Create an array to hold the book objects
+        $books = array();
+        // Loop through the rows in the result set and create a book object for each one
+        while ($row = $result->fetch_assoc()) {
+            $book = new stdClass();
+            $book->id = $row['id'];
+            $book->title = $row['title'];
+            $book->description = $row['description'];
+            $book->image = $row['image'];
+            $book->quantity = $row['quantity'];
+            $book->cost_per_quantity = $row['cost_per_quantity'];
+            $book->author_names = $row['author_names'];
+            $book->tag_names = $row['tag_names'];
+            $books[] = $book;
+        }
+
+        // Free the result set and close the prepared statement
+        $result->free();
+        $stmt->close();
+
+        // Return the array of book objects
         return $books;
     }
 }
