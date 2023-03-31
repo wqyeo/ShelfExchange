@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($newPassword)) {
         $newHashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         $statement = $connection->prepare("UPDATE user SET password=? WHERE id=?");
-        $statement->bind_param("ii", $newHashedPassword, $userid);
+        $statement->bind_param("si", $newHashedPassword, $userid);
         if (!$statement->execute()) {
             // TODO: Statement failed
         }
