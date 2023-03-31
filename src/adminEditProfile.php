@@ -8,7 +8,7 @@
 ?>
 <html>
     <head>
-        <title>Edit Profile</title>
+        <title>Edit Profile (Admin)</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -63,41 +63,30 @@
         ?>
         
         <main class="container rounded p-3 my-3 border"> 
-            <h2> Edit Profile </h2>
-            <form action="updateProfile.php" method="POST">
+            <h2> Edit Profile (Admin) </h2>
+            <form action="updateAdminProfile.php" method="POST">
                 <input type="hidden" id="userID" value="<?php echo $row['id']; ?>">
                 <div class="form-group"> 
                     <label for="username">Username:</label>
-                    <input class="form-control" type="text" maxlength="45" id="updateusername" name="updateusername"
+                    <input class="form-control" type="text" maxlength="45" id="updateAdminUsername" name="updateAdminUsername"
                         value='<?php echo $row['username'];?>'>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input class="form-control" type="email" id="updateemail" name="updateemail"
+                    <input class="form-control" type="email" id="updateAdminEmail" name="updateAdminEmail"
                         value='<?php echo $row['email'];?>'>
                 </div>
                 
                 <div class="form-group">
                     <label for="contactno">Contact No:</label>
-                    <input class="form-control" type="text" id="updatecontact" name="updatecontact"
+                    <input class="form-control" type="text" id="updateAdminContact" name="updateAdminContact"
                         value='<?php echo $row['contact_no'];?>'>
                 </div>
-                
-<!--                <div class="mb-3">
-                    <label for="profpic">Profile Picture:</label>
-                    <input class="form-control" type="file" id="updateprofpic" name="updateprofpic"
-                                        value='<?php echo $row['profile_picture'];?>'<!doctype html>
-                </div>-->
-                <div class="form-group">
-                    <label for="imageInput">Profile Picture:</label>
-                    <input class="form-control" type="file" id="imageInput" name="imageInput">
-                </div>
-
-
+          
                 <div class="form-group"> 
-                    <button class="btn btn-primary" type="submit" name='updateProf'>Save Changes</button>
-                    <button class="btn btn-danger"> <a href="UserProfilePage.php?user=<?php echo $row['id']; ?>" class="text-light"> Cancel </a></button>
+                    <button class="btn btn-primary" type="submit" name='updateAdminProf'>Save Changes</button>
+                    <button class="btn btn-danger"> <a href="adminPage.php" class="text-light"> Cancel </a></button>
                     
                 </div>
             </form>

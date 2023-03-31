@@ -93,6 +93,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                              echo "User: " . $user['fname'] . " " . $user['lname'] . "<br>";
                              echo "Email: " . $user['email'] . "<br>";
                              echo "Contact: " . $user['contact_no'] . "<br><br>";
+                             echo "<button type='button' class='btn btn-primary'> <a href='adminEditProfile.php' style='color:white;'>Edit Profile</a> </button>";
                             ?>
                         </div>
                     </div>
@@ -104,7 +105,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                     <div class='row'>
                         <div class="col">
                             <h1> ACCOUNT MANAGEMENT </h1> 
-                            <button type='button' class='btn btn-success' data-toggle='modal' data-target='#createNewUser'> Create New User </button>
+<!--                            <button type='button' class='btn btn-success' data-toggle='modal' data-target='#createNewUser'> Create New User </button>-->
                             <table class="table table-bordered text-center"> 
                                 <tr class="bg-dark text-white">
                                     <th> User ID </th>
@@ -315,11 +316,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
             <div class="modal-body">
 
                 <div class="form-group">
-                    <label for="updateUsername">Username</label>
+                    <label for="updateUsername">Username:</label>
                     <input type="text" class="form-control" id="updateUsername">
                 </div>
                 <div class="form-group">
-                    <label for="updateEmail">Email</label>
+                    <label for="updateEmail">Email:</label>
                     <input type="text" class="form-control" id="updateEmail">
                 </div>
 
