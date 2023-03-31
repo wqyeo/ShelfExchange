@@ -58,7 +58,7 @@ if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
                 integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm"
                 crossorigin="anonymous">
         </script>
-
+        
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <link href="css/styles.css" rel="stylesheet" />
         <!-- Custom JS -->
