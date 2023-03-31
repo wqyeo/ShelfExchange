@@ -1,12 +1,10 @@
 <?php
 
-require_once "php_util/userSessionHelper.php";
-
 /**
  * Helper class to display all the reviews
  * belonging to the a given user .
  */
-class UserReviewsDisplay
+class UserInformationDisplay
 {
     private mysqli $connection;
     private int $userId;
@@ -64,33 +62,48 @@ class UserReviewsDisplay
 ';
     }
 
+
     public function displayOrders(): void
     {
-        $orderHistoryQuery = "SELECT order_history.id, order_history.order_date FROM order_history WHERE order_history.user_id = ?";
+        $orderHistoryQuery = "SELECT id, order_date FROM order_history WHERE user_id = ?";
         $orderHistoryStatement = $this->connection->prepare($orderHistoryQuery);
         $userId = $this->userId;
         $orderHistoryStatement->bind_param("i", $userId);
 
+        $orderHistory = array();
+
         if ($orderHistoryStatement->execute()) {
-            $orderHistoryStatement->bind_result($orderHistoryId, $orderDate);
+            $orderHistoryStatement->bind_result($id, $orderDate);
             // Fetch the result set
             while ($orderHistoryStatement->fetch()) {
-                $ordersQuery = "SELECT book_order.quantity, book_order.cost_per_quantity FROM book_order WHERE book_order.order_id = ?";
-                $ordersStatement = $this->connection->prepare($ordersQuery);
-                $ordersStatement->bind_param("i", $orderHistoryId);
-                $ordersStatement->execute();
-                $orderPrice = 0.0;
-
-                $ordersStatement->bind_result($quantity, $costPerQuantity);
-                while ($ordersStatement->fetch()) {
-                    $orderPrice += $costPerQuantity;
-                }
-                $this->showOrder($orderHistoryId, $orderDate, $orderPrice);
-                $ordersStatement->close();
+                $orderHistory[] = array('id' => $id, 'orderDate' => $orderDate);
             }
         }
-
         $orderHistoryStatement->close();
+
+        foreach ($orderHistory as $order) {
+            $id = $order['id'];
+            $orderDate = $order['orderDate'];
+
+            $ordersQuery = "SELECT quantity, cost_per_quantity FROM book_order WHERE order_id = ?";
+            $ordersStatement = $this->connection->prepare($ordersQuery);
+
+            if (!$ordersStatement) {
+                echo('Error preparing statement: ' . $this->connection->error);
+            }
+
+
+            $ordersStatement->bind_param("i", $id);
+            $ordersStatement->execute();
+            $orderPrice = 0.0;
+
+            $ordersStatement->bind_result($quantity, $costPerQuantity);
+            while ($ordersStatement->fetch()) {
+                $orderPrice += $costPerQuantity;
+            }
+            $this->showOrder($id, $orderDate, $orderPrice);
+            $ordersStatement->close();
+        }
     }
 
     private function showOrder(int $orderId, string $orderDate, float $price): void
@@ -101,7 +114,6 @@ class UserReviewsDisplay
                             <div class="review-comment">Total Cost: ' .  $price . '</div>
                             <div class="review-date">' .  $orderDate . '</div>
                 </li>
-
 ';
     }
 }

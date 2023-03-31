@@ -27,6 +27,7 @@
   <!--Header-->
   <script src="js/html_generator/headerCreator.js"></script>
   <script>
+
     const headerCreator = new HeaderCreator();
     headerCreator.createHeadingWith("SHELF EXCHANGE", "A bookworm's paradise.");
     headerCreator.createSearchBar();
@@ -77,6 +78,12 @@
   ?>
   <!-- Bootstrap core JS-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+if (window.location.search.indexOf('transaction=success') > -1) {
+  window.alert('Transaction was successful!');
+}
+</script>
 </body>
 
 </html>

@@ -1,5 +1,12 @@
 <!DOCTYPE html>
+<?php
+// Set error reporting to display all errors
+ini_set('display_errors', 1);
+ini_set('error_reporting', E_ALL);
 
+// Your PHP code here
+// ...
+?>
 <html>
     <head>
 
@@ -38,34 +45,33 @@
     <body class="d-flex flex-column h-100">
         <?php
         include "php_util/util.php";
-        $connection = createDatabaseConnection();
-        include "nav.php";
-        // checks if user is logged in
-        if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
-            $id = $userSessionHelper->getUserInformation()['user_id'];
-            $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
-            $sel->bind_param("i", $id);
-            $sel->execute();
-            $result = $sel->get_result();
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-            }
+$connection = createDatabaseConnection();
+include "nav.php";
+// checks if user is logged in
+if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
+    $id = $userSessionHelper->getUserInformation()['user_id'];
+    $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
+    $sel->bind_param("i", $id);
+    $sel->execute();
+    $result = $sel->get_result();
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+    }
 
-            // Check if the user's id is in the seller table
-            $checkSeller = $connection->prepare("SELECT * FROM seller WHERE user_id = ?");
-            $checkSeller->bind_param("i", $id);
-            $checkSeller->execute();
-            $sellerResult = $checkSeller->get_result();
+    // Check if the user's id is in the seller table
+    $checkSeller = $connection->prepare("SELECT * FROM seller WHERE user_id = ?");
+    $checkSeller->bind_param("i", $id);
+    $checkSeller->execute();
+    $sellerResult = $checkSeller->get_result();
 
-            if ($sellerResult->num_rows > 0) 
-            {
-                header("Location: adminPage.php");
-                exit();
-            }
-        } else {
-            header("Location: login.php");
-        }
-        ?>
+    if ($sellerResult->num_rows > 0) {
+        header("Location: adminPage.php");
+        exit();
+    }
+} else {
+    header("Location: login.php");
+}
+?>
 
         <main class="container rounded p-3 my-3 border"> 
 
@@ -110,10 +116,10 @@
             </section>
 
             <?php
-            $sel->close();
-            include_once "php_display/userInformationDisplay.php";
-            $userReviewDisplay = new UserReviewsDisplay($connection, $userSessionHelper->getUserInformation()['user_id']);
-            ?>
+    $sel->close();
+include_once "php_display/userInformationDisplay.php";
+$userInformationDisplay = new UserInformationDisplay($connection, $userSessionHelper->getUserInformation()['user_id']);
+?>
 
             <!--Show User Reviews and Orders-->
             <ul class="nav nav-tabs">
@@ -125,28 +131,29 @@
                 </li>
             </ul>
 
-            <div class="tab-content">
-                <div id="user-reviews" class="tab-pane active">
+            <div class="tab-content"> 
+               <div id="user-reviews" class="tab-pane active">
                     <div class="container mt-5">
                         <ul class="review-list">
-                            <?php
-                            $userReviewDisplay->displayReviews();
-                            ?>
+<?php
+                $userInformationDisplay->displayReviews();
+?>
                         </ul></div> 
                 </div>
-                <div id="user-orders" class="tab-pane">
+ <div id="user-orders" class="tab-pane">
                     <div class="container mt-5">
                         <ul class="review-list">
-                            <?php $userReviewDisplay->displayOrders(); ?>  
-                        </ul></div> 
+                            <?php $userInformationDisplay->displayOrders(); ?>  
+                        </ul>
+                    </div> 
                 </div>
             </div>
 
 
         </main>
         <?php
-        include "footer.php";
-        $connection->close();
-        ?>
+include "footer.php";
+$connection->close();
+?>
     </body>
 </html>
