@@ -76,7 +76,13 @@ $connection = createDatabaseConnection();
                     <input class="form-control" type="email" id="updateemail" name="updateemail"
                         value='<?php echo $row['email'];?>'>
                 </div>
-                
+
+                <div class="form-group">
+                    <label for="email">New Password (Optional)</label>
+                    <input class="form-control" type="password" id="updatepassword" name="updatepassword">
+                </div>
+ 
+
                 <div class="form-group">
                     <label for="contactno">Contact No:</label>
                     <input class="form-control" type="text" id="updatecontact" name="updatecontact"
@@ -89,6 +95,11 @@ $connection = createDatabaseConnection();
                     <input class="form-control" type="file" id="imageInput" name="imageInput">
                 </div>
 
+                
+                <div class="form-group">
+                    <label for="email">Your Current Password (Required, to make changes)</label>
+                    <input class="form-control" type="password" id="confirmpassword" name="confirmpassword">
+                </div>
 
                 <div class="form-group"> 
                     <button class="btn btn-primary" type="submit" name='updateProf'>Save Changes</button>
