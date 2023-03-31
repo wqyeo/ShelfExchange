@@ -7,6 +7,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userSessionHelper = new UserSessionHelper($connection);
     $userid = $userSessionHelper->getUserInformation()['user_id'];
 
+    // Verify user's current password first.
+    $confirmPassword = $_POST['confirmpassword'];
+    $statement = $connection->prepare("SELECT password FROM user WHERE id=?");
+    $statement->bind_param("i", $userid);
+    if (!$statement->execute()) {
+        // TODO: Failed to execute statement;
+    }
+
+
+    // Get the password result and check if it exists
+    $result = $statement->get_result();
+    if ($result->num_rows != 1) {
+        // TODO: User not found or multiple users found
+    }
+
+    // Fetch the password result and verify the password
+    $confirmPasswordResult = $result->fetch_assoc();
+    if (!password_verify($confirmPassword, $confirmPasswordResult['password'])) {
+        // TODO: Wrong password for confirmation
+    }
+
+    $statement->close();
+
     $username = $_POST['updateusername'];
     $email = $_POST['updateemail'];
     $contactNum = $_POST['updatecontact'];
@@ -18,6 +41,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $updatedResults = $stmt->get_result();
 
         $stmt->close();
+    }
+
+    $newPassword = $_POST['updatepassword'];
+    // User wants to change password
+    if (!empty($newPassword)) {
+        $newHashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $statement = $connection->prepare("UPDATE user SET password=? WHERE id=?");
+        $statement->bind_param("ii", $newHashedPassword, $userid);
+        if (!$statement->execute()) {
+            // TODO: Statement failed
+        }
+        $statement->close();
     }
 
     // If user gave a profile picture.
@@ -47,8 +82,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             // File is not an image;
         }
-    } else {
-        echo "NOT SET";
     }
 
     $connection->close();
