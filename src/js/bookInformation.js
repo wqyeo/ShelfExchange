@@ -90,8 +90,7 @@ function displayReviews(bookReviews, reviewDocId) {
     bookReviews.length <= 0
   ) {
     const text = document.createElement("p");
-    text.innerHTML =
-      "There are no reviews for this book.... yet.<br>You can be the first!";
+    text.innerHTML = "No other users have reviewed this book... yet.";
     reviewList.appendChild(text);
     return;
   }

@@ -7,30 +7,11 @@ ini_set('display_errors', 0);
  * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHP.php to edit this template
  */
 
-// Define database connection parameters
-$servername = "localhost";
-$dbusername = "shelfdev";
-$password = "lmao01234";
-$dbname = "shelf_exchange";
 
-// Create database connection
-$conn = new mysqli($servername, $dbusername, $password, $dbname);
+include_once "php_util/util.php";
 
-// Check if connection was successful
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-function getBooks() {
-    //Create Database connection
-    $servername = "localhost";
-    $dbusername = "shelfdev";
-    $password = "lmao01234";
-    $dbname = "shelf_exchange";
-
-    // Create a connection to the database
-    $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
-
+function getBooks(mysqli $conn)
+{
     // Check connection
     if (!$conn) {
         die("Connection failed: " . mysqli_connect_error());
@@ -53,16 +34,11 @@ function getBooks() {
     mysqli_close($conn);
 }
 
-function updateBook($bookId, $bookTitle, $bookReleaseDate, $image, $language_id, $description) {
-    // Create Database connection
-    $servername = "localhost";
-    $dbusername = "shelfdev";
-    $password = "lmao01234";
-    $dbname = "shelf_exchange";
-
+function updateBook($bookId, $bookTitle, $bookReleaseDate, $image, $language_id, $description)
+{
     // Create a connection to the database
-    $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
-
+    include_once "php_util/util.php";
+    $conn = createDatabaseConnection();
     // Check connection
     if (!$conn) {
         die("Connection failed: " . mysqli_connect_error());
@@ -99,7 +75,8 @@ function updateBook($bookId, $bookTitle, $bookReleaseDate, $image, $language_id,
     $conn->close();
 }
 
-function uploadImage($image) {
+function uploadImage($image)
+{
     $target_dir = "/var/www/html/ShelfExchange/images/books/";
     $target_file = $target_dir . basename($image["name"]);
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -120,7 +97,7 @@ function uploadImage($image) {
     // Check if $uploadOk is set to 0 by an error
     if ($uploadOk == 0) {
         echo "File not uploaded.";
-        // If everything is ok, try to upload file
+    // If everything is ok, try to upload file
     } else {
         if (move_uploaded_file($image["tmp_name"], $target_file)) {
             $filepath = str_replace('/var/www/html/ShelfExchange/', '', $target_file);
@@ -132,15 +109,10 @@ function uploadImage($image) {
     return null;
 }
 
-function addBook($bookTitle, $bookReleaseDate, $image, $language_id, $description) {
-    // Create Database connection
-    $servername = "localhost";
-    $dbusername = "shelfdev";
-    $password = "lmao01234";
-    $dbname = "shelf_exchange";
-
-    // Create a connection to the database
-    $conn = mysqli_connect($servername, $dbusername, $password, $dbname);
+function addBook($bookTitle, $bookReleaseDate, $image, $language_id, $description)
+{
+    include_once "php_util/util.php";
+    $conn = createDatabaseConnection();
 
     // Check connection
     if (!$conn) {
@@ -152,11 +124,11 @@ function addBook($bookTitle, $bookReleaseDate, $image, $language_id, $descriptio
     if ($image !== null && $image['size'] > 0) {
         $uploadedImage = uploadImage($image);
     }
-    
+
     // Prepare and execute the SQL query to insert the book
     $sql = "INSERT INTO shelf_exchange.book SET title=?, release_date=?, language_id=?, description=?"
-            . ($uploadedImage !== null ? ", image=?" : "");  
-            $stmt = $conn->prepare($sql);
+            . ($uploadedImage !== null ? ", image=?" : "");
+    $stmt = $conn->prepare($sql);
 
     if ($uploadedImage !== null) {
         $stmt->bind_param("ssiss", $bookTitle, $bookReleaseDate, $language_id, $description, $uploadedImage);
@@ -212,15 +184,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (isset($_POST['book_id'])) {
         $book_id = $_POST['book_id'];
 
-        // Define database connection parameters
-        $servername = "localhost";
-        $dbusername = "shelfdev";
-        $password = "lmao01234";
-        $dbname = "shelf_exchange";
-
-        // Create database connection
-        $conn = new mysqli($servername, $dbusername, $password, $dbname);
-
+        include_once "php_util/util.php";
+        $conn = createDatabaseConnection();
         // Check if connection was successful
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);

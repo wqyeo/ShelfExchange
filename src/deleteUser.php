@@ -1,8 +1,14 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('error_reporting', E_ALL);
+
 if (isset($_POST['deleteid'])) {
     include_once "php_util/util.php";
-    $connection = createDatabaseConnection();
+
+    if (!isset($connection) || $connection) {
+        $connection = createDatabaseConnection();
+    }
 
     // Check connection
     if (!$connection) {
@@ -16,7 +22,7 @@ if (isset($_POST['deleteid'])) {
     $statement->bind_param("i", $unique);
 
     if ($statement->execute()) {
-        //success
+    } else {
     }
     $statement->close();
     $connection->close();

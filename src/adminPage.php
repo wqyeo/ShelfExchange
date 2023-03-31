@@ -37,41 +37,40 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
     </head>
 
     <body>
-        <?php
-        include_once "php_util/util.php";
-        $connection = createDatabaseConnection();
-        $query = "SELECT * FROM shelf_exchange.user";
-        $result = mysqli_query($connection, $query);
-        include "nav.php";
-        include "book_functions.php";
+<?php
 
-        if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
-            $currentUserId = $userSessionHelper->getUserInformation()['user_id'];
+ini_set('display_errors', 1);
+ini_set('error_reporting', E_ALL);
 
-            function getUserContact(mysqli $conn, $userId) {
-                $sql = "SELECT * FROM shelf_exchange.user INNER JOIN shelf_exchange.seller ON user.id = seller.user_id WHERE user.id = ?";
+include_once "php_util/util.php";
+$connection = createDatabaseConnection();
+include "nav.php";
+include "book_functions.php";
 
-                // Prepare the statement and bind the user ID
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $userId);
-                $stmt->execute();
+if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
+    $currentUserId = $userSessionHelper->getUserInformation()['user_id'];
 
-                // Get the results
-                $result = $stmt->get_result();
+    function getUserContact(mysqli $conn, $userId)
+    {
+        $sql = "SELECT * FROM shelf_exchange.user INNER JOIN shelf_exchange.seller ON user.id = seller.user_id WHERE user.id = ?";
 
-                // Check if any results were returned
-                if ($result->num_rows > 0) {
-                    return $result;
-                } else {
-                    echo "No results found.";
-                }
+        // Prepare the statement and bind the user ID
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
 
-                // Close the database connection
-            }
+        // Get the results
+        $result = $stmt->get_result();
 
-            mysqli_close($conn);
+        // Check if any results were returned
+        if ($result->num_rows > 0) {
+            return $result;
+        } else {
+            echo "No results found.";
         }
-        ?>
+    }
+}
+?>
 
         <main class="container rounded p-3 my-3 border"> 
             <div class='col-4' style='display: inline-block;'>
@@ -89,12 +88,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                         <div class="col" style='display: inline-block;'> 
                             <h5 style='text-align:left;'><b> Personal Information </b> </h5>
                             <?php
-                            $user = getUserContact($connection, $currentUserId)->fetch_assoc();
-                             echo "User: " . $user['fname'] . " " . $user['lname'] . "<br>";
-                             echo "Email: " . $user['email'] . "<br>";
-                             echo "Contact: " . $user['contact_no'] . "<br><br>";
-                             echo "<button type='button' class='btn btn-primary'> <a href='adminEditProfile.php' style='color:white;'>Edit Profile</a> </button>";
-                            ?>
+                    $user = getUserContact($connection, $currentUserId)->fetch_assoc();
+echo "User: " . $user['fname'] . " " . $user['lname'] . "<br>";
+echo "Email: " . $user['email'] . "<br>";
+echo "Contact: " . $user['contact_no'] . "<br><br>";
+echo "<button type='button' class='btn btn-primary'> <a href='adminEditProfile.php' style='color:white;'>Edit Profile</a> </button>";
+?>
                         </div>
                     </div>
                 </section>
@@ -116,8 +115,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                 </tr>
 
                                 <?php
-                                while ($row = mysqli_fetch_array($result)) {
-                                    ?>
+
+
+$query = "SELECT * FROM shelf_exchange.user";
+$result = mysqli_query($connection, $query);
+while ($row = mysqli_fetch_array($result)) {
+    ?>
                                     <tr>
                                         <td><?php echo $row["id"]; ?></td>
                                         <td><?php echo $row["username"]; ?> </td>
@@ -126,8 +129,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                         <td><button type='button' class='btn btn-danger text-light' onclick='deleteUser(<?php echo $row["id"]; ?>)'>  Delete </button></td>
                                     </tr>
                                     <?php
-                                }
-                                ?>
+}
+?>
                             </table>
 
                         </div>
@@ -148,17 +151,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                     </th>
                                 </tr>
                                 <?php
-                                $books = getBooks();
+$books = getBooks($connection);
 
-                                foreach ($books as $book) {
-                                    echo "<tr>";
-                                    echo "<td> <figure> <img src='" . $book['image'] . "' width='200' height='300'></figure></td>";
-                                    echo "<td>" . $book['title'] . "</td>";
-                                    echo "<td>" . $book['release_date'] . "</td>";
-                                    echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#updateBookModal' data-book-id='" . $book['id'] . "' data-book-title='" . rawurlencode($book['title']) . "' data-book-release-date='" . $book['release_date'] . "' data-book-description='" . rawurlencode($book['description']) . "' data-book-language-id='" . $book['language_id'] . "'>Update</button></td>";
-                                    echo "</tr>";
-                                }
-                                ?>
+foreach ($books as $book) {
+    echo "<tr>";
+    echo "<td> <figure> <img src='" . $book['image'] . "' width='200' height='300'></figure></td>";
+    echo "<td>" . $book['title'] . "</td>";
+    echo "<td>" . $book['release_date'] . "</td>";
+    echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#updateBookModal' data-book-id='" . $book['id'] . "' data-book-title='" . rawurlencode($book['title']) . "' data-book-release-date='" . $book['release_date'] . "' data-book-description='" . rawurlencode($book['description']) . "' data-book-language-id='" . $book['language_id'] . "'>Update</button></td>";
+    echo "</tr>";
+}
+?>
                             </table>
                         </div>
                     </div>
@@ -200,12 +203,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                 <label for="update-language-id">Language:</label>
                                 <select class="form-control" name="update-language-id" id="update-language-id" required>
                                     <?php
-                                    $language_query = "SELECT * FROM shelf_exchange.book_language";
-                                    $language_result = mysqli_query($conn, $language_query);
-                                    while ($language = mysqli_fetch_assoc($language_result)) {
-                                        echo '<option value="' . $language['id'] . '">' . $language['language_name'] . '</option>';
-                                    }
-                                    ?>
+    $language_query = "SELECT * FROM shelf_exchange.book_language";
+$language_result = mysqli_query($connection, $language_query);
+while ($language = mysqli_fetch_assoc($language_result)) {
+    echo '<option value="' . $language['id'] . '">' . $language['language_name'] . '</option>';
+}
+?>
                                 </select>
                             </div>
                         </form>
@@ -247,12 +250,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                                 <label for="add-language-id">Language</label>
                                 <select class="form-control" id="add-language-id" name="add-language-id" required>
                                     <?php
-                                    $language_query = "SELECT * FROM shelf_exchange.book_language";
-                                    $language_result = mysqli_query($conn, $language_query);
-                                    while ($language = mysqli_fetch_assoc($language_result)) {
-                                        echo '<option value="' . $language['id'] . '">' . $language['language_name'] . '</option>';
-                                    }
-                                    ?>
+$language_query = "SELECT * FROM shelf_exchange.book_language";
+$language_result = mysqli_query($connection, $language_query);
+while ($language = mysqli_fetch_assoc($language_result)) {
+    echo '<option value="' . $language['id'] . '">' . $language['language_name'] . '</option>';
+}
+?>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -336,6 +339,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
 </div>
 
 </body>
+<!--
 <script>
     //still in progress
     function addUser(){
@@ -351,7 +355,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                     sendName: addName,
                     sendPassword: addPassword
             }
-    success:function(data, status){
+    function(data, status){
     $('#createNewUser').modal("hide");
     //                    location.href='testAPAcc.php';
 
@@ -359,6 +363,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
     });
     }
 </script>
+
+-->
 <?php
 include "footer.php";
 $connection->close();
