@@ -79,8 +79,14 @@ if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
             <section id='profilepic' style='text-align:center;'>
 
                 <figure>
-
-                    <img class='img-thumbnail' src='<?php echo $row['profile_picture']; ?>' alt='profpic'>
+                    <?php
+                    $profile_picture = $userSessionHelper->getUserInformation()['profile_picture'];
+                    if (isset($profile_picture)){
+                        echo "<img class='img-thumbnail' src='$profile_picture' alt='profpic'>";
+                    } else {
+                        echo "<img class='img-thumbnail' src='images/genericprofpic.png' alt='profpic'>";
+                    }
+                    ?>
                 </figure>
 
             </section>
