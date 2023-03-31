@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-<?php
-// Set error reporting to display all errors
-ini_set('display_errors', 1);
-ini_set('error_reporting', E_ALL);
-
 // Your PHP code here
 // ...
 include "php_util/util.php";
