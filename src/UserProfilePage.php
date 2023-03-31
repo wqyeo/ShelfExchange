@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<?php
 // Your PHP code here
 // ...
 include "php_util/util.php";
