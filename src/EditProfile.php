@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<?php 
+<?php
 
     include "php_util/util.php";
-    $connection = createDatabaseConnection();  
-    
-    
+$connection = createDatabaseConnection();
+
+
 ?>
 <html>
     <head>
@@ -41,30 +41,29 @@
     <body>
         <?php
         include "nav.php";
-        ?>
+?>
         <?php
-            // checks if user is logged in
-            if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
-                $id = $userSessionHelper->getUserInformation()['user_id'];
-                $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
-                $sel->bind_param("i", $id);
-                $sel->execute();
-                $result = $sel->get_result();
-                if ($result->num_rows > 0){
-                    $row = $result->fetch_assoc(); 
-                }
-            }
-            else {
-                header("Location: login.php");
-            }
-            
-            // update profile not working, will continue tmr night
-            
-        ?>
+    // checks if user is logged in
+    if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
+        $id = $userSessionHelper->getUserInformation()['user_id'];
+        $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
+        $sel->bind_param("i", $id);
+        $sel->execute();
+        $result = $sel->get_result();
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+        }
+    } else {
+        header("Location: login.php");
+    }
+
+    // update profile not working, will continue tmr night
+
+?>
         
         <main class="container rounded p-3 my-3 border"> 
             <h2> Edit Profile </h2>
-            <form action="updateProfile.php" method="POST">
+            <form action="updateProfile.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="userID" value="<?php echo $row['id']; ?>">
                 <div class="form-group"> 
                     <label for="username">Username:</label>
@@ -84,11 +83,7 @@
                         value='<?php echo $row['contact_no'];?>'>
                 </div>
                 
-<!--                <div class="mb-3">
-                    <label for="profpic">Profile Picture:</label>
-                    <input class="form-control" type="file" id="updateprofpic" name="updateprofpic"
-                                        value='<?php echo $row['profile_picture'];?>'<!doctype html>
-                </div>-->
+
                 <div class="form-group">
                     <label for="imageInput">Profile Picture:</label>
                     <input class="form-control" type="file" id="imageInput" name="imageInput">
@@ -104,7 +99,7 @@
             
         </main>
         <?php
-            include "footer.php"
-        ?>
+    include "footer.php"
+?>
     </body>
 </html>
