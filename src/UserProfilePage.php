@@ -80,7 +80,7 @@ if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
 
                 <figure>
 
-                    <img class='img-thumbnail' src='images/genericprofpic.png' alt='profpic'>
+                    <img class='img-thumbnail' src='<?php echo $row['profile_picture']; ?>' alt='profpic'>
                 </figure>
 
             </section>
