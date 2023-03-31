@@ -58,11 +58,11 @@ function deleteAcc(deleteID) {
                 url: "deleteUser.php",
                 type: "post",
                 data: {
-                    deleteid: deleteID,
+                    deleteid: deleteID
                 },
                 success: function(data, status) {
                     location.href = "signUp.php";
-                },
+                }
             });
         }
     } else {
