@@ -282,6 +282,8 @@ ORDER BY RAND() LIMIT " . $bookCount;
         return $books;
     }
 
+
+
     public function getBookInventoryByBookId(array $bookIds): ?array
     {
         // Convert the book IDs array to a string with comma-separated placeholders for the prepared statement
@@ -324,6 +326,54 @@ ORDER BY RAND() LIMIT " . $bookCount;
 
         // Return the array of book objects
         return $bookInventory;
+    }
+
+    public function getBookInventoryByOrderId(int $orderId): ?array
+    {
+        $query = "SELECT book.*, book_order.quantity, book_order.cost_per_quantity, GROUP_CONCAT(author.name SEPARATOR ', ') as author_names, GROUP_CONCAT(tag.name SEPARATOR ', ') as tag_names
+            FROM order_history
+            LEFT JOIN book_order ON order_history.id = book_order.order_id
+            LEFT JOIN book_inventory ON book_order.book_inventory_id = book_inventory.id
+            LEFT JOIN book ON book_inventory.book_id = book.id
+            LEFT JOIN book_author ON book.id = book_author.book_id
+            LEFT JOIN author ON book_author.author_id = author.id
+            LEFT JOIN book_tag ON book.id = book_tag.book_id
+            LEFT JOIN tag ON book_tag.tag_id = tag.id
+            WHERE order_history.id = ?
+            GROUP BY book.id, book_order.quantity, book_order.cost_per_quantity
+        ";
+        // Create a prepared statement
+        $stmt = $this->connection->prepare($query);
+
+        $stmt->bind_param("i", $orderId);
+
+        // Execute the prepared statement
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        // Create an array to hold the book objects
+        $books = array();
+        // Loop through the rows in the result set and create a book object for each one
+        while ($row = $result->fetch_assoc()) {
+            $book = new stdClass();
+            $book->id = $row['id'];
+            $book->title = $row['title'];
+            $book->description = $row['description'];
+            $book->image = $row['image'];
+            $book->quantity = $row['quantity'];
+            $book->cost_per_quantity = $row['cost_per_quantity'];
+            $book->author_names = $row['author_names'];
+            $book->tag_names = $row['tag_names'];
+            $books[] = $book;
+        }
+
+        // Free the result set and close the prepared statement
+        $result->free();
+        $stmt->close();
+
+        // Return the array of book objects
+        return $books;
     }
 
     /**
