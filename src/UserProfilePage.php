@@ -6,6 +6,33 @@ ini_set('error_reporting', E_ALL);
 
 // Your PHP code here
 // ...
+include "php_util/util.php";
+$connection = createDatabaseConnection();
+include "nav.php";
+// checks if user is logged in
+if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
+    $id = $userSessionHelper->getUserInformation()['user_id'];
+    $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
+    $sel->bind_param("i", $id);
+    $sel->execute();
+    $result = $sel->get_result();
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+    }
+
+    // Check if the user's id is in the seller table
+    $checkSeller = $connection->prepare("SELECT * FROM seller WHERE user_id = ?");
+    $checkSeller->bind_param("i", $id);
+    $checkSeller->execute();
+    $sellerResult = $checkSeller->get_result();
+
+    if ($sellerResult->num_rows > 0) {
+        header("Location: adminPage.php");
+        exit();
+    }
+} else {
+    header("Location: login.php");
+}
 ?>
 <html>
     <head>
@@ -43,35 +70,7 @@ ini_set('error_reporting', E_ALL);
         <link rel="stylesheet" href="css/userReviews.css">
     </head>
     <body class="d-flex flex-column h-100">
-        <?php
-        include "php_util/util.php";
-$connection = createDatabaseConnection();
-include "nav.php";
-// checks if user is logged in
-if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
-    $id = $userSessionHelper->getUserInformation()['user_id'];
-    $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
-    $sel->bind_param("i", $id);
-    $sel->execute();
-    $result = $sel->get_result();
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-    }
-
-    // Check if the user's id is in the seller table
-    $checkSeller = $connection->prepare("SELECT * FROM seller WHERE user_id = ?");
-    $checkSeller->bind_param("i", $id);
-    $checkSeller->execute();
-    $sellerResult = $checkSeller->get_result();
-
-    if ($sellerResult->num_rows > 0) {
-        header("Location: adminPage.php");
-        exit();
-    }
-} else {
-    header("Location: login.php");
-}
-?>
+        
 
         <main class="container rounded p-3 my-3 border"> 
 
