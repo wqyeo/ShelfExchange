@@ -92,7 +92,7 @@ if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
 echo "User: " . $user['fname'] . " " . $user['lname'] . "<br>";
 echo "Email: " . $user['email'] . "<br>";
 echo "Contact: " . $user['contact_no'] . "<br><br>";
-echo "<button type='button' class='btn btn-primary'> <a href='adminEditProfile.php' style='color:white;'>Edit Profile</a> </button>";
+echo "<button type='button' class='btn btn-primary'> <a href='EditProfile.php' style='color:white;'>Edit Profile</a> </button>";
 ?>
                         </div>
                     </div>
@@ -104,14 +104,12 @@ echo "<button type='button' class='btn btn-primary'> <a href='adminEditProfile.p
                     <div class='row'>
                         <div class="col">
                             <h1> ACCOUNT MANAGEMENT </h1> 
-<!--                            <button type='button' class='btn btn-success' data-toggle='modal' data-target='#createNewUser'> Create New User </button>-->
                             <table class="table table-bordered text-center"> 
                                 <tr class="bg-dark text-white">
                                     <th> User ID </th>
                                     <th> Username </th>
                                     <th> Email </th>
                                     <th> Contact No </th>
-<!--                                    <th> Edit User </th>-->
                                     <th> Delete User </th>
                                 </tr>
 
@@ -341,32 +339,7 @@ while ($language = mysqli_fetch_assoc($language_result)) {
 </div>
 
 </body>
-<!--
-<script>
-    //still in progress
-    function addUser(){
-    $('#createNewUser').modal("show");
-    var addName = $('#createUsername').val();
-    var addEmail = $('#createEmail').val();
-    var addPassword = $('#createPassword').val();
-    $.ajax({
-    url:"createUser.php",
-            type:'post',
-            data:{
-            sendEmail: addEmail,
-                    sendName: addName,
-                    sendPassword: addPassword
-            }
-    function(data, status){
-    $('#createNewUser').modal("hide");
-    //                    location.href='testAPAcc.php';
 
-    }
-    });
-    }
-</script>
-
--->
 <?php
 include "footer.php";
 $connection->close();

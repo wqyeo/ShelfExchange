@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <?php
-
-    include "php_util/util.php";
+include "php_util/util.php";
 $connection = createDatabaseConnection();
-
-
 ?>
 <html>
     <head>
@@ -39,28 +36,27 @@ $connection = createDatabaseConnection();
 
     </head>
     <body>
-        <?php
-        include "nav.php";
+<?php
+include "nav.php";
 ?>
         <?php
-    // checks if user is logged in
-    if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
-        $id = $userSessionHelper->getUserInformation()['user_id'];
-        $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
-        $sel->bind_param("i", $id);
-        $sel->execute();
-        $result = $sel->get_result();
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
+        // checks if user is logged in
+        if (isset($userSessionHelper) && $userSessionHelper->isLoggedIn()) {
+            $id = $userSessionHelper->getUserInformation()['user_id'];
+            $sel = $connection->prepare("SELECT * FROM user WHERE id=?");
+            $sel->bind_param("i", $id);
+            $sel->execute();
+            $result = $sel->get_result();
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+            }
+        } else {
+            header("Location: login.php");
         }
-    } else {
-        header("Location: login.php");
-    }
 
-    // update profile not working, will continue tmr night
+        // update profile not working, will continue tmr night
+        ?>
 
-?>
-        
         <main class="container rounded p-3 my-3 border"> 
             <h2> Edit Profile </h2>
             <form action="updateProfile.php" method="POST" enctype="multipart/form-data">
@@ -68,49 +64,50 @@ $connection = createDatabaseConnection();
                 <div class="form-group"> 
                     <label for="username">Username:</label>
                     <input class="form-control" type="text" maxlength="45" id="updateusername" name="updateusername"
-                        value='<?php echo $row['username'];?>'>
+                           value='<?php echo $row['username']; ?>'>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email:</label>
                     <input class="form-control" type="email" id="updateemail" name="updateemail"
-                        value='<?php echo $row['email'];?>'>
+                           value='<?php echo $row['email']; ?>'>
                 </div>
+
+                <div class="form-group">
+                    <label for="email">Your Current Password (Required, to make changes)</label>
+                    <input class="form-control" type="password" id="confirmpassword" name="confirmpassword">
+                </div>
+
 
                 <div class="form-group">
                     <label for="email">New Password (Optional)</label>
                     <input class="form-control" type="password" id="updatepassword" name="updatepassword">
                 </div>
- 
 
                 <div class="form-group">
                     <label for="contactno">Contact No:</label>
                     <input class="form-control" type="text" id="updatecontact" name="updatecontact"
-                        value='<?php echo $row['contact_no'];?>'>
+                           value='<?php echo $row['contact_no']; ?>'>
                 </div>
-                
+
 
                 <div class="form-group">
                     <label for="imageInput">Profile Picture:</label>
                     <input class="form-control" type="file" id="imageInput" name="imageInput">
                 </div>
 
-                
-                <div class="form-group">
-                    <label for="email">Your Current Password (Required, to make changes)</label>
-                    <input class="form-control" type="password" id="confirmpassword" name="confirmpassword">
-                </div>
+
 
                 <div class="form-group"> 
                     <button class="btn btn-primary" type="submit" name='updateProf'>Save Changes</button>
                     <button class="btn btn-danger"> <a href="UserProfilePage.php?user=<?php echo $row['id']; ?>" class="text-light"> Cancel </a></button>
-                    
+
                 </div>
             </form>
-            
+
         </main>
-        <?php
-    include "footer.php"
+<?php
+include "footer.php"
 ?>
     </body>
 </html>
