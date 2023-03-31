@@ -110,7 +110,8 @@ echo "<button type='button' class='btn btn-primary'> <a href='adminEditProfile.p
                                     <th> User ID </th>
                                     <th> Username </th>
                                     <th> Email </th>
-                                    <th> Edit User </th>
+                                    <th> Contact No </th>
+<!--                                    <th> Edit User </th>-->
                                     <th> Delete User </th>
                                 </tr>
 
@@ -125,7 +126,8 @@ while ($row = mysqli_fetch_array($result)) {
                                         <td><?php echo $row["id"]; ?></td>
                                         <td><?php echo $row["username"]; ?> </td>
                                         <td><?php echo $row["email"]; ?></td>
-                                        <td><button type='button' class='btn btn-primary' onclick='getUserDetails(<?php echo $row["id"]; ?>)'> Edit </button></td> 
+                                        <td><?php echo $row["contact_no"]; ?></td>
+                                        <!--<td><button type='button' class='btn btn-primary' onclick='getUserDetails(<?php echo $row["id"]; ?>)'> Edit </button></td>--> 
                                         <td><button type='button' class='btn btn-danger text-light' onclick='deleteUser(<?php echo $row["id"]; ?>)'>  Delete </button></td>
                                     </tr>
                                     <?php
